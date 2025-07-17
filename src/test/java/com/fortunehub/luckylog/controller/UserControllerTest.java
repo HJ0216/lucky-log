@@ -1,13 +1,21 @@
 package com.fortunehub.luckylog.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.config.SecurityConfig;
 import com.fortunehub.luckylog.dto.request.UserCreateRequest;
+import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.service.UserService;
+import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,6 +199,44 @@ class UserControllerTest {
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
            .andExpect(status().isBadRequest());
+  }
+  
+  @Test
+  @DisplayName("유저 조회 - 성공")
+  void getUser_ValidRequest_Success() throws Exception{
+    // given
+    long userId = 1L;
+    String email = "test@email.com";
+    String nickname = "text";
+
+    UserResponse response = new UserResponse(email, nickname);
+
+    when(userService.getUser(userId)).thenReturn(response);
+
+    // when & then
+    mockMvc.perform(get("/api/v1/user/{id}", userId))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+           .andExpect(jsonPath("$.email").value(email))
+           .andExpect(jsonPath("$.nickname").value(nickname));
+  }
+
+  @Test
+  @DisplayName("유저 조회 - 존재하지 않는 유저")
+  void getUser_UserNotFound() throws Exception {
+    // given
+    Long userId = 100L;
+    when(userService.getUser(userId))
+        .thenThrow(new IllegalArgumentException());
+
+    // when & then
+    Exception exception = assertThrows(ServletException.class, () -> {
+      mockMvc.perform(get("/api/v1/user/{id}", userId))
+             .andDo(print());
+    });
+
+    assertThat(exception.getCause()).isInstanceOf(IllegalArgumentException.class);
   }
 
 

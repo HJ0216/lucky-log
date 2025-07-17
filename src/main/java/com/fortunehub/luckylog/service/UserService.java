@@ -1,6 +1,8 @@
 package com.fortunehub.luckylog.service;
 
+import com.fortunehub.luckylog.domain.User;
 import com.fortunehub.luckylog.dto.request.UserCreateRequest;
+import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,5 +22,9 @@ public class UserService {
     String encodedPassword = passwordEncoder.encode(rawPassword);
 
     userRepository.save(request.toEntity(encodedPassword));
+  @Transactional(readOnly = true)
+  public UserResponse getUser(Long id) {
+    User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+    return UserResponse.from(user);
   }
 }
