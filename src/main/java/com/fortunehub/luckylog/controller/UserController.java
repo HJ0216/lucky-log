@@ -5,6 +5,7 @@ import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,9 @@ public class UserController {
   }
 
   @PostMapping("/user") // POST /api/v1/user
-  public void createUser(@Valid @RequestBody UserCreateRequest request){
-    userService.createUser(request);
+  public ResponseEntity<Void> createUser(@Valid @RequestBody UserCreateRequest request){
+    long userId = userService.createUser(request);
+    URI location = URI.create("/api/v1/user/" + userId);
+    return ResponseEntity.created(location).build();
   }
 }

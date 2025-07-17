@@ -17,11 +17,14 @@ public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
-  public void createUser(UserCreateRequest request) {
+  public long createUser(UserCreateRequest request) {
     String rawPassword = request.password();
     String encodedPassword = passwordEncoder.encode(rawPassword);
 
-    userRepository.save(request.toEntity(encodedPassword));
+    User user = userRepository.save(request.toEntity(encodedPassword));
+    return user.getId();
+  }
+
   @Transactional(readOnly = true)
   public UserResponse getUser(Long id) {
     User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
