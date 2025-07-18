@@ -3,6 +3,7 @@ package com.fortunehub.luckylog.dto.response;
 import com.fortunehub.luckylog.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "사용자 정보 조회 결과를 담는 응답")
 public record UserResponse(
     @Schema(description = "사용자 로그인 이메일", example = "chrome123@naver.com")
     String email,

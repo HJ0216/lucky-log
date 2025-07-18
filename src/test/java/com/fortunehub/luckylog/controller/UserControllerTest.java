@@ -1,7 +1,6 @@
 package com.fortunehub.luckylog.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -14,8 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.config.SecurityConfig;
 import com.fortunehub.luckylog.dto.request.UserCreateRequest;
 import com.fortunehub.luckylog.dto.response.UserResponse;
+import com.fortunehub.luckylog.exception.GlobalExceptionHandler;
 import com.fortunehub.luckylog.service.UserService;
-import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(UserController.class)
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, GlobalExceptionHandler.class})
 class UserControllerTest {
 
   @Autowired
@@ -56,7 +55,7 @@ class UserControllerTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request))) // request 객체를 JSON 문자열로 바꿔서 전송
            .andDo(print()) // 요청/응답 결과를 콘솔에 출력
-           .andExpect(status().isOk()); // HTTP 상태 코드가 200 OK인지 확인
+           .andExpect(status().isCreated()); // HTTP 상태 코드가 200 OK인지 확인
   }
 
   @Test
@@ -72,7 +71,9 @@ class UserControllerTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
         .andDo(print())
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isBadRequest())
+         .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+         .andExpect(jsonPath("$.message").value(containsString("이메일은 필수입니다.")));
   }
 
   @Test
@@ -90,7 +91,10 @@ class UserControllerTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
-           .andExpect(status().isBadRequest());
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+           .andExpect(jsonPath("$.message").value(containsString("올바른 이메일 형식이 아닙니다.")));
+
   }
 
   @Test
@@ -108,7 +112,9 @@ class UserControllerTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
-           .andExpect(status().isBadRequest());
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+           .andExpect(jsonPath("$.message").value(containsString("이메일은 50자를 초과할 수 없습니다.")));
   }
 
   @Test
@@ -126,7 +132,11 @@ class UserControllerTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
-           .andExpect(status().isBadRequest());
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+           .andExpect(jsonPath("$.message").value(containsString("닉네임은 필수입니다.")))
+           .andExpect(jsonPath("$.message").value(containsString("닉네임은 2자 이상 8자 이하여야 합니다.")));
+
   }
 
   @Test
@@ -144,7 +154,9 @@ class UserControllerTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
-           .andExpect(status().isBadRequest());
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+           .andExpect(jsonPath("$.message").value(containsString("닉네임은 2자 이상 8자 이하여야 합니다.")));
   }
 
   @Test
@@ -162,7 +174,9 @@ class UserControllerTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
-           .andExpect(status().isBadRequest());
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+           .andExpect(jsonPath("$.message").value(containsString("닉네임은 2자 이상 8자 이하여야 합니다.")));
   }
 
   @Test
@@ -172,7 +186,7 @@ class UserControllerTest {
     UserCreateRequest request = new UserCreateRequest(
         "test@example.com",
         "testuser",
-        "" // 빈 비밀번호
+        ""
     );
 
     // when & then
@@ -180,7 +194,10 @@ class UserControllerTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
-           .andExpect(status().isBadRequest());
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+           .andExpect(jsonPath("$.message").value(containsString("비밀번호는 필수입니다.")))
+           .andExpect(jsonPath("$.message").value(containsString("비밀번호는 8자 이상 20자 이하여야 합니다.")));
   }
 
   @Test
@@ -198,7 +215,9 @@ class UserControllerTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
-           .andExpect(status().isBadRequest());
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+           .andExpect(jsonPath("$.message").value("password: 비밀번호는 8자 이상 20자 이하여야 합니다."));
   }
   
   @Test
@@ -228,16 +247,13 @@ class UserControllerTest {
     // given
     Long userId = 100L;
     when(userService.getUser(userId))
-        .thenThrow(new IllegalArgumentException());
+        .thenThrow(new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
     // when & then
-    Exception exception = assertThrows(ServletException.class, () -> {
       mockMvc.perform(get("/api/v1/user/{id}", userId))
-             .andDo(print());
-    });
-
-    assertThat(exception.getCause()).isInstanceOf(IllegalArgumentException.class);
+             .andDo(print())
+             .andExpect(status().isBadRequest())
+             .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
+             .andExpect(jsonPath("$.message").value("존재하지 않는 사용자입니다."));
   }
-
-
 }
