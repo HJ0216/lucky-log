@@ -26,6 +26,11 @@ public class UserService {
   }
 
   @Transactional(readOnly = true)
+  public boolean isEmailAvailable(String email) {
+    return !userRepository.existsByEmail(email);
+  }
+
+  @Transactional(readOnly = true)
   public UserResponse getUser(Long id) {
     User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     return UserResponse.from(user);
