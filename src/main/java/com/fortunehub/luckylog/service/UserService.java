@@ -6,6 +6,7 @@ import com.fortunehub.luckylog.dto.request.UserNicknameUpdateRequest;
 import com.fortunehub.luckylog.dto.request.UserProfileImageUpdateRequest;
 import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,13 @@ public class UserService {
     return UserResponse.from(user);
   }
 
+  public List<UserResponse> getAllUsers() {
+    List<User> users = userRepository.findAll();
+    return users.stream()
+                .map(UserResponse::from)
+                .toList();
+  }
+
   public UserResponse updateNickname(Long id, UserNicknameUpdateRequest request) {
     User user = userRepository.findById((id)).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
@@ -58,4 +66,5 @@ public class UserService {
     User user = userRepository.findById((id)).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     user.updateIsActive(false);
   }
+
 }

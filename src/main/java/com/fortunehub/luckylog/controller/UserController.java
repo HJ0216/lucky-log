@@ -9,6 +9,7 @@ import com.fortunehub.luckylog.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,12 @@ public class UserController {
   public ResponseEntity<UserResponse> getUser(@PathVariable Long id){
     UserResponse userResponse = userService.getUser(id);
     return ResponseEntity.ok(userResponse);
+  }
+
+  @GetMapping("")
+  public ResponseEntity<List<UserResponse>> getAllUsers(){
+    List<UserResponse> users = userService.getAllUsers();
+    return ResponseEntity.ok(users);
   }
 
   @GetMapping("/check-email") // GET /api/v1/users/check-email?email=:email

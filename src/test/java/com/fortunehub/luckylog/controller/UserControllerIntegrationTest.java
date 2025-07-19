@@ -1,7 +1,10 @@
 package com.fortunehub.luckylog.controller;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -18,6 +21,8 @@ import com.fortunehub.luckylog.dto.request.UserNicknameUpdateRequest;
 import com.fortunehub.luckylog.dto.request.UserProfileImageUpdateRequest;
 import com.fortunehub.luckylog.repository.UserRepository;
 import com.fortunehub.luckylog.service.UserService;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -485,4 +490,63 @@ class UserControllerIntegrationTest {
            .andExpect(jsonPath("$.message").value("존재하지 않는 회원입니다."));
   }
   
+  
+  // ========== 모든 회원 조회 API 테스트 ==========
+  @Test
+  @DisplayName("모든 사용자 조회 - 성공")
+  void getAllUsers_Success_ReturnsUserList() throws Exception {
+    // given
+    User user1 = new User("user1@email.com", "user1", "password123");
+    User user2 = new User("user2@email.com", "user2", "password456");
+    User user3 = new User("user3@email.com", "user3", "password789");
+
+    userRepository.saveAll(List.of(user1, user2, user3));
+
+    // when & then
+    mockMvc.perform(get(BASE_URL))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+           .andExpect(jsonPath("$", hasSize(3)))
+           .andExpect(jsonPath("$[0].email", is("user1@email.com")))
+           .andExpect(jsonPath("$[0].nickname", is("user1")))
+           .andExpect(jsonPath("$[1].email", is("user2@email.com")))
+           .andExpect(jsonPath("$[1].nickname", is("user2")))
+           .andExpect(jsonPath("$[2].email", is("user3@email.com")))
+           .andExpect(jsonPath("$[2].nickname", is("user3")));
+  }
+
+  @Test
+  @DisplayName("모든 사용자 조회 - 빈 목록")
+  void getAllUsers_EmptyList_ReturnsEmptyArray() throws Exception {
+    // given - 데이터베이스가 비어있는 상태
+
+    // when & then
+    mockMvc.perform(get(BASE_URL))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+           .andExpect(jsonPath("$", hasSize(0)))
+           .andExpect(jsonPath("$", is(emptyList())));
+  }
+
+  @Test
+  @DisplayName("모든 사용자 조회 - 대량 데이터")
+  void getAllUsers_LargeDataSet_ReturnsAllUsers() throws Exception {
+    // given - 100명의 사용자 생성
+    List<User> users = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      users.add(new User("user" + i + "@email.com", "user" + i, "password"));
+    }
+    userRepository.saveAll(users);
+
+    // when & then
+    mockMvc.perform(get(BASE_URL))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+           .andExpect(jsonPath("$", hasSize(100)))
+           .andExpect(jsonPath("$[0].email", is("user1@email.com")))
+           .andExpect(jsonPath("$[99].email", is("user100@email.com")));
+  }
 }
