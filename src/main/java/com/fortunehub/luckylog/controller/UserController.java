@@ -2,6 +2,7 @@ package com.fortunehub.luckylog.controller;
 
 import com.fortunehub.luckylog.dto.request.UserCreateRequest;
 import com.fortunehub.luckylog.dto.request.UserNicknameUpdateRequest;
+import com.fortunehub.luckylog.dto.request.UserProfileImageUpdateRequest;
 import com.fortunehub.luckylog.dto.response.EmailCheckResponse;
 import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.service.UserService;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -59,8 +59,17 @@ public class UserController {
   @PatchMapping("/user/{id}/nickname") // PATCH /api/v1/user/1/nickname
   public ResponseEntity<UserResponse> updateNickname(
       @PathVariable Long id,
-      @RequestBody UserNicknameUpdateRequest request){
+      @Valid @RequestBody UserNicknameUpdateRequest request){
     UserResponse response = userService.updateNickname(id, request);
     return ResponseEntity.ok(response);
+  }
+
+  @PatchMapping("user/{id}/profile-image") // PATCH /api/v1/user/1/profile-image
+  public ResponseEntity<Void> updateProfileImage(
+      @PathVariable Long id,
+      @Valid @RequestBody UserProfileImageUpdateRequest request
+  ){
+    userService.updateProfileImage(id, request);
+    return ResponseEntity.noContent().build();
   }
 }

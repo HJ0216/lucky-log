@@ -29,18 +29,25 @@ public class User extends BaseTimeEntity {
   @Column(nullable = false)
   private String password;
 
+  @Column(length = 500)
+  private String profileImageUrl;
+
   @Column(nullable = false)
   private boolean isActive;
 
   public User(String email, String nickname, String password) {
     this.email = email;
-    this.nickname = nickname;
     this.password = password;
+    this.nickname = nickname;
     this.isActive = true;
   }
 
   // 메서드
   public void updateNickname(String nickname) {
     this.nickname = nickname;
+  }
+
+  public void updateProfileImage(String url) {
+    this.profileImageUrl = url;
   }
 }

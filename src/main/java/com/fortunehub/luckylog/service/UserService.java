@@ -3,6 +3,7 @@ package com.fortunehub.luckylog.service;
 import com.fortunehub.luckylog.domain.User;
 import com.fortunehub.luckylog.dto.request.UserCreateRequest;
 import com.fortunehub.luckylog.dto.request.UserNicknameUpdateRequest;
+import com.fortunehub.luckylog.dto.request.UserProfileImageUpdateRequest;
 import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +47,10 @@ public class UserService {
 
     user.updateNickname(request.nickname());
     return UserResponse.from(user);
+  }
+
+  public void updateProfileImage(Long id, UserProfileImageUpdateRequest request) {
+    User user = userRepository.findById((id)).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    user.updateProfileImage(request.url());
   }
 }

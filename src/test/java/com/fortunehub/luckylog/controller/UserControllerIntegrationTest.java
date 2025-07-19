@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.domain.User;
 import com.fortunehub.luckylog.dto.request.UserCreateRequest;
 import com.fortunehub.luckylog.dto.request.UserNicknameUpdateRequest;
+import com.fortunehub.luckylog.dto.request.UserProfileImageUpdateRequest;
 import com.fortunehub.luckylog.repository.UserRepository;
 import com.fortunehub.luckylog.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -385,4 +386,67 @@ class UserControllerIntegrationTest {
            .andExpect(jsonPath("$.message").value("요청 본문이 누락되었거나 형식이 올바르지 않습니다."));
   }
 
+
+  // ========== 프로필 이미지 변경 API 테스트 ==========
+  @Test
+  @DisplayName("프로필 이미지 변경 - 성공")
+  void updateProfileImage_ValidImage_ReturnsNoContent() throws Exception{
+    // given
+    User user = new User("test@email.com", "test", "password123");
+    User savedUser = userRepository.save(user);
+
+    String url = "https://example.com/images/profile/test-user.jpg";
+    UserProfileImageUpdateRequest request = new UserProfileImageUpdateRequest(url);
+
+    // when & then
+    mockMvc.perform(patch(BASE_URL + "/{id}/profile-image", savedUser.getId())
+               .contentType(MediaType.APPLICATION_JSON)
+               .content(objectMapper.writeValueAsString(request)))
+           .andDo(print())
+           .andExpect(status().isNoContent());
+
+    // 실제 DB에서 변경되었는지 확인
+    User updatedUser = userRepository.findById(savedUser.getId()).orElseThrow();
+    assertThat(updatedUser.getProfileImageUrl()).isEqualTo(url);
+  }
+
+  @Test
+  @DisplayName("프로필 이미지 제거 - 성공")
+  void updateProfileImage_NullImage_RemovesImage() throws Exception {
+    // given - 기존에 프로필 이미지가 있는 사용자
+    User user = new User("test@email.com", "test", "password123");
+    User savedUser = userRepository.save(user);
+
+    UserProfileImageUpdateRequest request = new UserProfileImageUpdateRequest(null);
+
+    // when & then
+    mockMvc.perform(patch(BASE_URL + "/{id}/profile-image", savedUser.getId())
+               .contentType(MediaType.APPLICATION_JSON)
+               .content(objectMapper.writeValueAsString(request)))
+           .andDo(print())
+           .andExpect(status().isNoContent());
+
+    // 실제 DB에서 제거되었는지 확인
+    User updatedUser = userRepository.findById(savedUser.getId()).orElseThrow();
+    assertThat(updatedUser.getProfileImageUrl()).isNull();
+  }
+
+  @Test
+  @DisplayName("프로필 이미지 변경 - 존재하지 않는 회원")
+  void updateProfileImage_UserNotFound_ReturnsNotFound() throws Exception {
+    // given
+    Long userId = 999L;
+    UserProfileImageUpdateRequest request = new UserProfileImageUpdateRequest(
+        "https://example.com/images/profile/test.jpg"
+    );
+
+    // when & then
+    mockMvc.perform(patch(BASE_URL + "/{id}/profile-image", userId)
+               .contentType(MediaType.APPLICATION_JSON)
+               .content(objectMapper.writeValueAsString(request)))
+           .andDo(print())
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
+           .andExpect(jsonPath("$.message").value("존재하지 않는 회원입니다."));
+  }
 }
