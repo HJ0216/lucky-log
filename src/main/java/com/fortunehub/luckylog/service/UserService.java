@@ -32,7 +32,7 @@ public class UserService {
 
   @Transactional(readOnly = true)
   public UserResponse getUser(Long id) {
-    User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+    User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     return UserResponse.from(user);
   }
 }
