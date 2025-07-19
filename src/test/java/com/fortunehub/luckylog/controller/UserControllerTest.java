@@ -30,6 +30,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @Import({SecurityConfig.class, GlobalExceptionHandler.class})
 class UserControllerTest {
 
+  private static final String BASE_URL = "/api/v1/user";
+
   @Autowired
   private MockMvc mockMvc;
   // perform() 메서드를 통해 가상의 HTTP 요청을 보냄
@@ -53,7 +55,7 @@ class UserControllerTest {
     when(userService.isEmailAvailable(email)).thenReturn(true);
 
     // then
-    mockMvc.perform((get("/api/v1/user/check-email")
+    mockMvc.perform((get(BASE_URL + "/check-email")
                .param("email", email)))
            .andDo(print())
            .andExpect(status().isOk())
@@ -71,7 +73,7 @@ class UserControllerTest {
     when(userService.isEmailAvailable(email)).thenReturn(false);
 
     // then
-    mockMvc.perform((get("/api/v1/user/check-email")
+    mockMvc.perform((get(BASE_URL + "/check-email")
                .param("email", email)))
            .andDo(print())
            .andExpect(status().isConflict())
@@ -82,7 +84,7 @@ class UserControllerTest {
   @Test
   @DisplayName("이메일 중복 검사 - 파라미터 누락")
   void checkEmailDuplicate_MissingEmail_ReturnsBadRequest() throws Exception {
-    mockMvc.perform(get("/api/v1/user/check-email"))
+    mockMvc.perform(get(BASE_URL + "/check-email"))
            .andDo(print())
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.code").value("MISSING_REQUIRED_PARAMETER"))
@@ -102,7 +104,7 @@ class UserControllerTest {
     );
 
     // when & then
-    mockMvc.perform(post("/api/v1/user")
+    mockMvc.perform(post(BASE_URL)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request))) // request 객체를 JSON 문자열로 바꿔서 전송
            .andDo(print()) // 요청/응답 결과를 콘솔에 출력
@@ -119,7 +121,7 @@ class UserControllerTest {
         "password123"
     );
 
-    mockMvc.perform(post("/api/v1/user")
+    mockMvc.perform(post(BASE_URL)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -139,7 +141,7 @@ class UserControllerTest {
     );
 
     // when & then
-    mockMvc.perform(post("/api/v1/user")
+    mockMvc.perform(post(BASE_URL)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -160,7 +162,7 @@ class UserControllerTest {
     );
 
     // when & then
-    mockMvc.perform(post("/api/v1/user")
+    mockMvc.perform(post(BASE_URL)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -180,7 +182,7 @@ class UserControllerTest {
     );
 
     // when & then
-    mockMvc.perform(post("/api/v1/user")
+    mockMvc.perform(post(BASE_URL)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -202,7 +204,7 @@ class UserControllerTest {
     );
 
     // when & then
-    mockMvc.perform(post("/api/v1/user")
+    mockMvc.perform(post(BASE_URL)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -222,7 +224,7 @@ class UserControllerTest {
     );
 
     // when & then
-    mockMvc.perform(post("/api/v1/user")
+    mockMvc.perform(post(BASE_URL)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -242,7 +244,7 @@ class UserControllerTest {
     );
 
     // when & then
-    mockMvc.perform(post("/api/v1/user")
+    mockMvc.perform(post(BASE_URL)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -263,7 +265,7 @@ class UserControllerTest {
     );
 
     // when & then
-    mockMvc.perform(post("/api/v1/user")
+    mockMvc.perform(post(BASE_URL)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -287,7 +289,7 @@ class UserControllerTest {
     when(userService.getUser(userId)).thenReturn(response);
 
     // when & then
-    mockMvc.perform(get("/api/v1/user/{id}", userId))
+    mockMvc.perform(get(BASE_URL + "/{id}", userId))
            .andDo(print())
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -304,7 +306,7 @@ class UserControllerTest {
         .thenThrow(new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
     // when & then
-    mockMvc.perform(get("/api/v1/user/{id}", userId))
+    mockMvc.perform(get(BASE_URL + "/{id}", userId))
            .andDo(print())
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
@@ -328,7 +330,7 @@ class UserControllerTest {
     when(userService.updateNickname(userId, request)).thenReturn(response);
 
     // then
-    mockMvc.perform(patch("/api/v1/user/{id}/nickname", userId)
+    mockMvc.perform(patch(BASE_URL + "/{id}/nickname", userId)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -352,7 +354,7 @@ class UserControllerTest {
         .thenThrow(new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
     // then
-    mockMvc.perform(patch("/api/v1/user/{id}/nickname", userId)
+    mockMvc.perform(patch(BASE_URL + "/{id}/nickname", userId)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -362,8 +364,8 @@ class UserControllerTest {
   }
 
   @Test
-  @DisplayName("닉네임 변경 - 중복 중복 닉네임")
-  void updateNickname_DuplicateEmail_ReturnsBadRequest() throws Exception{
+  @DisplayName("닉네임 변경 - 중복 닉네임")
+  void updateNickname_DuplicateNickname_ReturnsBadRequest() throws Exception{
     // given
     long userId = 1L;
     String nickname = "duplicy";
@@ -375,7 +377,7 @@ class UserControllerTest {
         .thenThrow(new IllegalArgumentException("이미 사용중인 닉네임입니다."));
 
     // then
-    mockMvc.perform(patch("/api/v1/user/{id}/nickname", userId)
+    mockMvc.perform(patch(BASE_URL + "/{id}/nickname", userId)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -391,7 +393,7 @@ class UserControllerTest {
     long userId = 1L;
 
     // when & then
-    mockMvc.perform(patch("/api/v1/user/{id}/nickname", userId)
+    mockMvc.perform(patch(BASE_URL + "/{id}/nickname", userId)
                .contentType(MediaType.APPLICATION_JSON))
            .andDo(print())
            .andExpect(status().isBadRequest())
