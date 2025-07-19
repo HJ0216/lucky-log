@@ -35,7 +35,7 @@ public class UserController {
     return ResponseEntity.ok(userResponse);
   }
 
-  @GetMapping("/user/check-email")
+  @GetMapping("/user/check-email") // GET /api/v1/user/check-email?email=:email
   public ResponseEntity<EmailCheckResponse> checkEmailDuplicate(@RequestParam String email){
     boolean available = userService.isEmailAvailable(email);
     if (available) {
@@ -56,7 +56,7 @@ public class UserController {
     return ResponseEntity.created(location).build();
   }
 
-  @PatchMapping("/user/{id}/nickname")
+  @PatchMapping("/user/{id}/nickname") // PATCH /api/v1/user/1/nickname
   public ResponseEntity<UserResponse> updateNickname(
       @PathVariable Long id,
       @RequestBody UserNicknameUpdateRequest request){

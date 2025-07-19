@@ -1,7 +1,7 @@
 package com.fortunehub.luckylog.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -11,24 +11,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fortunehub.luckylog.config.SecurityConfig;
+import com.fortunehub.luckylog.domain.User;
 import com.fortunehub.luckylog.dto.request.UserCreateRequest;
 import com.fortunehub.luckylog.dto.request.UserNicknameUpdateRequest;
-import com.fortunehub.luckylog.dto.response.UserResponse;
-import com.fortunehub.luckylog.exception.GlobalExceptionHandler;
+import com.fortunehub.luckylog.repository.UserRepository;
 import com.fortunehub.luckylog.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
-@WebMvcTest(UserController.class)
-@Import({SecurityConfig.class, GlobalExceptionHandler.class})
-class UserControllerTest {
+@SpringBootTest
+@AutoConfigureMockMvc // Bean을 찾을 수 없음
+@Transactional
+class UserControllerIntegrationTest {
 
   private static final String BASE_URL = "/api/v1/user";
 
@@ -36,13 +36,15 @@ class UserControllerTest {
   private MockMvc mockMvc;
   // perform() 메서드를 통해 가상의 HTTP 요청을 보냄
 
-  @MockitoBean // 가짜(mock) 객체
-  private UserService userService;
-  // 컨트롤러가 이 서비스를 호출하더라도 실제 로직이 실행되지 않고, 모킹된 결과만 제공
-
   @Autowired
   private ObjectMapper objectMapper;
   // 자바 객체를 JSON 문자열로 변환 또는 JSON 문자열을 자바 객체로 변환
+
+  @Autowired
+  UserService userService;
+
+  @Autowired
+  UserRepository userRepository;
 
   // ========== 이메일 중복 검사 API 테스트 ==========
   @Test
@@ -51,11 +53,7 @@ class UserControllerTest {
     // given
     String email = "new@email.com";
 
-    // when
-    // Mock 설정 없음 → userService.isEmailAvailable(email) 기본값 false 리턴
-    when(userService.isEmailAvailable(email)).thenReturn(true);
-
-    // then
+    // when & then
     mockMvc.perform((get(BASE_URL + "/check-email")
                .param("email", email)))
            .andDo(print())
@@ -69,13 +67,12 @@ class UserControllerTest {
   void checkEmailDuplicate_DuplicateEmail_ReturnsConflict() throws Exception {
     // given
     String email = "duplicate@email.com";
+    User user = new User(email, "user", "password123");
+    userRepository.save(user);
 
-    // when
-    when(userService.isEmailAvailable(email)).thenReturn(false);
-
-    // then
-    mockMvc.perform((get(BASE_URL + "/check-email")
-               .param("email", email)))
+    // when & then
+    mockMvc.perform(get(BASE_URL + "/check-email")
+               .param("email", email))
            .andDo(print())
            .andExpect(status().isConflict())
            .andExpect(jsonPath("$.available").value(false))
@@ -107,10 +104,14 @@ class UserControllerTest {
     // when & then
     mockMvc.perform(post(BASE_URL)
                .contentType(MediaType.APPLICATION_JSON)
-               .content(objectMapper.writeValueAsString(request))) // request 객체를 JSON 문자열로 바꿔서 전송
-           .andDo(print()) // 요청/응답 결과를 콘솔에 출력
-           // HTTP 상태 코드가 200 OK인지 확인
+               .content(objectMapper.writeValueAsString(request)))
+           .andDo(print())
            .andExpect(status().isCreated());
+
+    // 실제 DB에 저장되었는지 확인
+    User savedUser = userRepository.findByEmail("test@example.com").orElseThrow();
+    assertThat(savedUser.getEmail()).isEqualTo("test@example.com");
+    assertThat(savedUser.getNickname()).isEqualTo("test");
   }
 
   @Test
@@ -149,7 +150,6 @@ class UserControllerTest {
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
            .andExpect(jsonPath("$.message").value(containsString("올바른 이메일 형식이 아닙니다.")));
-
   }
 
   @Test
@@ -191,7 +191,6 @@ class UserControllerTest {
            .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
            .andExpect(jsonPath("$.message").value(containsString("닉네임은 필수입니다.")))
            .andExpect(jsonPath("$.message").value(containsString("닉네임은 2자 이상 8자 이하여야 합니다.")));
-
   }
 
   @Test
@@ -275,110 +274,93 @@ class UserControllerTest {
            .andExpect(jsonPath("$.message").value("password: 비밀번호는 8자 이상 20자 이하여야 합니다."));
   }
 
-  
+
   // ========== 회원 조회 API 테스트 ==========
   @Test
   @DisplayName("회원 조회 - 성공")
-  void getUser_ValidId_ReturnsOk() throws Exception{
+  void getUser_ValidId_ReturnsOk() throws Exception {
     // given
-    long userId = 1L;
-    String email = "test@email.com";
-    String nickname = "text";
-
-    UserResponse response = new UserResponse(email, nickname);
-
-    when(userService.getUser(userId)).thenReturn(response);
+    User user = new User("test@email.com", "test", "password123");
+    User savedUser = userRepository.save(user);
 
     // when & then
-    mockMvc.perform(get(BASE_URL + "/{id}", userId))
+    mockMvc.perform(get(BASE_URL + "/{id}", savedUser.getId()))
            .andDo(print())
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-           .andExpect(jsonPath("$.email").value(email))
-           .andExpect(jsonPath("$.nickname").value(nickname));
+           .andExpect(jsonPath("$.email").value("test@email.com"))
+           .andExpect(jsonPath("$.nickname").value("test"));
   }
 
   @Test
   @DisplayName("회원 조회 - 존재하지 않는 회원")
   void getUser_UserNotFound_ReturnsBadRequest() throws Exception {
     // given
-    Long userId = 100L;
-    when(userService.getUser(userId))
-        .thenThrow(new IllegalArgumentException("존재하지 않는 사용자입니다."));
+    Long nonExistentUserId = 1L;
 
     // when & then
-    mockMvc.perform(get(BASE_URL + "/{id}", userId))
+    mockMvc.perform(get(BASE_URL + "/{id}", nonExistentUserId))
            .andDo(print())
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
-           .andExpect(jsonPath("$.message").value("존재하지 않는 사용자입니다."));
+           .andExpect(jsonPath("$.message").value("존재하지 않는 회원입니다."));
   }
-
 
   // ========== 닉네임 변경 API 테스트 ==========
   @Test
   @DisplayName("닉네임 변경 - 성공")
-  void updateNickname_ValidNickname_ReturnsOk() throws Exception{
+  void updateNickname_ValidNickname_ReturnsOk() throws Exception {
     // given
-    long userId = 1L;
-    String email = "test@email.com";
-    String nickname = "newky";
+    User user = new User("test@email.com", "test", "password123");
+    User savedUser = userRepository.save(user);
 
-    UserNicknameUpdateRequest request = new UserNicknameUpdateRequest("newky");
-    UserResponse response = new UserResponse(email, nickname);
+    UserNicknameUpdateRequest request = new UserNicknameUpdateRequest("test-new");
 
-    // when
-    when(userService.updateNickname(userId, request)).thenReturn(response);
-
-    // then
-    mockMvc.perform(patch(BASE_URL + "/{id}/nickname", userId)
+    // when & then
+    mockMvc.perform(patch(BASE_URL + "/{id}/nickname", savedUser.getId())
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
            .andExpect(status().isOk())
            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-           .andExpect(jsonPath("$.email").value(email))
-           .andExpect(jsonPath("$.nickname").value(nickname));
+           .andExpect(jsonPath("$.email").value("test@email.com"))
+           .andExpect(jsonPath("$.nickname").value("test-new"));
+
+    // 실제 DB에서 변경되었는지 확인
+    User updatedUser = userRepository.findById(savedUser.getId()).orElseThrow();
+    assertThat(updatedUser.getNickname()).isEqualTo("test-new");
   }
 
   @Test
   @DisplayName("닉네임 변경 - 존재하지 않는 회원")
-  void updateNickname_UserNotFound_ReturnsBadRequest() throws Exception{
+  void updateNickname_UserNotFound_ReturnsBadRequest() throws Exception {
     // given
-    long userId = 1L;
-    String nickname = "updaty";
+    Long nonExistentUserId = 1L;
+    UserNicknameUpdateRequest request = new UserNicknameUpdateRequest("test-new");
 
-    UserNicknameUpdateRequest request = new UserNicknameUpdateRequest(nickname);
-
-    // when
-    when(userService.updateNickname(userId, request))
-        .thenThrow(new IllegalArgumentException("존재하지 않는 사용자입니다."));
-
-    // then
-    mockMvc.perform(patch(BASE_URL + "/{id}/nickname", userId)
+    // when & then
+    mockMvc.perform(patch(BASE_URL + "/{id}/nickname", nonExistentUserId)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
-           .andExpect(jsonPath("$.message").value("존재하지 않는 사용자입니다."));
+           .andExpect(jsonPath("$.message").value("존재하지 않는 회원입니다."));
   }
 
   @Test
   @DisplayName("닉네임 변경 - 중복 닉네임")
-  void updateNickname_DuplicateNickname_ReturnsBadRequest() throws Exception{
+  void updateNickname_DuplicateNickname_ReturnsBadRequest() throws Exception {
     // given
-    long userId = 1L;
-    String nickname = "duplicy";
+    User user1 = new User("test@email.com", "test", "password123");
+    User user2 = new User("test2@email.com", "test2", "password123");
+    User savedUser1 = userRepository.save(user1);
+    userRepository.save(user2);
 
-    UserNicknameUpdateRequest request = new UserNicknameUpdateRequest(nickname);
+    UserNicknameUpdateRequest request = new UserNicknameUpdateRequest("test");
 
-    // when
-    when(userService.updateNickname(userId, request))
-        .thenThrow(new IllegalArgumentException("이미 사용중인 닉네임입니다."));
-
-    // then
-    mockMvc.perform(patch(BASE_URL + "/{id}/nickname", userId)
+    // when & then
+    mockMvc.perform(patch(BASE_URL + "/{id}/nickname", savedUser1.getId())
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andDo(print())
@@ -391,10 +373,11 @@ class UserControllerTest {
   @DisplayName("닉네임 변경 - RequestBody 누락")
   void updateNickname_MissingRequestBody_ReturnsBadRequest() throws Exception {
     // given
-    long userId = 1L;
+    User user = new User("test@email.com", "test", "password123");
+    User savedUser = userRepository.save(user);
 
     // when & then
-    mockMvc.perform(patch(BASE_URL + "/{id}/nickname", userId)
+    mockMvc.perform(patch(BASE_URL + "/{id}/nickname", savedUser.getId())
                .contentType(MediaType.APPLICATION_JSON))
            .andDo(print())
            .andExpect(status().isBadRequest())
