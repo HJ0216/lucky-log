@@ -50,4 +50,8 @@ public class User extends BaseTimeEntity {
   public void updateProfileImage(String url) {
     this.profileImageUrl = url;
   }
+
+  public void updateIsActive(boolean isActive) {
+    this.isActive = isActive;
+  }
 }

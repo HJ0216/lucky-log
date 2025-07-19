@@ -2,6 +2,7 @@ package com.fortunehub.luckylog.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -31,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class UserControllerIntegrationTest {
 
-  private static final String BASE_URL = "/api/v1/user";
+  private static final String BASE_URL = "/api/v1/users";
 
   @Autowired
   private MockMvc mockMvc;
@@ -433,7 +434,7 @@ class UserControllerIntegrationTest {
 
   @Test
   @DisplayName("프로필 이미지 변경 - 존재하지 않는 회원")
-  void updateProfileImage_UserNotFound_ReturnsNotFound() throws Exception {
+  void updateProfileImage_UserNotFound_ReturnsBadRequest() throws Exception {
     // given
     Long userId = 999L;
     UserProfileImageUpdateRequest request = new UserProfileImageUpdateRequest(
@@ -449,4 +450,39 @@ class UserControllerIntegrationTest {
            .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
            .andExpect(jsonPath("$.message").value("존재하지 않는 회원입니다."));
   }
+
+
+  // ========== 회원 삭제 API 테스트 ==========
+  @Test
+  @DisplayName("사용자 삭제 - 소프트 삭제 확인")
+  void deleteUser_SoftDelete_MarksAsInactive() throws Exception {
+    // given
+    User user = new User("test@email.com", "test", "password123");
+    User savedUser = userRepository.save(user);
+    assertThat(savedUser.isActive()).isTrue(); // 초기에는 활성 상태
+
+    // when
+    mockMvc.perform(delete(BASE_URL + "/{id}", savedUser.getId()))
+           .andDo(print())
+           .andExpect(status().isNoContent());
+
+    // then - 소프트 삭제의 경우 (isActive = false로 변경)
+    User deletedUser = userRepository.findById(savedUser.getId()).orElseThrow();
+    assertThat(deletedUser.isActive()).isFalse();
+  }
+
+  @Test
+  @DisplayName("사용자 삭제 - 존재하지 않는 사용자")
+  void deleteUser_UserNotFound_ReturnsBadRequest() throws Exception {
+    // given
+    Long userId = 999L;
+
+    // when & then
+    mockMvc.perform(delete(BASE_URL + "/{id}", userId))
+           .andDo(print())
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
+           .andExpect(jsonPath("$.message").value("존재하지 않는 회원입니다."));
+  }
+  
 }

@@ -12,6 +12,7 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,20 +23,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Tag(name = "User", description = "User API")
 public class UserController {
 
   private final UserService userService;
 
-  @GetMapping("/user/{id}") // GET /api/user/1
+  @GetMapping("/{id}") // GET /api/users/1
   public ResponseEntity<UserResponse> getUser(@PathVariable Long id){
     UserResponse userResponse = userService.getUser(id);
     return ResponseEntity.ok(userResponse);
   }
 
-  @GetMapping("/user/check-email") // GET /api/v1/user/check-email?email=:email
+  @GetMapping("/check-email") // GET /api/v1/users/check-email?email=:email
   public ResponseEntity<EmailCheckResponse> checkEmailDuplicate(@RequestParam String email){
     boolean available = userService.isEmailAvailable(email);
     if (available) {
@@ -49,14 +50,14 @@ public class UserController {
     }
   }
 
-  @PostMapping("/user") // POST /api/v1/user
+  @PostMapping("") // POST /api/v1/users
   public ResponseEntity<Void> createUser(@Valid @RequestBody UserCreateRequest request){
     long userId = userService.createUser(request);
     URI location = URI.create("/api/v1/user/" + userId);
     return ResponseEntity.created(location).build();
   }
 
-  @PatchMapping("/user/{id}/nickname") // PATCH /api/v1/user/1/nickname
+  @PatchMapping("/{id}/nickname") // PATCH /api/v1/users/1/nickname
   public ResponseEntity<UserResponse> updateNickname(
       @PathVariable Long id,
       @Valid @RequestBody UserNicknameUpdateRequest request){
@@ -64,12 +65,18 @@ public class UserController {
     return ResponseEntity.ok(response);
   }
 
-  @PatchMapping("user/{id}/profile-image") // PATCH /api/v1/user/1/profile-image
+  @PatchMapping("/{id}/profile-image") // PATCH /api/v1/users/1/profile-image
   public ResponseEntity<Void> updateProfileImage(
       @PathVariable Long id,
       @Valid @RequestBody UserProfileImageUpdateRequest request
   ){
     userService.updateProfileImage(id, request);
+    return ResponseEntity.noContent().build();
+  }
+
+  @DeleteMapping("/{id}") // DELETE /api/v1/users/1
+  public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    userService.deleteUser(id);
     return ResponseEntity.noContent().build();
   }
 }

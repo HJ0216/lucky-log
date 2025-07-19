@@ -53,4 +53,9 @@ public class UserService {
     User user = userRepository.findById((id)).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     user.updateProfileImage(request.url());
   }
+
+  public void deleteUser(Long id) {
+    User user = userRepository.findById((id)).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    user.updateIsActive(false);
+  }
 }
