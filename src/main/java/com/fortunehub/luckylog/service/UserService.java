@@ -2,6 +2,7 @@ package com.fortunehub.luckylog.service;
 
 import com.fortunehub.luckylog.domain.User;
 import com.fortunehub.luckylog.dto.request.UserCreateRequest;
+import com.fortunehub.luckylog.dto.request.UserNicknameUpdateRequest;
 import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,17 @@ public class UserService {
   @Transactional(readOnly = true)
   public UserResponse getUser(Long id) {
     User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    return UserResponse.from(user);
+  }
+
+  public UserResponse updateNickname(Long id, UserNicknameUpdateRequest request) {
+    User user = userRepository.findById((id)).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+    if (userRepository.existsByNickname(request.nickname())) {
+      throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
+    }
+
+    user.updateNickname(request.nickname());
     return UserResponse.from(user);
   }
 }

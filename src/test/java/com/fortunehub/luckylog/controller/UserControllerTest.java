@@ -3,6 +3,7 @@ package com.fortunehub.luckylog.controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -12,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.config.SecurityConfig;
 import com.fortunehub.luckylog.dto.request.UserCreateRequest;
+import com.fortunehub.luckylog.dto.request.UserNicknameUpdateRequest;
 import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.exception.GlobalExceptionHandler;
 import com.fortunehub.luckylog.service.UserService;
@@ -308,4 +310,93 @@ class UserControllerTest {
            .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
            .andExpect(jsonPath("$.message").value("존재하지 않는 사용자입니다."));
   }
+
+
+  // ========== 닉네임 변경 API 테스트 ==========
+  @Test
+  @DisplayName("닉네임 변경 - 성공")
+  void updateNickname_ValidNickname_ReturnsOk() throws Exception{
+    // given
+    long userId = 1L;
+    String email = "test@email.com";
+    String nickname = "newky";
+
+    UserNicknameUpdateRequest request = new UserNicknameUpdateRequest("newky");
+    UserResponse response = new UserResponse(email, nickname);
+
+    // when
+    when(userService.updateNickname(userId, request)).thenReturn(response);
+
+    // then
+    mockMvc.perform(patch("/api/v1/user/{id}/nickname", userId)
+               .contentType(MediaType.APPLICATION_JSON)
+               .content(objectMapper.writeValueAsString(request)))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+           .andExpect(jsonPath("$.email").value(email))
+           .andExpect(jsonPath("$.nickname").value(nickname));
+  }
+
+  @Test
+  @DisplayName("닉네임 변경 - 존재하지 않는 회원")
+  void updateNickname_UserNotFound_ReturnsBadRequest() throws Exception{
+    // given
+    long userId = 1L;
+    String nickname = "updaty";
+
+    UserNicknameUpdateRequest request = new UserNicknameUpdateRequest(nickname);
+
+    // when
+    when(userService.updateNickname(userId, request))
+        .thenThrow(new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+    // then
+    mockMvc.perform(patch("/api/v1/user/{id}/nickname", userId)
+               .contentType(MediaType.APPLICATION_JSON)
+               .content(objectMapper.writeValueAsString(request)))
+           .andDo(print())
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
+           .andExpect(jsonPath("$.message").value("존재하지 않는 사용자입니다."));
+  }
+
+  @Test
+  @DisplayName("닉네임 변경 - 중복 중복 닉네임")
+  void updateNickname_DuplicateEmail_ReturnsBadRequest() throws Exception{
+    // given
+    long userId = 1L;
+    String nickname = "duplicy";
+
+    UserNicknameUpdateRequest request = new UserNicknameUpdateRequest(nickname);
+
+    // when
+    when(userService.updateNickname(userId, request))
+        .thenThrow(new IllegalArgumentException("이미 사용중인 닉네임입니다."));
+
+    // then
+    mockMvc.perform(patch("/api/v1/user/{id}/nickname", userId)
+               .contentType(MediaType.APPLICATION_JSON)
+               .content(objectMapper.writeValueAsString(request)))
+           .andDo(print())
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
+           .andExpect(jsonPath("$.message").value("이미 사용중인 닉네임입니다."));
+  }
+
+  @Test
+  @DisplayName("닉네임 변경 - RequestBody 누락")
+  void updateNickname_MissingRequestBody_ReturnsBadRequest() throws Exception {
+    // given
+    long userId = 1L;
+
+    // when & then
+    mockMvc.perform(patch("/api/v1/user/{id}/nickname", userId)
+               .contentType(MediaType.APPLICATION_JSON))
+           .andDo(print())
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("INVALID_REQUEST_BODY"))
+           .andExpect(jsonPath("$.message").value("요청 본문이 누락되었거나 형식이 올바르지 않습니다."));
+  }
+
 }

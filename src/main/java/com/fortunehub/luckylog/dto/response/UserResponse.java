@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record UserResponse(
     @Schema(description = "사용자 로그인 이메일", example = "chrome123@naver.com")
     String email,
-    @Schema(description = "서비스에서 사용할 별칭", example = "nick")
+    @Schema(description = "사용자 닉네임", example = "nick")
     String nickname) {
 
   public static UserResponse from(User user) {

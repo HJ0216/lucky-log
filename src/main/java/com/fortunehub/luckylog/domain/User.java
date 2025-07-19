@@ -6,9 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,11 +32,15 @@ public class User extends BaseTimeEntity {
   @Column(nullable = false)
   private boolean isActive;
 
-  // 메서드
   public User(String email, String nickname, String password) {
     this.email = email;
     this.nickname = nickname;
     this.password = password;
     this.isActive = true;
+  }
+
+  // 메서드
+  public void updateNickname(String nickname) {
+    this.nickname = nickname;
   }
 }
