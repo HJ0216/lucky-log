@@ -1,0 +1,158 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #00509d;
+    color: #ffffff;
+}
+
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+    justify-content: center;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-tab-input {
+    display: none;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 100px;
+    margin-bottom: 20px;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.nav-btn:hover {
+  color: #ffffff;
+}
+
+#login-tab:checked ~ .nav-buttons label[for="login-tab"],
+#signup-tab:checked ~ .nav-buttons label[for="signup-tab"] {
+    color: #ffffff;
+}
+
+#login-tab:checked ~ .sub-container .login-form {
+    display: flex;
+}
+
+#login-tab:checked ~ .sub-container .signup-form {
+    display: none;
+}
+
+#login-tab:checked ~ .sub-container .forgot-password {
+    display: inline-block;
+}
+
+#signup-tab:checked ~ .sub-container h2::before {
+    content: "Sign Up";
+}
+
+#signup-tab:checked ~ .sub-container .login-form {
+    display: none;
+}
+
+#signup-tab:checked ~ .sub-container .signup-form {
+    display: flex;
+}
+
+#signup-tab:checked ~ .sub-container .forgot-password {
+    display: none;
+}
+
+.sub-container {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 60px 40px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    min-height: 350px;
+    text-align: center;
+}
+
+.sub-container h2 {
+    margin-bottom: 30px;
+}
+
+.sub-container h2::before {
+  content: "Log In";
+}
+
+.login-form, .signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    padding: 15px;
+}
+
+.input-icon {
+    margin-right: 10px;
+}
+
+.input-group input {
+    background: none;
+    border: none;
+    color: #ffffff;
+    outline: none;
+}
+
+.input-group input::placeholder {
+    color: #888;
+}
+
+.submit-btn {
+    background: #fdc500;
+    color: #333;
+    border: none;
+    padding: 15px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s;
+}
+
+.submit-btn:hover {
+    background: #ffd500;
+}
+
+.forgot-password {
+    color: #888;
+    text-decoration: none;
+    margin-top: 15px;
+    display: inline-block;
+}
+
+.forgot-password:hover {
+    color: #ffffff;
+}
