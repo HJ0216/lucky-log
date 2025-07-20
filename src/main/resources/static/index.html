@@ -41,17 +41,26 @@
                 <form class="signup-form" id="signup-form">
                     <div class="input-group">
                         <span class="input-icon">🏷️</span>
-                        <input type="text" placeholder="Your Nickname" required>
+                        <input id="nickname-input" type="text" placeholder="Your Nickname" required>
+                        <span id="nickname-validation" class="validation-icon"></span>
                     </div>
 
                     <div class="input-group">
                         <span class="input-icon">✉️</span>
-                        <input type="email" placeholder="Your Email" required>
+                        <input id="signup-email" type="email" placeholder="Your Email" required>
+                        <span id="email-validation" class="validation-icon"></span>
                     </div>
 
                     <div class="input-group">
                         <span class="input-icon">🔒</span>
-                        <input type="password" placeholder="Your Password" required>
+                        <input id="signup-password" type="password" placeholder="Your Password" required>
+                        <span id="password-validation" class="validation-icon"></span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <span class="input-icon">🔒</span>
+                        <input id="password-confirm" type="password" placeholder="Confirm Password" required>
+                        <span id="password-confirm-validation" class="validation-icon"></span>
                     </div>
                     
                     <button type="submit" class="submit-btn">SUBMIT</button>
@@ -60,5 +69,7 @@
             </div>
         </main>
     </div>
+
+    <script defer src="./js/script.js"></script>
 </body>
 </html>

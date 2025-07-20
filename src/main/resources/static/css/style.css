@@ -87,7 +87,7 @@ main {
     padding: 60px 40px;
     border-radius: 10px;
     width: 100%;
-    max-width: 400px;
+    max-width: 300px;
     min-height: 350px;
     text-align: center;
 }
@@ -112,22 +112,24 @@ main {
     align-items: center;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 6px;
-    padding: 15px;
-}
-
-.input-icon {
-    margin-right: 10px;
+    padding: 10px 10px;
+    gap: 5px;
 }
 
 .input-group input {
-    background: none;
-    border: none;
-    color: #ffffff;
-    outline: none;
+  flex: 1;
+  background: none;
+  border: none;
+  color: #ffffff;
+  outline: none;
 }
 
 .input-group input::placeholder {
     color: #888;
+}
+
+.validation-icon {
+  width: 20px;
 }
 
 .submit-btn {
@@ -138,7 +140,6 @@ main {
     border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
-    margin-top: 20px;
     transition: background 0.3s;
 }
 
@@ -149,7 +150,7 @@ main {
 .forgot-password {
     color: #888;
     text-decoration: none;
-    margin-top: 15px;
+    margin-top: 25px;
     display: inline-block;
 }
 
