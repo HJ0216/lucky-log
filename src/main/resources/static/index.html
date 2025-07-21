@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUCKY LOG</title>
+    <link href="./css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="logo">LUCKY LOG</h1>
+
+        <main>
+            <input type="radio" name="form-tab" id="login-tab" class="form-tab-input" checked>
+            <input type="radio" name="form-tab" id="signup-tab" class="form-tab-input">
+
+            <div class="nav-buttons">
+                <label for="login-tab" class="nav-btn">LOG IN</label>
+                <label for="signup-tab" class="nav-btn">SIGN UP</label>
+            </div>
+
+            <div class="sub-container">
+                <h2></h2>
+
+                <!-- Login Form -->
+                <form class="login-form" id="login-form">
+                    <div class="input-group">
+                        <span class="input-icon">✉️</span>
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" placeholder="Your Password" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">👉 가보자고 🎟️</button>
+                </form>
+
+                <!-- Signup Form -->
+                <form class="signup-form" id="signup-form">
+                    <div class="input-group">
+                        <span class="input-icon">🏷️</span>
+                        <input id="nickname-input" type="text" placeholder="Your Nickname" required>
+                        <span id="nickname-validation" class="validation-icon"></span>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-icon">✉️</span>
+                        <input id="signup-email" type="email" placeholder="Your Email" required>
+                        <span id="email-validation" class="validation-icon"></span>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-icon">🔒</span>
+                        <input id="signup-password" type="password" placeholder="Your Password" required>
+                        <span id="password-validation" class="validation-icon"></span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <span class="input-icon">🔒</span>
+                        <input id="password-confirm" type="password" placeholder="Confirm Password" required>
+                        <span id="password-confirm-validation" class="validation-icon"></span>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">📝 가보자고 ✨</button>
+                </form>
+                <a href="#" class="forgot-password">🔑 임시 비밀번호 발급 받기 💌</a>
+            </div>
+        </main>
+    </div>
+
+    <script defer src="./js/script.js"></script>
+</body>
+</html>
