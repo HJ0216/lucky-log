@@ -31,20 +31,20 @@ public class UserController {
 
   private final UserService userService;
 
-  @GetMapping("/{id}") // GET /api/users/1
-  public ResponseEntity<UserResponse> getUser(@PathVariable Long id){
+  @GetMapping("/{id}") // GET /api/v1/users/1
+  public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
     UserResponse userResponse = userService.getUser(id);
     return ResponseEntity.ok(userResponse);
   }
 
-  @GetMapping("")
-  public ResponseEntity<List<UserResponse>> getAllUsers(){
+  @GetMapping("") // GET /api/v1/users
+  public ResponseEntity<List<UserResponse>> getAllUsers() {
     List<UserResponse> users = userService.getAllUsers();
     return ResponseEntity.ok(users);
   }
 
   @GetMapping("/check-email") // GET /api/v1/users/check-email?email=:email
-  public ResponseEntity<EmailCheckResponse> checkEmailDuplicate(@RequestParam String email){
+  public ResponseEntity<EmailCheckResponse> checkEmailDuplicate(@RequestParam String email) {
     boolean available = userService.isEmailAvailable(email);
     if (available) {
       return ResponseEntity.ok(
@@ -58,7 +58,7 @@ public class UserController {
   }
 
   @PostMapping("") // POST /api/v1/users
-  public ResponseEntity<Void> createUser(@Valid @RequestBody UserCreateRequest request){
+  public ResponseEntity<Void> createUser(@Valid @RequestBody UserCreateRequest request) {
     long userId = userService.createUser(request);
     URI location = URI.create("/api/v1/user/" + userId);
     return ResponseEntity.created(location).build();
@@ -67,7 +67,7 @@ public class UserController {
   @PatchMapping("/{id}/nickname") // PATCH /api/v1/users/1/nickname
   public ResponseEntity<UserResponse> updateNickname(
       @PathVariable Long id,
-      @Valid @RequestBody UserNicknameUpdateRequest request){
+      @Valid @RequestBody UserNicknameUpdateRequest request) {
     UserResponse response = userService.updateNickname(id, request);
     return ResponseEntity.ok(response);
   }
@@ -76,7 +76,7 @@ public class UserController {
   public ResponseEntity<Void> updateProfileImage(
       @PathVariable Long id,
       @Valid @RequestBody UserProfileImageUpdateRequest request
-  ){
+  ) {
     userService.updateProfileImage(id, request);
     return ResponseEntity.noContent().build();
   }
@@ -86,4 +86,5 @@ public class UserController {
     userService.deleteUser(id);
     return ResponseEntity.noContent().build();
   }
+  
 }

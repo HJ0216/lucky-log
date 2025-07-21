@@ -87,8 +87,9 @@ main {
     padding: 60px 40px;
     border-radius: 10px;
     width: 100%;
-    max-width: 300px;
-    min-height: 350px;
+    max-width: 280px;
+    min-height: 360px;
+    max-height: 360px;
     text-align: center;
 }
 
