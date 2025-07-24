@@ -23,7 +23,7 @@ class UserServiceTest {
 
   @Test
   @DisplayName("회원 가입 - 성공")
-  void createUser_ValidRequest_ReturnsUserId() throws Exception {
+  void createUser_ValidRequest_ReturnsUserId() {
     // given
     UserCreateRequest request = new UserCreateRequest(
         "test@example.com",
@@ -42,7 +42,7 @@ class UserServiceTest {
 
   @Test
   @DisplayName("이메일 중복 검사 - 사용 가능")
-  void isEmailAvailable_NewEmail_ReturnsTrue() throws Exception {
+  void isEmailAvailable_NewEmail_ReturnsTrue() {
     // given
     String email = "new@example.com";
 
@@ -55,7 +55,7 @@ class UserServiceTest {
 
   @Test
   @DisplayName("이메일 중복 검사 - 사용 불가능")
-  void isEmailAvailable_DuplicateEmail_ReturnsFalse() throws Exception {
+  void isEmailAvailable_DuplicateEmail_ReturnsFalse() {
     // given
     String email = "test@example.com";
     UserCreateRequest request = new UserCreateRequest(
