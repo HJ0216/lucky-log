@@ -1,15 +1,19 @@
 package com.fortunehub.luckylog.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.fortunehub.luckylog.domain.User;
 import com.fortunehub.luckylog.dto.request.LoginRequest;
+import com.fortunehub.luckylog.dto.request.UserCreateRequest;
 import com.fortunehub.luckylog.dto.response.LoginResponse;
+import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.repository.UserRepository;
 import com.fortunehub.luckylog.util.JwtUtil;
 import java.util.Optional;
@@ -35,6 +39,65 @@ class AuthServiceTest {
 
   @Mock
   private JwtUtil jwtUtil;
+
+  @Test
+  @DisplayName("회원 가입 - 성공")
+  void createUser_ValidRequest_ReturnsUserId() {
+    // given
+    String email = "test@exampl.com";
+    String nickname = "test";
+    String password = "password123";
+    String encodedPassword = "encodedPassword";
+
+    UserCreateRequest request = new UserCreateRequest(email, nickname, password);
+
+    User user = createUser(email, nickname, encodedPassword);
+
+    when(passwordEncoder.encode("password123")).thenReturn("encodedPassword123");
+    when(userRepository.save(any(User.class))).thenReturn(user);
+
+    // when
+    UserResponse response = authService.createUser(request);
+
+    // then
+    assertThat(response.email()).isEqualTo(request.email());
+    assertThat(response.nickname()).isEqualTo(request.nickname());
+
+    verify(passwordEncoder).encode(password);
+    verify(userRepository).save(any(User.class));
+  }
+
+  @Test
+  @DisplayName("이메일 중복 검사 - 사용 가능")
+  void isEmailAvailable_NewEmail_ReturnsTrue() {
+    // given
+    String email = "new@example.com";
+    when(userRepository.existsByEmail(email)).thenReturn(false);
+
+    // when
+    boolean available = authService.isEmailAvailable(email);
+
+    // then
+    assertThat(available).isTrue();
+
+    verify(userRepository).existsByEmail(email);
+  }
+
+  @Test
+  @DisplayName("이메일 중복 검사 - 사용 불가능")
+  void isEmailAvailable_DuplicateEmail_ReturnsFalse() {
+    // given
+    String email = "test@example.com";
+    when(userRepository.existsByEmail(email)).thenReturn(true);
+
+    // when
+    boolean available = authService.isEmailAvailable(email);
+
+    // then
+    assertThat(available).isFalse();
+
+    verify(userRepository).existsByEmail(email);
+  }
 
   @Test
   @DisplayName("로그인 - 성공")

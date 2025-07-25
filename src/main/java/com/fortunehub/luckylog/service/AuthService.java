@@ -2,7 +2,9 @@ package com.fortunehub.luckylog.service;
 
 import com.fortunehub.luckylog.domain.User;
 import com.fortunehub.luckylog.dto.request.LoginRequest;
+import com.fortunehub.luckylog.dto.request.UserCreateRequest;
 import com.fortunehub.luckylog.dto.response.LoginResponse;
+import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.repository.UserRepository;
 import com.fortunehub.luckylog.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,19 @@ public class AuthService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtUtil jwtUtil;
+
+  @Transactional(readOnly = true)
+  public boolean isEmailAvailable(String email) {
+    return !userRepository.existsByEmail(email);
+  }
+
+  public UserResponse createUser(UserCreateRequest request) {
+    String rawPassword = request.password();
+    String encodedPassword = passwordEncoder.encode(rawPassword);
+
+    User user = userRepository.save(request.toEntity(encodedPassword));
+    return UserResponse.from(user);
+  }
 
   public LoginResponse login(LoginRequest request) {
     User user = userRepository.findByEmail(request.email())
