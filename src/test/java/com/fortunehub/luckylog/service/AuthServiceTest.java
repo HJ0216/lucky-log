@@ -132,13 +132,15 @@ class AuthServiceTest {
     // then
     assertThat(response.accessToken()).isEqualTo(accessToken);
     assertThat(response.tokenType()).isEqualTo("Bearer");
+    assertThat(response.userResponse().id()).isEqualTo(userId);
     assertThat(response.userResponse().email()).isEqualTo(email);
-    assertThat(response.userResponse().nickname()).isEqualTo("test");
+    assertThat(response.userResponse().nickname()).isEqualTo(nickname);
+    assertThat(response.userResponse().profileImageUrl()).isEqualTo(profileImageUrl);
 
-    // verify: 올바른 파라미터로 메서드가 정말 호출되었는지 확인
-    verify(userRepository).findByEmail(email);
-    verify(passwordEncoder).matches(password, encodedPassword);
-    verify(jwtUtil).createToken(email);
+    // then: 올바른 파라미터로 메서드가 정말 호출되었는지 확인
+    then(userRepository).should().findByEmail(email);
+    then(passwordEncoder).should().matches(password, user.getPassword());
+    then(jwtUtil).should().createToken(userId);
   }
 
   @Test

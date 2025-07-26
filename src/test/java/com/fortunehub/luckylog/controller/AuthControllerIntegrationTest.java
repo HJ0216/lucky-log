@@ -297,8 +297,11 @@ class AuthControllerIntegrationTest {
            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
            .andExpect(jsonPath("$.accessToken").exists())
            .andExpect(jsonPath("$.tokenType").value("Bearer"))
+           .andExpect(jsonPath("$.userResponse.id").exists())
            .andExpect(jsonPath("$.userResponse.email").value(email))
-           .andExpect(jsonPath("$.userResponse.nickname").value(nickname));
+           .andExpect(jsonPath("$.userResponse.nickname").value(nickname))
+           .andExpect(jsonPath("$.userResponse.profileImageUrl").isEmpty())
+           .andExpect(jsonPath("$.userResponse.createdAt").isNotEmpty());
   }
 
   @Test
