@@ -36,9 +36,11 @@ import org.springframework.transaction.annotation.Transactional;
 class AuthControllerIntegrationTest {
 
   private static final String BASE_URL = "/api/v1/auth";
-  private final String email = "test@email.com";
-  private final String nickname = "test";
-  private final String password = "password123";
+
+
+  private static final String VALID_EMAIL = "valid@email.com";
+  private static final String VALID_NICKNAME = "john";
+  private static final String VALID_PASSWORD = "password123";
 
   @Autowired
   private MockMvc mockMvc;
@@ -55,9 +57,6 @@ class AuthControllerIntegrationTest {
   @Nested
   @DisplayName("checkEmailDuplicate 메서드는")
   class Describe_checkEmailDuplicate{
-    private static final String UNUSED_EMAIL = "unused@email.com";
-    private static final String EXISTING_EMAIL = "existing@email.com";
-
     @Nested
     @DisplayName("만약 가입하지 않은 이메일이면")
     class Context_with_unused_email{
@@ -65,7 +64,7 @@ class AuthControllerIntegrationTest {
       @DisplayName("사용 가능하다는 응답을 반환한다")
       void it_returns_email_available() throws Exception {
         mockMvc.perform((get(BASE_URL + "/check-email")
-                   .param("email", UNUSED_EMAIL)))
+                   .param("email", VALID_EMAIL)))
                .andDo(print())
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.available").value(true))
@@ -79,11 +78,11 @@ class AuthControllerIntegrationTest {
       @Test
       @DisplayName("사용 불가능하다는 응답을 반환한다")
       void it_returns_duplicate_email_error() throws Exception {
-        User user = createUser(EXISTING_EMAIL, nickname, password);
+        User user = createUser(VALID_EMAIL, VALID_NICKNAME, VALID_PASSWORD);
         userRepository.save(user);
 
         mockMvc.perform(get(BASE_URL + "/check-email")
-                   .param("email", EXISTING_EMAIL))
+                   .param("email", VALID_EMAIL))
                .andDo(print())
                .andExpect(status().isConflict())
                .andExpect(jsonPath("$.available").value(false))
@@ -113,10 +112,6 @@ class AuthControllerIntegrationTest {
   @Nested
   @DisplayName("createUser 메서드는")
   class Describe_createUser{
-    private static final String VALID_EMAIL = "valid@email.com";
-    private static final String VALID_NICKNAME = "johndoe";
-    private static final String VALID_PASSWORD = "password123";
-
     @Nested
     @DisplayName("만약 유효한 가입 요청이면")
     class Context_with_valid_sign_up_request{
@@ -164,7 +159,7 @@ class AuthControllerIntegrationTest {
       @Test
       @DisplayName("이메일이 누락되었다는 응답을 반환한다")
       void it_returns_missing_email_error() throws Exception {
-        UserCreateRequest request = new UserCreateRequest("", nickname, password);
+        UserCreateRequest request = new UserCreateRequest("", VALID_NICKNAME, VALID_PASSWORD);
 
         mockMvc.perform(post(BASE_URL + "/signup")
                    .contentType(MediaType.APPLICATION_JSON)
@@ -180,7 +175,7 @@ class AuthControllerIntegrationTest {
       void it_returns_invalid_email_format_error() throws Exception {
         // given
         String invalidEmail = "invalid-email";
-        UserCreateRequest request = new UserCreateRequest(invalidEmail, nickname, password);
+        UserCreateRequest request = new UserCreateRequest(invalidEmail, VALID_NICKNAME, VALID_PASSWORD);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/signup")
@@ -197,7 +192,7 @@ class AuthControllerIntegrationTest {
       void it_returns_email_too_long_error() throws Exception {
         // given
         String tooLongEmail = "verylongemailaddressthatexceedsfiftycharacters@example.com";
-        UserCreateRequest request = new UserCreateRequest(tooLongEmail, nickname, password);
+        UserCreateRequest request = new UserCreateRequest(tooLongEmail, VALID_NICKNAME, VALID_PASSWORD);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/signup")
@@ -217,7 +212,7 @@ class AuthControllerIntegrationTest {
       @DisplayName("닉네임이 누락되었다는 응답을 반환한다")
       void it_returns_missing_nickname_error() throws Exception {
         // given
-        UserCreateRequest request = new UserCreateRequest(email, "", password);
+        UserCreateRequest request = new UserCreateRequest(VALID_EMAIL, "", VALID_PASSWORD);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/signup")
@@ -235,7 +230,7 @@ class AuthControllerIntegrationTest {
       void it_returns_nickname_too_short_error() throws Exception {
         // given
         String tooShortNickname = "a";
-        UserCreateRequest request = new UserCreateRequest(email, tooShortNickname, password);
+        UserCreateRequest request = new UserCreateRequest(VALID_EMAIL, tooShortNickname, VALID_PASSWORD);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/signup")
@@ -251,8 +246,8 @@ class AuthControllerIntegrationTest {
       @DisplayName("닉네임이 너무 길다는 응답을 반환한다")
       void it_returns_nickname_too_long_error() throws Exception {
         // given
-        String tooLongNickname = "verylongnickname";
-        UserCreateRequest request = new UserCreateRequest(email, tooLongNickname, password);
+        String tooLongNickname = "very_long_nickname";
+        UserCreateRequest request = new UserCreateRequest(VALID_EMAIL, tooLongNickname, VALID_PASSWORD);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/signup")
@@ -273,7 +268,7 @@ class AuthControllerIntegrationTest {
       @DisplayName("비밀번호가 누락되었다는 응답을 반환한다")
       void it_returns_missing_password_error() throws Exception {
         // given
-        UserCreateRequest request = new UserCreateRequest(email, nickname, "");
+        UserCreateRequest request = new UserCreateRequest(VALID_EMAIL, VALID_NICKNAME, "");
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/signup")
@@ -292,7 +287,7 @@ class AuthControllerIntegrationTest {
         // given
         String tooShortPassword = "1234567";
 
-        UserCreateRequest request = new UserCreateRequest(email, nickname, tooShortPassword);
+        UserCreateRequest request = new UserCreateRequest(VALID_EMAIL, VALID_NICKNAME, tooShortPassword);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/signup")
@@ -310,7 +305,6 @@ class AuthControllerIntegrationTest {
   @Nested
   @DisplayName("login 메서드는")
   class Describe_login {
-
     @Nested
     @DisplayName("만약 유효한 로그인 요청이면")
     class Context_with_valid_login_request {
@@ -320,10 +314,10 @@ class AuthControllerIntegrationTest {
       void it_returns_login_success_response() throws Exception {
         // given
         // 사용자 미리 생성 (실제 암호화된 비밀번호로)
-        User user = createUser(email, nickname, passwordEncoder.encode(password));
+        User user = createUser(VALID_EMAIL, VALID_NICKNAME, passwordEncoder.encode(VALID_PASSWORD));
         userRepository.save(user);
 
-        LoginRequest request = new LoginRequest(email, password);
+        LoginRequest request = new LoginRequest(VALID_EMAIL, VALID_PASSWORD);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/login")
@@ -335,8 +329,9 @@ class AuthControllerIntegrationTest {
                .andExpect(jsonPath("$.accessToken").exists())
                .andExpect(jsonPath("$.tokenType").value("Bearer"))
                .andExpect(jsonPath("$.userResponse.id").exists())
-               .andExpect(jsonPath("$.userResponse.email").value(email))
-               .andExpect(jsonPath("$.userResponse.nickname").value(nickname))
+               .andExpect(jsonPath("$.userResponse.email").value(VALID_EMAIL))
+               .andExpect(jsonPath("$.userResponse.password").doesNotExist())
+               .andExpect(jsonPath("$.userResponse.nickname").value(VALID_NICKNAME))
                .andExpect(jsonPath("$.userResponse.profileImageUrl").isEmpty())
                .andExpect(jsonPath("$.userResponse.createdAt").isNotEmpty());
       }
@@ -350,7 +345,7 @@ class AuthControllerIntegrationTest {
       @DisplayName("이메일이 누락되었다는 응답을 반환한다")
       void it_returns_missing_email_error() throws Exception {
         // given
-        LoginRequest request = new LoginRequest("", password);
+        LoginRequest request = new LoginRequest("", VALID_PASSWORD);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/login")
@@ -367,7 +362,7 @@ class AuthControllerIntegrationTest {
       void it_returns_invalid_email_format_error() throws Exception {
         // given
         String invalidEmail = "invalid-email";
-        LoginRequest request = new LoginRequest(invalidEmail, password);
+        LoginRequest request = new LoginRequest(invalidEmail, VALID_PASSWORD);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/login")
@@ -384,7 +379,7 @@ class AuthControllerIntegrationTest {
       void it_returns_email_too_long_error() throws Exception {
         // given
         String tooLongEmail = "verylongemailaddressthatexceedsfiftycharacters@example.com";
-        LoginRequest request = new LoginRequest(tooLongEmail, password);
+        LoginRequest request = new LoginRequest(tooLongEmail, VALID_PASSWORD);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/login")
@@ -405,7 +400,7 @@ class AuthControllerIntegrationTest {
       @DisplayName("비밀번호가 누락되었다는 응답을 반환한다")
       void it_returns_missing_password_error() throws Exception {
         // given
-        LoginRequest request = new LoginRequest(email, "");
+        LoginRequest request = new LoginRequest(VALID_EMAIL, "");
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/login")
@@ -423,7 +418,7 @@ class AuthControllerIntegrationTest {
       void it_returns_password_too_short_error() throws Exception {
         // given
         String tooShortPassword = "1234567";
-        LoginRequest request = new LoginRequest(email, tooShortPassword);
+        LoginRequest request = new LoginRequest(VALID_EMAIL, tooShortPassword);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/login")
@@ -439,8 +434,8 @@ class AuthControllerIntegrationTest {
       @DisplayName("비밀번호가 너무 길다는 응답을 반환한다")
       void it_returns_password_too_long_error() throws Exception {
         // given
-        String tooLongPassword = "verylongpasswordthatexceedstwentycharacters";
-        LoginRequest request = new LoginRequest(email, tooLongPassword);
+        String tooLongPassword = "very_long_password_that_exceeds_twenty_characters";
+        LoginRequest request = new LoginRequest(VALID_EMAIL, tooLongPassword);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/login")
@@ -462,7 +457,7 @@ class AuthControllerIntegrationTest {
       @DisplayName("존재하지 않는 사용자라는 응답을 반환한다")
       void it_returns_user_not_found_error() throws Exception {
         // given
-        LoginRequest request = new LoginRequest(email, password);
+        LoginRequest request = new LoginRequest(VALID_EMAIL, VALID_PASSWORD);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/login")
@@ -481,10 +476,10 @@ class AuthControllerIntegrationTest {
         String wrongPassword = "password456";
 
         // 사용자 미리 생성
-        User user = createUser(email, nickname, passwordEncoder.encode(password));
+        User user = createUser(VALID_EMAIL, VALID_NICKNAME, passwordEncoder.encode(VALID_PASSWORD));
         userRepository.save(user);
 
-        LoginRequest request = new LoginRequest(email, wrongPassword);
+        LoginRequest request = new LoginRequest(VALID_EMAIL, wrongPassword);
 
         // when & then
         mockMvc.perform(post(BASE_URL + "/login")
