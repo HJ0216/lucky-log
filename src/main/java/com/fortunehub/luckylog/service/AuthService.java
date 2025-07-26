@@ -48,4 +48,27 @@ public class AuthService {
 
     return LoginResponse.of(accessToken, user);
   }
+
+  public UserResponse getCurrentUser(String authorizationHeader) {
+    String token = extractTokenFromHeader(authorizationHeader);
+
+    if (!jwtUtil.validateToken(token)) {
+      throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+    }
+
+    Long userId = jwtUtil.getUserIdFromToken(token);
+
+    User user = userRepository.findById(userId)
+                              .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+    return UserResponse.from(user);
+  }
+
+  private String extractTokenFromHeader(String authorizationHeader) {
+    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+      throw new IllegalArgumentException("Authorization 헤더가 올바르지 않습니다.");
+    }
+
+    return authorizationHeader.substring(7); // "Bearer " 제거
+  }
 }
