@@ -456,4 +456,15 @@ class AuthControllerIntegrationTest {
            .andExpect(jsonPath("$.code").value("INVALID_REQUEST_BODY"))
            .andExpect(jsonPath("$.message").value("요청 본문이 누락되었거나 형식이 올바르지 않습니다."));
   }
+
+
+  // ========== 로그아웃 API 테스트 ==========
+  @Test
+  @DisplayName("로그아웃")
+  void logout_Success_ReturnsOk() throws Exception {
+    // when & then
+    mockMvc.perform(post(BASE_URL + "/logout"))
+           .andDo(print())
+           .andExpect(status().isOk());
+  }
 }
