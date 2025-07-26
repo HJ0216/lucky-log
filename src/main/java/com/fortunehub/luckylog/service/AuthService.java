@@ -42,7 +42,9 @@ public class AuthService {
       throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.");
     }
 
-    String accessToken = jwtUtil.createToken(user.getEmail());
+    String accessToken = jwtUtil.createToken(user.getId());
+    // token 생성에 사용된 payload만 추출 할 수 있음
+    // email로만 token을 생성했다면, token으로부터 userId 정보를 가져올 수 없음
 
     return LoginResponse.of(accessToken, user);
   }

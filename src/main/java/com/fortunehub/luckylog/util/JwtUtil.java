@@ -22,12 +22,12 @@ public class JwtUtil {
     this.tokenValidityInMilliseconds = tokenValidity;
   }
 
-  public String createToken(String email) {
-    if (email == null || email.trim().isEmpty()) {
-      throw new IllegalArgumentException("이메일은 필수입니다.");
+  public String createToken(Long userId) {
+    if (userId == null) {
+      throw new IllegalArgumentException("아이디는 필수입니다.");
     }
 
-    Claims claims = Jwts.claims().setSubject(email);
+    Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
 
     Date now = new Date();
     Date validity = new Date(now.getTime() + tokenValidityInMilliseconds);

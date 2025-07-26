@@ -2,8 +2,10 @@ package com.fortunehub.luckylog.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -16,6 +18,7 @@ import com.fortunehub.luckylog.dto.response.LoginResponse;
 import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.repository.UserRepository;
 import com.fortunehub.luckylog.util.JwtUtil;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +27,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -103,18 +107,24 @@ class AuthServiceTest {
   @DisplayName("로그인 - 성공")
   void login_ValidCredentials_ReturnsLoginResponse() {
     // given
-    String email = "test@exampl.com";
+    Long userId = 1L;
+    String email = "test@example.com";
     String nickname = "test";
     String password = "password123";
     String encodedPassword = "encodedPassword";
+    String profileImageUrl = "https://example.com/default.jpg";
     String accessToken = "jwt.access.token";
 
     User user = createUser(email, nickname, encodedPassword);
+    ReflectionTestUtils.setField(user, "id", userId);
+    ReflectionTestUtils.setField(user, "createdAt", LocalDateTime.now());
+    ReflectionTestUtils.setField(user, "profileImageUrl", profileImageUrl);
+
     LoginRequest loginRequest = new LoginRequest(email, password);
 
     given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
     given(passwordEncoder.matches(password, user.getPassword())).willReturn(true);
-    given(jwtUtil.createToken(email)).willReturn(accessToken);
+    given(jwtUtil.createToken(userId)).willReturn(accessToken);
 
     // when
     LoginResponse response = authService.login(loginRequest);
@@ -146,9 +156,9 @@ class AuthServiceTest {
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("존재하지 않는 회원입니다.");
 
-    verify(userRepository).findByEmail(email);
-    verify(passwordEncoder, never()).matches(anyString(), anyString()); // 호출되지 않았어야 함
-    verify(jwtUtil, never()).createToken(anyString());
+    then(userRepository).should().findByEmail(email);
+    then(passwordEncoder).should(never()).matches(anyString(), anyString());
+    then(jwtUtil).should(never()).createToken(anyLong());
   }
 
   @Test
@@ -173,7 +183,7 @@ class AuthServiceTest {
 
     verify(userRepository).findByEmail(email);
     verify(passwordEncoder).matches(password, encodedPassword);
-    verify(jwtUtil, never()).createToken(anyString());
+    verify(jwtUtil, never()).createToken(anyLong());
   }
 
   private User createUser(String email, String nickname, String password) {
