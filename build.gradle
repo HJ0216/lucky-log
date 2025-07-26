@@ -48,6 +48,10 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+test {
+	jvmArgs '-Djdk.attach.allowAttachSelf=true'
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
