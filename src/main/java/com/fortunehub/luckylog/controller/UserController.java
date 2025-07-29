@@ -54,6 +54,12 @@ public class UserController {
     return ResponseEntity.noContent().build();
   }
 
+  @DeleteMapping("/{id}/profile-image") // DELETE /api/v1/users/1/profile-image
+  public ResponseEntity<Void> deleteProfileImage(@PathVariable Long id) {
+    userService.deleteProfileImage(id);
+    return ResponseEntity.noContent().build();
+  }
+
   @DeleteMapping("/{id}") // DELETE /api/v1/users/1
   public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
     userService.deleteUser(id);
