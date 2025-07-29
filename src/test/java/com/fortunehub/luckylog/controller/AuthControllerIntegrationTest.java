@@ -38,17 +38,18 @@ class AuthControllerIntegrationTest {
 
   private static final String BASE_URL = "/api/v1/auth";
 
-
   private static final String VALID_EMAIL = "valid@email.com";
   private static final String WRONG_FORMAT_EMAIL = "invalid-email";
   private static final String TOO_LONG_EMAIL = "verylongemailaddressthatexceedsfiftycharacters@example.com";
+
+  private static final String VALID_NICKNAME = "john";
+  private static final String TOO_SHORT_NICKNAME = "a";
+  private static final String TOO_LONG_NICKNAME = "very_long_nickname";
+
   private static final String VALID_PASSWORD = "password123";
   private static final String TOO_SHORT_PASSWORD = "1234567";
   private static final String TOO_LONG_PASSWORD = "very_long_password_that_exceeds_twenty_characters";
   private static final String WRONG_PASSWORD = "password456";
-  private static final String VALID_NICKNAME = "john";
-  private static final String TOO_SHORT_NICKNAME = "a";
-  private static final String TOO_LONG_NICKNAME = "very_long_nickname";
 
 
   @Autowired
