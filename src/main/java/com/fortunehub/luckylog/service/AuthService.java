@@ -2,8 +2,12 @@ package com.fortunehub.luckylog.service;
 
 import com.fortunehub.luckylog.domain.User;
 import com.fortunehub.luckylog.dto.request.LoginRequest;
+import com.fortunehub.luckylog.dto.request.MyNicknameUpdateRequest;
+import com.fortunehub.luckylog.dto.request.MyPasswordUpdateRequest;
+import com.fortunehub.luckylog.dto.request.MyProfileImageUpdateRequest;
 import com.fortunehub.luckylog.dto.request.UserCreateRequest;
 import com.fortunehub.luckylog.dto.response.LoginResponse;
+import com.fortunehub.luckylog.dto.response.MyProfileResponse;
 import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.repository.UserRepository;
 import com.fortunehub.luckylog.util.JwtUtil;
@@ -38,7 +42,7 @@ public class AuthService {
     User user = userRepository.findByEmail(request.email())
                               .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-    if(!passwordEncoder.matches(request.password(), user.getPassword())){
+    if (!passwordEncoder.matches(request.password(), user.getPassword())) {
       throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.");
     }
 
@@ -49,7 +53,7 @@ public class AuthService {
     return LoginResponse.of(accessToken, user);
   }
 
-  public UserResponse getCurrentUser(String authorizationHeader) {
+  public MyProfileResponse getMyProfile(String authorizationHeader) {
     String token = extractTokenFromHeader(authorizationHeader);
 
     if (!jwtUtil.validateToken(token)) {
@@ -61,7 +65,7 @@ public class AuthService {
     User user = userRepository.findById(userId)
                               .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-    return UserResponse.from(user);
+    return MyProfileResponse.from(user);
   }
 
   private String extractTokenFromHeader(String authorizationHeader) {
@@ -70,5 +74,81 @@ public class AuthService {
     }
 
     return authorizationHeader.substring(7); // "Bearer " 제거
+  }
+
+  public MyProfileResponse updateMyNickname(String authorizationHeader,
+      MyNicknameUpdateRequest request) {
+    String token = extractTokenFromHeader(authorizationHeader);
+
+    if (!jwtUtil.validateToken(token)) {
+      throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+    }
+
+    Long userId = jwtUtil.getUserIdFromToken(token);
+
+    User user = userRepository.findById(userId)
+                              .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    user.updateNickname(request.nickname());
+
+    return MyProfileResponse.from(user);
+  }
+
+  public MyProfileResponse updateMyProfileImage(String authorizationHeader,
+      MyProfileImageUpdateRequest request) {
+    String token = extractTokenFromHeader(authorizationHeader);
+
+    if (!jwtUtil.validateToken(token)) {
+      throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+    }
+
+    Long userId = jwtUtil.getUserIdFromToken(token);
+
+    User user = userRepository.findById(userId)
+                              .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    user.updateNickname(request.url());
+
+    return MyProfileResponse.from(user);
+  }
+
+  public void deleteMyProfileImage(String authorizationHeader) {
+    String token = extractTokenFromHeader(authorizationHeader);
+
+    if (!jwtUtil.validateToken(token)) {
+      throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+    }
+
+    Long userId = jwtUtil.getUserIdFromToken(token);
+
+    User user = userRepository.findById(userId)
+                              .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    user.updateProfileImage(null);
+  }
+
+  public void changePassword(String authorizationHeader, MyPasswordUpdateRequest request) {
+    String token = extractTokenFromHeader(authorizationHeader);
+
+    if (!jwtUtil.validateToken(token)) {
+      throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+    }
+
+    Long userId = jwtUtil.getUserIdFromToken(token);
+
+    User user = userRepository.findById(userId)
+                              .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    user.updatePassword(passwordEncoder.encode(request.password()));
+  }
+
+  public void deleteMyAccount(String authorizationHeader) {
+    String token = extractTokenFromHeader(authorizationHeader);
+
+    if (!jwtUtil.validateToken(token)) {
+      throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+    }
+
+    Long userId = jwtUtil.getUserIdFromToken(token);
+
+    User user = userRepository.findById(userId)
+                              .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    user.updateIsActive(false);
   }
 }

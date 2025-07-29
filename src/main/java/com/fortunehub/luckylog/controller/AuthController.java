@@ -1,9 +1,13 @@
 package com.fortunehub.luckylog.controller;
 
 import com.fortunehub.luckylog.dto.request.LoginRequest;
+import com.fortunehub.luckylog.dto.request.MyNicknameUpdateRequest;
+import com.fortunehub.luckylog.dto.request.MyPasswordUpdateRequest;
+import com.fortunehub.luckylog.dto.request.MyProfileImageUpdateRequest;
 import com.fortunehub.luckylog.dto.request.UserCreateRequest;
 import com.fortunehub.luckylog.dto.response.EmailCheckResponse;
 import com.fortunehub.luckylog.dto.response.LoginResponse;
+import com.fortunehub.luckylog.dto.response.MyProfileResponse;
 import com.fortunehub.luckylog.dto.response.UserResponse;
 import com.fortunehub.luckylog.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,7 +16,9 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -59,8 +65,52 @@ public class AuthController {
   }
 
   @GetMapping("/me")
-  public ResponseEntity<UserResponse> getCurrentUser(@RequestHeader("Authorization") String token) {
-    UserResponse response = authService.getCurrentUser(token);
+  public ResponseEntity<MyProfileResponse> getMyProfile(
+      @RequestHeader("Authorization") String authorizationHeader) {
+    MyProfileResponse response = authService.getMyProfile(authorizationHeader);
     return ResponseEntity.ok(response);
+  }
+
+  @PatchMapping("/me/nickname")
+  public ResponseEntity<MyProfileResponse> updateMyNickname(
+      @RequestHeader("Authorization") String authorizationHeader,
+      @Valid @RequestBody MyNicknameUpdateRequest request
+  ) {
+    MyProfileResponse response = authService.updateMyNickname(authorizationHeader, request);
+    return ResponseEntity.ok(response);
+  }
+
+  @PatchMapping("/me/profile-image")
+  public ResponseEntity<MyProfileResponse> updateMyProfileImage(
+      @RequestHeader("Authorization") String authorizationHeader,
+      @Valid @RequestBody MyProfileImageUpdateRequest request
+  ) {
+    MyProfileResponse response = authService.updateMyProfileImage(authorizationHeader, request);
+    return ResponseEntity.ok(response);
+  }
+
+  @DeleteMapping("/me/profile-image")
+  public ResponseEntity<Void> deleteMyProfileImage(
+      @RequestHeader("Authorization") String authorizationHeader) {
+    authService.deleteMyProfileImage(authorizationHeader);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/me/password")
+  public ResponseEntity<Void> changePassword(
+      @RequestHeader("Authorization") String authorizationHeader,
+      @Valid @RequestBody MyPasswordUpdateRequest request) {
+    authService.changePassword(authorizationHeader, request);
+    return ResponseEntity.noContent().build();
+  }
+
+  // @PostMapping("/forgot-password")
+
+  // @PostMapping("/reset-password")
+
+  @DeleteMapping("/me")
+  public ResponseEntity<Void> deleteMyProfile(@RequestHeader("Authorization") String authorizationHeader) {
+    authService.deleteMyAccount(authorizationHeader);
+    return ResponseEntity.noContent().build();
   }
 }
