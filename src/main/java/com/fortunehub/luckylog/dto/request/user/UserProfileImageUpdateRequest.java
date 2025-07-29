@@ -1,4 +1,4 @@
-package com.fortunehub.luckylog.dto.request;
+package com.fortunehub.luckylog.dto.request.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

@@ -1,9 +1,9 @@
 package com.fortunehub.luckylog.service;
 
 import com.fortunehub.luckylog.domain.User;
-import com.fortunehub.luckylog.dto.request.UserNicknameUpdateRequest;
-import com.fortunehub.luckylog.dto.request.UserProfileImageUpdateRequest;
-import com.fortunehub.luckylog.dto.response.UserResponse;
+import com.fortunehub.luckylog.dto.request.user.UserNicknameUpdateRequest;
+import com.fortunehub.luckylog.dto.request.user.UserProfileImageUpdateRequest;
+import com.fortunehub.luckylog.dto.response.user.UserResponse;
 import com.fortunehub.luckylog.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

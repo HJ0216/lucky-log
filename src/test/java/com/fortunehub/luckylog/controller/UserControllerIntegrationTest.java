@@ -15,8 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.domain.User;
-import com.fortunehub.luckylog.dto.request.UserNicknameUpdateRequest;
-import com.fortunehub.luckylog.dto.request.UserProfileImageUpdateRequest;
+import com.fortunehub.luckylog.dto.request.user.UserNicknameUpdateRequest;
+import com.fortunehub.luckylog.dto.request.user.UserProfileImageUpdateRequest;
 import com.fortunehub.luckylog.repository.UserRepository;
 import com.fortunehub.luckylog.service.UserService;
 import java.util.List;

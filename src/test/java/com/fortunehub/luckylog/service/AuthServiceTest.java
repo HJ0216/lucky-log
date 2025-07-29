@@ -12,10 +12,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.fortunehub.luckylog.domain.User;
-import com.fortunehub.luckylog.dto.request.LoginRequest;
-import com.fortunehub.luckylog.dto.request.UserCreateRequest;
-import com.fortunehub.luckylog.dto.response.LoginResponse;
-import com.fortunehub.luckylog.dto.response.UserResponse;
+import com.fortunehub.luckylog.dto.request.auth.LoginRequest;
+import com.fortunehub.luckylog.dto.request.auth.UserCreateRequest;
+import com.fortunehub.luckylog.dto.response.auth.LoginResponse;
+import com.fortunehub.luckylog.dto.response.user.UserResponse;
 import com.fortunehub.luckylog.repository.UserRepository;
 import com.fortunehub.luckylog.util.JwtUtil;
 import java.time.LocalDateTime;

@@ -12,8 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.domain.User;
-import com.fortunehub.luckylog.dto.request.LoginRequest;
-import com.fortunehub.luckylog.dto.request.UserCreateRequest;
+import com.fortunehub.luckylog.dto.request.auth.LoginRequest;
+import com.fortunehub.luckylog.dto.request.auth.UserCreateRequest;
 import com.fortunehub.luckylog.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

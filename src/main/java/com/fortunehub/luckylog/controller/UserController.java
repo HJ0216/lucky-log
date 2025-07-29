@@ -1,8 +1,8 @@
 package com.fortunehub.luckylog.controller;
 
-import com.fortunehub.luckylog.dto.request.UserNicknameUpdateRequest;
-import com.fortunehub.luckylog.dto.request.UserProfileImageUpdateRequest;
-import com.fortunehub.luckylog.dto.response.UserResponse;
+import com.fortunehub.luckylog.dto.request.user.UserNicknameUpdateRequest;
+import com.fortunehub.luckylog.dto.request.user.UserProfileImageUpdateRequest;
+import com.fortunehub.luckylog.dto.response.user.UserResponse;
 import com.fortunehub.luckylog.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

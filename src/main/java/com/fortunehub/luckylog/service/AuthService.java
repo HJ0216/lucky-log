@@ -1,14 +1,14 @@
 package com.fortunehub.luckylog.service;
 
 import com.fortunehub.luckylog.domain.User;
-import com.fortunehub.luckylog.dto.request.LoginRequest;
-import com.fortunehub.luckylog.dto.request.MyNicknameUpdateRequest;
-import com.fortunehub.luckylog.dto.request.MyPasswordUpdateRequest;
-import com.fortunehub.luckylog.dto.request.MyProfileImageUpdateRequest;
-import com.fortunehub.luckylog.dto.request.UserCreateRequest;
-import com.fortunehub.luckylog.dto.response.LoginResponse;
-import com.fortunehub.luckylog.dto.response.MyProfileResponse;
-import com.fortunehub.luckylog.dto.response.UserResponse;
+import com.fortunehub.luckylog.dto.request.auth.LoginRequest;
+import com.fortunehub.luckylog.dto.request.auth.MyNicknameUpdateRequest;
+import com.fortunehub.luckylog.dto.request.auth.MyPasswordUpdateRequest;
+import com.fortunehub.luckylog.dto.request.auth.MyProfileImageUpdateRequest;
+import com.fortunehub.luckylog.dto.request.auth.UserCreateRequest;
+import com.fortunehub.luckylog.dto.response.auth.LoginResponse;
+import com.fortunehub.luckylog.dto.response.auth.MyProfileResponse;
+import com.fortunehub.luckylog.dto.response.user.UserResponse;
 import com.fortunehub.luckylog.repository.UserRepository;
 import com.fortunehub.luckylog.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
