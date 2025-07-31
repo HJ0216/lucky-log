@@ -1,12 +1,12 @@
 package com.fortunehub.luckylog.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,7 +15,7 @@ import com.fortunehub.luckylog.domain.User;
 import com.fortunehub.luckylog.dto.request.auth.LoginRequest;
 import com.fortunehub.luckylog.dto.request.auth.UserCreateRequest;
 import com.fortunehub.luckylog.dto.response.auth.LoginResponse;
-import com.fortunehub.luckylog.dto.response.user.UserResponse;
+import com.fortunehub.luckylog.dto.response.auth.MyProfileResponse;
 import com.fortunehub.luckylog.repository.UserRepository;
 import com.fortunehub.luckylog.util.JwtUtil;
 import java.time.LocalDateTime;
@@ -61,7 +61,7 @@ class AuthServiceTest {
     when(userRepository.save(any(User.class))).thenReturn(user);
 
     // when
-    UserResponse response = authService.createUser(request);
+    MyProfileResponse response = authService.createUser(request);
 
     // then
     assertThat(response.email()).isEqualTo(request.email());

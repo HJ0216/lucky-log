@@ -65,8 +65,8 @@ class AuthControllerIntegrationTest {
   private PasswordEncoder passwordEncoder;
 
   @Nested
-  @DisplayName("checkEmailDuplicate 메서드는")
-  class Describe_checkEmailDuplicate {
+  @DisplayName("checkEmailAvailability 메서드는")
+  class Describe_checkEmailAvailability {
 
     @Nested
     @DisplayName("만약 가입하지 않은 이메일이면")
@@ -79,7 +79,7 @@ class AuthControllerIntegrationTest {
         String validEmail = VALID_EMAIL;
 
         // when
-        ResultActions result = performCheckEmailDuplicate(validEmail)
+        ResultActions result = performCheckEmailAvailability(validEmail)
             .andDo(print());
 
         // then
@@ -101,7 +101,7 @@ class AuthControllerIntegrationTest {
         userRepository.save(user);
 
         // when
-        ResultActions result = performCheckEmailDuplicate(user.getEmail());
+        ResultActions result = performCheckEmailAvailability(user.getEmail());
 
         // then
         result.andDo(print())
@@ -121,7 +121,7 @@ class AuthControllerIntegrationTest {
         // given
 
         // when
-        ResultActions result = performCheckEmailDuplicate();
+        ResultActions result = performCheckEmailAvailability();
 
         // then
         result.andDo(print())
@@ -131,12 +131,12 @@ class AuthControllerIntegrationTest {
       }
     }
 
-    private ResultActions performCheckEmailDuplicate(String email) throws Exception {
+    private ResultActions performCheckEmailAvailability(String email) throws Exception {
       return mockMvc.perform((get(BASE_URL + "/check-email")
           .param("email", email)));
     }
 
-    private ResultActions performCheckEmailDuplicate() throws Exception {
+    private ResultActions performCheckEmailAvailability() throws Exception {
       return mockMvc.perform(get(BASE_URL + "/check-email"));
     }
   }
