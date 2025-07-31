@@ -34,7 +34,7 @@ public class AuthController {
   private final AuthService authService;
 
   @GetMapping("/check-email") // GET /api/v1/auth/check-email
-  public ResponseEntity<EmailCheckResponse> checkEmailDuplicate(@RequestParam String email) {
+  public ResponseEntity<EmailCheckResponse> checkEmailAvailability(@RequestParam String email) {
     boolean available = authService.isEmailAvailable(email);
     if (available) {
       return ResponseEntity.status(HttpStatus.OK)
@@ -108,7 +108,7 @@ public class AuthController {
   // @PostMapping("/reset-password")
 
   @DeleteMapping("/me")
-  public ResponseEntity<Void> deleteMyProfile(@RequestHeader("Authorization") String authorizationHeader) {
+  public ResponseEntity<Void> deleteMyAccount(@RequestHeader("Authorization") String authorizationHeader) {
     authService.deleteMyAccount(authorizationHeader);
     return ResponseEntity.noContent().build();
   }
