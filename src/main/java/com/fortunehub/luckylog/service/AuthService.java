@@ -30,12 +30,12 @@ public class AuthService {
     return !userRepository.existsByEmail(email);
   }
 
-  public UserResponse createUser(UserCreateRequest request) {
+  public MyProfileResponse createUser(UserCreateRequest request) {
     String rawPassword = request.password();
     String encodedPassword = passwordEncoder.encode(rawPassword);
 
     User user = userRepository.save(request.toEntity(encodedPassword));
-    return UserResponse.from(user);
+    return MyProfileResponse.from(user);
   }
 
   public LoginResponse login(LoginRequest request) {

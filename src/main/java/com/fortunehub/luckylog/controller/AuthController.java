@@ -8,7 +8,6 @@ import com.fortunehub.luckylog.dto.request.auth.UserCreateRequest;
 import com.fortunehub.luckylog.dto.response.auth.EmailCheckResponse;
 import com.fortunehub.luckylog.dto.response.auth.LoginResponse;
 import com.fortunehub.luckylog.dto.response.auth.MyProfileResponse;
-import com.fortunehub.luckylog.dto.response.user.UserResponse;
 import com.fortunehub.luckylog.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -47,8 +46,8 @@ public class AuthController {
   }
 
   @PostMapping("signup") // POST /api/v1/auth/signup
-  public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserCreateRequest request) {
-    UserResponse response = authService.createUser(request);
+  public ResponseEntity<MyProfileResponse> createUser(@Valid @RequestBody UserCreateRequest request) {
+    MyProfileResponse response = authService.createUser(request);
     URI location = URI.create("/api/v1/users/" + response.id());
     return ResponseEntity.created(location).body(response);
   }
