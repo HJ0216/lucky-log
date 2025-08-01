@@ -1,75 +1,658 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUCKY LOG</title>
-    <link href="./css/style.css" rel="stylesheet">
+    <link rel="icon" href="./images/lucky-log-logo.png" type="image/x-icon">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 25%, #fecfef 50%, #fad0c4 100%);
+            color: #2d3436; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            padding: 20px 10px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .holographic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.3) 0%, transparent 25%),
+                radial-gradient(circle at 75% 75%, rgba(255, 182, 193, 0.4) 0%, transparent 25%),
+                radial-gradient(circle at 75% 25%, rgba(173, 216, 230, 0.4) 0%, transparent 25%);
+            animation: hologram 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes hologram {
+            0%, 100% { opacity: 0.6; transform: rotate(0deg); }
+            50% { opacity: 0.8; transform: rotate(1deg); }
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 32px;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
+            text-align: center;
+            box-shadow: 
+                0 20px 60px rgba(255, 182, 193, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            position: relative;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #a8edea, #fed6e3);
+            border-radius: 36px;
+            z-index: -1;
+            animation: rainbow-border 3s linear infinite;
+        }
+        
+        @keyframes rainbow-border {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+        
+        .logo {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .logo h1 {
+            font-size: 2.2em;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e, #55efc4, #74b9ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            letter-spacing: -2px;
+            text-shadow: 2px 2px 10px rgba(253, 121, 168, 0.3), 0 0 15px rgba(253, 203, 110, 0.2);
+        }
+        
+        .logo p {
+            color: rgba(45, 52, 54, 0.6);
+            font-size: 1.1em;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 6px 0;
+            border-radius: 16px;
+            display: block;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: left;
+        }
+        
+        .field-group {
+            position: relative;
+        }
+        
+        .field-label {
+            display: block;
+            margin-bottom: 10px;
+            color: #2d3436;
+            font-size: 0.85em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .gender-cards {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .card-option {
+            flex: 1;
+        }
+        
+        .card-option input[type="radio"] {
+            display: none;
+        }
+        
+        .card-option label {
+            display: block;
+            background: rgba(255, 255, 255, 0.8);
+            border: 3px solid #ff6b6b;
+            border-radius: 10px;
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+            margin: 0;
+            color: rgba(45, 52, 54, 0.6);
+            box-shadow: 
+                0 2px 0 #e55656,
+                0 4px 10px rgba(255, 107, 107, 0.2);
+        }
+        
+        .card-option input[type="radio"]:checked + label {
+            border-color: #ff7675;
+            background: rgba(255, 118, 117, 0.3);
+            color: #ff7675;
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 
+                0 4px 0 #ff7675,
+                0 8px 15px rgba(255, 118, 117, 0.4);
+        }
+        
+        .birth-section {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 20px 12px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .calendar-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        
+        .toggle-option {
+            flex: 1;
+        }
+        
+        .toggle-option input[type="radio"] {
+            display: none;
+        }
+        
+        .toggle-option label {
+            display: block;
+            background: rgba(255, 255, 255, 0.6);
+            border: 3px solid #f1c40f;
+            border-radius: 10px;
+            padding: 8px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin: 0;
+            color: rgba(45, 52, 54, 0.6);
+            box-shadow: 0 3px 0 #f39c12;
+        }
+        
+        .toggle-option input[type="radio"]:checked + label {
+            background: rgba(241, 196, 15, 0.3);
+            border-color: #f39c12;
+            color: #f39c12;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 0 #f39c12;
+        }
+        
+        .date-inputs {
+            display: grid;
+            grid-template-columns: 1.2fr 0.9fr 0.9fr;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        
+        .date-inputs.single {
+            grid-template-columns: 1fr;
+            margin-bottom: 18px;
+            margin-top: 6px;
+        }
+        
+        .retro-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            border: 3px solid #f1c40f;
+            border-radius: 12px;
+            padding: 10px 12px;
+            color: rgba(45, 52, 54, 0.6);
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .retro-input:focus {
+            outline: none;
+            border-color: #ffeaa7;
+            transform: translateY(-2px);
+        }
+        
+        /* 년, 월, 일 입력 필드 (초록색) - 동일한 스타일 적용 */
+        .retro-input[name="year"],
+        .retro-input[name="month"],
+        .retro-input[name="day"] {
+            border: 3px solid #00b894;
+            text-align: left;
+            box-shadow: 
+                0 3px 0 #00a085,
+                0 6px 15px rgba(0, 184, 148, 0.2);
+        }
+        
+        .retro-input[name="year"]:focus,
+        .retro-input[name="month"]:focus,
+        .retro-input[name="day"]:focus {
+            border-color: #00cec9;
+            box-shadow: 
+                0 5px 0 #00b894,
+                0 10px 20px rgba(0, 206, 201, 0.3);
+        }
+        
+        /* 시, 분 입력 필드 (파란색) */
+        .time-input {
+            border: 3px solid #0984e3 !important;
+            color: rgba(45, 52, 54, 0.6);
+            width: 100% !important;
+            min-width: 100% !important;
+            text-align: left !important;
+            box-shadow: 
+                0 3px 0 #0652dd,
+                0 6px 15px rgba(9, 132, 227, 0.2) !important;
+        }
+        
+        .time-input:focus {
+            outline: none;
+            border-color: #74b9ff !important;
+            transform: translateY(-2px);
+            box-shadow: 
+                0 5px 0 #0984e3,
+                0 10px 20px rgba(116, 185, 255, 0.3) !important;
+        }
+        
+        .retro-input::placeholder {
+            color: rgba(45, 52, 54, 0.5);
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        
+        .city-input {
+            background: rgba(255, 255, 255, 0.8);
+            border: 3px solid #a29bfe !important;
+            color: rgba(45, 52, 54, 0.6);
+            width: 100% !important;
+            min-width: 100% !important;
+            text-align: left !important;
+            box-shadow: 
+                0 3px 0 #6c5ce7,
+                0 6px 15px rgba(162, 155, 254, 0.2) !important;
+        }
+        
+        .city-input:focus {
+            outline: none;
+            border-color: #d63af3 !important;
+            transform: translateY(-2px);
+            box-shadow: 
+                0 5px 0 #a29bfe,
+                0 10px 20px rgba(214, 58, 243, 0.3) !important;
+        }
+        
+        .retro-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #e17055, #74b9ff, #a29bfe, #fd79a8);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 18px;
+            font-size: 1.2em;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 6px 0 #d63031,
+                0 12px 25px rgba(225, 112, 85, 0.3);
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+        }
+        
+        .retro-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 10px 0 #d63031,
+                0 20px 40px rgba(225, 112, 85, 0.4);
+        }
+        
+        .retro-btn:active {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 4px 0 #d63031,
+                0 8px 20px rgba(225, 112, 85, 0.3);
+        }
+        
+        .retro-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            transition: left 0.6s;
+        }
+        
+        .retro-btn:hover::before {
+            left: 100%;
+        }
+        
+        .emoji-decoration {
+            position: fixed;
+            font-size: 1.5em;
+            animation: float-emoji 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .emoji-decoration:nth-child(2) {
+            top: 15%;
+            left: 8%;
+            animation-delay: 0s;
+        }
+        
+        .emoji-decoration:nth-child(3) {
+            top: 25%;
+            right: 12%;
+            animation-delay: 1s;
+        }
+        
+        .emoji-decoration:nth-child(4) {
+            bottom: 35%;
+            left: 10%;
+            animation-delay: 2s;
+        }
+        
+        .emoji-decoration:nth-child(5) {
+            bottom: 20%;
+            right: 8%;
+            animation-delay: 3s;
+        }
+        
+        .emoji-decoration:nth-child(6) {
+            top: 60%;
+            right: 15%;
+            animation-delay: 1.5s;
+        }
+        
+        @keyframes float-emoji {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
+        }
+        
+        @media (max-width: 400px) {
+            .container {
+                margin: 10px;
+                padding: 25px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 1.8em;
+            }
+            
+            .date-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-toggle {
+                flex-direction: row;
+                gap: 6px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="holographic-bg"></div>
+    
+    <div class="emoji-decoration">🌈</div>
+    <div class="emoji-decoration">💎</div>
+    <div class="emoji-decoration">⭐</div>
+    <div class="emoji-decoration">💖</div>
+    <div class="emoji-decoration">✨</div>
+    
     <div class="container">
-        <h1 class="logo">LUCKY LOG</h1>
-
-        <main>
-            <input type="radio" name="form-tab" id="login-tab" class="form-tab-input" checked>
-            <input type="radio" name="form-tab" id="signup-tab" class="form-tab-input">
-
-            <div class="nav-buttons">
-                <label for="login-tab" class="nav-btn">LOG IN</label>
-                <label for="signup-tab" class="nav-btn">SIGN UP</label>
+        <div class="logo">
+            <h1>운 세</h1>
+            <p>나만의 사주 보기 💖</p>
+        </div>
+        
+        <form class="form-grid">
+            <!-- 성별 선택 -->
+            <div class="field-group">
+                <label class="field-label">성별</label>
+                <div class="gender-cards">
+                    <div class="card-option">
+                        <input type="radio" id="female" name="gender" value="female">
+                        <label for="female">🙋‍♀️ 여성</label>
+                    </div>
+                    <div class="card-option">
+                        <input type="radio" id="male" name="gender" value="male">
+                        <label for="male">🙋‍♂️ 남성</label>
+                    </div>
+                </div>
             </div>
-
-            <div class="sub-container">
-                <h2></h2>
-
-                <!-- Login Form -->
-                <form class="login-form" id="login-form">
-                    <div class="input-group">
-                        <span class="input-icon">✉️</span>
-                        <input type="email" placeholder="Your Email" required>
-                    </div>
-
-                    <div class="input-group">
-                        <span class="input-icon">🔒</span>
-                        <input type="password" placeholder="Your Password" required>
-                    </div>
-                    
-                    <button type="submit" class="submit-btn">👉 가보자고 🎟️</button>
-                </form>
-
-                <!-- Signup Form -->
-                <form class="signup-form" id="signup-form">
-                    <div class="input-group">
-                        <span class="input-icon">🏷️</span>
-                        <input id="nickname-input" type="text" placeholder="Your Nickname" required>
-                        <span id="nickname-validation" class="validation-icon"></span>
-                    </div>
-
-                    <div class="input-group">
-                        <span class="input-icon">✉️</span>
-                        <input id="signup-email" type="email" placeholder="Your Email" required>
-                        <span id="email-validation" class="validation-icon"></span>
-                    </div>
-
-                    <div class="input-group">
-                        <span class="input-icon">🔒</span>
-                        <input id="signup-password" type="password" placeholder="Your Password" required>
-                        <span id="password-validation" class="validation-icon"></span>
+            
+            <!-- 생년월일 및 시간 -->
+            <div class="field-group">
+                <label class="field-label">생년월일 정보</label>
+                <div class="birth-section">
+                    <div class="calendar-toggle">
+                        <div class="toggle-option">
+                            <input type="radio" id="solar" name="calendar" value="solar" checked>
+                            <label for="solar">양력</label>
+                        </div>
+                        <div class="toggle-option">
+                            <input type="radio" id="lunar" name="calendar" value="lunar">
+                            <label for="lunar">음력(평달)</label>
+                        </div>
+                        <div class="toggle-option">
+                            <input type="radio" id="lunar_leap" name="calendar" value="lunar_leap">
+                            <label for="lunar_leap">음력(윤달)</label>
+                        </div>
                     </div>
                     
-                    <div class="input-group">
-                        <span class="input-icon">🔒</span>
-                        <input id="password-confirm" type="password" placeholder="Confirm Password" required>
-                        <span id="password-confirm-validation" class="validation-icon"></span>
+                    <div class="date-inputs">
+                        <input type="number" class="retro-input" name="year" placeholder="년도" min="1900" max="2030">
+                        <input type="number" class="retro-input" name="month" placeholder="월" min="1" max="12">
+                        <input type="number" class="retro-input" name="day" placeholder="일" min="1" max="31">
                     </div>
-                    
-                    <button type="submit" class="submit-btn">📝 가보자고 ✨</button>
-                </form>
-                <a href="#" class="forgot-password">🔑 임시 비밀번호 발급 받기 💌</a>
+                    <div class="date-inputs single">
+                        <select class="retro-input time-input" name="time">
+                            <option value="">(모름) 태어난 시간 🕐</option>
+                            <option value="자">子 (23:30 ~ 01:29)</option>
+                            <option value="축">丑 (01:30 ~ 03:29)</option>
+                            <option value="인">寅 (03:30 ~ 05:29)</option>
+                            <option value="묘">卯 (05:30 ~ 07:29)</option>
+                            <option value="진">辰 (07:30 ~ 09:29)</option>
+                            <option value="사">巳 (09:30 ~ 11:29)</option>
+                            <option value="오">午 (11:30 ~ 13:29)</option>
+                            <option value="미">未 (13:30 ~ 15:29)</option>
+                            <option value="신">申 (15:30 ~ 17:29)</option>
+                            <option value="유">酉 (17:30 ~ 19:29)</option>
+                            <option value="술">戌 (19:30 ~ 21:29)</option>
+                            <option value="해">亥 (21:30 ~ 23:29)</option>
+                        </select>
+                    </div>
+                    <div class="date-inputs single">
+                        <select class="retro-input city-input" name="city">
+                            <option value="">(모름) 태어난 도시 🏙️</option>
+                            <option value="서울">서울특별시</option>
+                            <option value="경기">경기도</option>
+                            <option value="인천">인천광역시</option>
+                            <option value="부산">부산광역시</option>
+                            <option value="대구">대구광역시</option>
+                            <option value="대전">대전광역시</option>
+                            <option value="광주">광주광역시</option>
+                            <option value="울산">울산광역시</option>
+                            <option value="세종">세종특별자치시</option>
+                            <option value="강원">강원도</option>
+                            <option value="충북">충청북도</option>
+                            <option value="충남">충청남도</option>
+                            <option value="전북">전라북도</option>
+                            <option value="전남">전라남도</option>
+                            <option value="경북">경상북도</option>
+                            <option value="경남">경상남도</option>
+                            <option value="제주">제주특별자치도</option>
+                            <option value="기타">기타</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-        </main>
+            
+            <button type="submit" class="retro-btn">🚀 다음단계 →</button>
+        </form>
     </div>
+    
+    <script>
+        // 윤년 체크 함수
+        function isLeapYear(year) {
+            return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+        }
 
-    <script defer src="./js/script.js"></script>
+        // 월별 최대 일수 반환 함수
+        function getDaysInMonth(year, month) {
+            const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            if (month === 2 && isLeapYear(year)) {
+                return 29;
+            }
+            return daysInMonth[month - 1];
+        }
+
+        // 일 입력 필드 최대값 업데이트 함수
+        function updateMaxDay() {
+            const yearInput = document.querySelector('[name="year"]');
+            const monthInput = document.querySelector('[name="month"]');
+            const dayInput = document.querySelector('[name="day"]');
+            
+            const year = parseInt(yearInput.value) || 2025;
+            const month = parseInt(monthInput.value) || 1;
+            
+            if (month >= 1 && month <= 12) {
+                const maxDay = getDaysInMonth(year, month);
+                dayInput.max = maxDay;
+                
+                // 현재 일이 최대값을 초과하면 조정
+                if (parseInt(dayInput.value) > maxDay) {
+                    dayInput.value = maxDay;
+                    dayInput.style.borderColor = '#00b894';
+                }
+            }
+        }
+
+        // 입력값 범위 체크 함수
+        function validateInput(input, min, max) {
+            const value = parseInt(input.value);
+            if (value < min) {
+                input.value = min;
+                input.style.borderColor = '#e74c3c';
+                setTimeout(() => input.style.borderColor = '', 2000);
+            } else if (value > max) {
+                input.value = max;
+                input.style.borderColor = '#e74c3c';
+                setTimeout(() => input.style.borderColor = '', 2000);
+            }
+        }
+
+        // DOM 로드 후 이벤트 리스너 등록
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearInput = document.querySelector('[name="year"]');
+            const monthInput = document.querySelector('[name="month"]');
+            const dayInput = document.querySelector('[name="day"]');
+
+            // 년도, 월 변경 시 일 최대값 업데이트
+            yearInput.addEventListener('change', updateMaxDay);
+            monthInput.addEventListener('change', updateMaxDay);
+
+            // 입력값 범위 체크
+            yearInput.addEventListener('change', function() {
+                validateInput(this, 1900, 2025);
+                updateMaxDay();
+            });
+
+            monthInput.addEventListener('change', function() {
+                validateInput(this, 1, 12);
+                updateMaxDay();
+            });
+
+            dayInput.addEventListener('change', function() {
+                const maxDay = parseInt(this.max) || 31;
+                validateInput(this, 1, maxDay);
+            });
+
+            // 숫자가 아닌 입력 방지
+            [yearInput, monthInput, dayInput].forEach(input => {
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+            });
+        });
+
+        // 폼 검증을 위한 JavaScript
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 필수 필드 검증
+            const requiredFields = ['gender', 'year', 'month', 'day', 'time', 'city'];
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                const input = document.querySelector(`[name="${field}"]`);
+                if (!input.value) {
+                    isValid = false;
+                    input.style.borderColor = '#e74c3c';
+                    setTimeout(() => input.style.borderColor = '', 2000);
+                }
+            });
+
+            // 날짜 유효성 추가 체크
+            const year = parseInt(document.querySelector('[name="year"]').value);
+            const month = parseInt(document.querySelector('[name="month"]').value);
+            const day = parseInt(document.querySelector('[name="day"]').value);
+
+            if (year < 1900 || year > 2025) {
+                isValid = false;
+                alert('년도는 1900년부터 2025년까지 입력 가능합니다.');
+            } else if (month < 1 || month > 12) {
+                isValid = false;
+                alert('월은 1월부터 12월까지 입력 가능합니다.');
+            } else if (day < 1 || day > getDaysInMonth(year, month)) {
+                isValid = false;
+                alert(`${month}월은 최대 ${getDaysInMonth(year, month)}일까지 입력 가능합니다.`);
+            }
+            
+            if (isValid) {
+                alert('사주 분석을 시작합니다! 🔮');
+                // 여기에 실제 사주 분석 로직 연결
+            } else if (requiredFields.some(field => !document.querySelector(`[name="${field}"]`).value)) {
+                alert('모든 필수 정보를 입력해주세요! ✨');
+            }
+        });
+    </script>
 </body>
 </html>
