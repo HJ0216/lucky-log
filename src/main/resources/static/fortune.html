@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUCKY LOG</title>
+    <link rel="icon" href="./images/lucky-log-logo.png" type="image/x-icon">
+    <link href="./css/fortune.css" rel="stylesheet">
+</head>
+<body>
+    <div class="holographic-bg"></div>
+    
+    <div class="emoji-decoration">🔮</div>
+    <div class="emoji-decoration">✨</div>
+    <div class="emoji-decoration">🌟</div>
+    <div class="emoji-decoration">🎪</div>
+    <div class="emoji-decoration">🪂</div>
+    
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <div class="ai-badge">
+                <span class="ai-icon" id="ai-icon">🎆</span>
+                <span id="ai-name">Claude</span>
+            </div>
+            <p class="user-info" id="user-info"></p>
+        </div>
+        
+        <!-- 로딩 화면 -->
+        <div class="loading-screen" id="loading-screen">
+            <div class="loading-animation">
+                <div class="loading-ring"></div>
+            </div>
+            <div class="loading-text">🔮 운세 분석 중...</div>
+            <div class="loading-subtext">AI가 당신의 운명을 읽고 있습니다</div>
+            <div class="scanline"></div>
+        </div>
+        
+        <!-- 결과 화면 -->
+        <div class="results-screen" id="results-screen">
+            <div class="results-container" id="results-container">
+                <!-- 운세 결과가 여기에 동적으로 추가됩니다 -->
+            </div>
+            
+            <div class="action-buttons">
+                <button class="retro-btn-small" onclick="goToSelection()">
+                    <span class="btn-icon">🔄</span>
+                    <span>다시</span>
+                </button>
+                <button class="retro-btn-small" onclick="copyResults()">
+                    <span class="btn-icon">📋</span>
+                    <span>복사</span>
+                </button>
+                <button class="retro-btn-small" onclick="shareResults()">
+                    <span class="btn-icon">📤</span>
+                    <span>공유</span>
+                </button>
+                <button class="retro-btn-small" onclick="saveResults()">
+                    <span class="btn-icon">💾</span>
+                    <span>저장</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script defer src="./js/fortune.js"></script>
+</body>
+</html>

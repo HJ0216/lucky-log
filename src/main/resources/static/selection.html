@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUCKY LOG</title>
+    <link rel="icon" href="./images/lucky-log-logo.png" type="image/x-icon">
+    <link href="./css/selection.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="holographic-bg"></div>
+
+    <div class="emoji-decoration">🔮</div>
+    <div class="emoji-decoration">✨</div>
+    <div class="emoji-decoration">🌟</div>
+    <div class="emoji-decoration">💫</div>
+    <div class="emoji-decoration">🎯</div>
+
+    <div class="container">
+        <div class="logo">
+            <h1>운 세</h1>
+            <p></p>
+        </div>
+
+        <form class="form-grid">
+            <!-- AI 선택 -->
+            <div class="field-group">
+                <label class="field-label">🤖 AI 선택</label>
+                <div class="ai-cards">
+                    <div class="ai-option">
+                        <input type="radio" id="claude" name="ai" value="claude" disabled>
+                        <label for="claude">
+                            <div>🎆</div>
+                            <div>Claude</div>
+                        </label>
+                    </div>
+                    <div class="ai-option">
+                        <input type="radio" id="gemini" name="ai" value="gemini" disabled>
+                        <label for="gemini">
+                            <div>🪂</div>
+                            <div>Gemini</div>
+                        </label>
+                    </div>
+                    <div class="ai-option">
+                        <input type="radio" id="gpt" name="ai" value="gpt" checked>
+                        <label for="gpt">
+                            <div>🚀</div>
+                            <div>GPT</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 운세 종류 선택 -->
+            <div class="field-group">
+                <label class="field-label">🍀 보고 싶은 운세 (복수 선택 가능)</label>
+                <div class="fortune-grid">
+                    <div class="fortune-option" data-tooltip="종합">
+                        <input type="checkbox" id="overall" name="fortune" value="overall" checked>
+                        <label for="overall">🔮</label>
+                    </div>
+                    <div class="fortune-option" data-tooltip="재물">
+                        <input type="checkbox" id="money" name="fortune" value="money">
+                        <label for="money">💰</label>
+                    </div>
+                    <div class="fortune-option" data-tooltip="애정">
+                        <input type="checkbox" id="love" name="fortune" value="love">
+                        <label for="love">💕</label>
+                    </div>
+                    <div class="fortune-option" data-tooltip="직장 사업">
+                        <input type="checkbox" id="career" name="fortune" value="career" disabled>
+                        <label for="career">💼</label>
+                    </div>
+                    <div class="fortune-option" data-tooltip="학업 시험">
+                        <input type="checkbox" id="study" name="fortune" value="study" disabled>
+                        <label for="study">📚</label>
+                    </div>
+                    <div class="fortune-option" data-tooltip="행운">
+                        <input type="checkbox" id="luck" name="fortune" value="luck" disabled>
+                        <label for="luck">🍀</label>
+                    </div>
+                    <div class="fortune-option" data-tooltip="가정">
+                        <input type="checkbox" id="family" name="fortune" value="family" disabled>
+                        <label for="family">🏠</label>
+                    </div>
+                    <div class="fortune-option" data-tooltip="건강"">
+                        <input type="checkbox" id="health" name="fortune" value="health" disabled>
+                        <label for="health">💪</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 기간 선택 -->
+            <div class="field-group">
+                <label class="field-label">📊 운세 주기</label>
+                <div class="period-cards">
+                    <div class="period-option">
+                        <input type="radio" id="monthly" name="period" value="monthly" checked>
+                        <label for="monthly">
+                            <div>📆</div>
+                            <div>월별</div>
+                        </label>
+                    </div>
+                    <div class="period-option">
+                        <input type="radio" id="quarterly" name="period" value="quarterly" disabled>
+                        <label for="quarterly">
+                            <div>📊</div>
+                            <div>분기별</div>
+                        </label>
+                    </div>
+                    <div class="period-option">
+                        <input type="radio" id="yearly" name="period" value="yearly" disabled>
+                        <label for="yearly">
+                            <div>📋</div>
+                            <div>올 한해</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="retro-btn-container">
+                <button type="submit" class="retro-btn">✨ 운세 확인 ✨</button>
+            </div>
+            <div style="position: absolute; top: 20px; left: 20px;">
+                <button type="button" class="back-btn" onclick="history.back()">←</button>
+            </div>
+        </form>
+    </div>
+
+    <script defer src="./js/selection.js"></script>
+</body>
+
+</html>
