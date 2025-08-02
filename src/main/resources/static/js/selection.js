@@ -25,63 +25,125 @@ if (userData) {
    `${userData.city} ${genderText} ${calendarText}<br>${userData.year}년 ${formattedMonth}월 ${formattedDay}일${timeText ? ' ' + timeText : ''}`;
 }
 
-// 폼 검증
+// 에러 애니메이션 적용 함수
+function applyErrorAnimation(element, animationClass) {
+  element.classList.add(animationClass);
+  setTimeout(() => {
+    element.classList.remove(animationClass);
+  }, 1000);
+}
+
+// 에러 메시지 스택 표시 함수
+function showErrorMessages(messages) {
+  // 기존 에러 컨테이너 제거
+  const existingContainer = document.querySelector(".error-container");
+  if (existingContainer) {
+    existingContainer.remove();
+  }
+
+  if (messages.length === 0) return;
+
+  // 에러 컨테이너 생성
+  const errorContainer = document.createElement("div");
+  errorContainer.className = "error-container";
+
+  // 각 에러 메시지를 스택으로 추가
+  messages.forEach((message, index) => {
+    const errorDiv = document.createElement("div");
+    errorDiv.className = "error-message";
+    errorDiv.textContent = message;
+
+    // 순차적으로 나타나는 애니메이션 효과
+    errorDiv.style.animationDelay = `${index * 0.1}s`;
+
+    errorContainer.appendChild(errorDiv);
+  });
+
+  // 버튼 컨테이너 위에 삽입
+  const btnContainer = document.querySelector(".retro-btn-container");
+  btnContainer.parentNode.insertBefore(errorContainer, btnContainer);
+}
+
+// 에러 메시지 숨기기 함수
+function hideErrorMessages() {
+  const errorContainer = document.querySelector(".error-container");
+  if (errorContainer) {
+    errorContainer.remove();
+  }
+}
+
+// 전체 폼 유효성 검사 함수
+function validateForm() {
+  const errors = [];
+
+  // AI 선택 확인
+  const ai = document.querySelector('input[name="ai"]:checked');
+  if (!ai) {
+    errors.push("🤖 AI를 선택해주세요!");
+    const aiContainer = document.querySelector(".ai-cards");
+    if (aiContainer) {
+      applyErrorAnimation(aiContainer, "field-error-jump");
+    }
+  }
+
+  // 운세 종류 선택 확인 (최소 1개 이상)
+  const fortunes = document.querySelectorAll('input[name="fortune"]:checked');
+  if (fortunes.length === 0) {
+    errors.push("🍀 최소 하나의 운세를 선택해주세요!");
+    const fortuneContainer = document.querySelector(".fortune-grid");
+    if (fortuneContainer) {
+      applyErrorAnimation(fortuneContainer, "field-error-jump");
+    }
+  }
+
+  // 운세 주기 선택 확인
+  const period = document.querySelector('input[name="period"]:checked');
+  if (!period) {
+    errors.push("📊 운세 주기를 선택해주세요!");
+    const periodContainer = document.querySelector(".period-cards");
+    if (periodContainer) {
+      applyErrorAnimation(periodContainer, "field-error-jump");
+    }
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors: errors,
+  };
+}
+
+// 폼 제출 이벤트 핸들러
 document.querySelector("form").addEventListener("submit", function (e) {
   e.preventDefault();
 
-  // 필수 필드 검증
-  const ai = document.querySelector('input[name="ai"]:checked');
-  const fortunes = document.querySelectorAll('input[name="fortune"]:checked');
-  const period = document.querySelector('input[name="period"]:checked');
+  const validation = validateForm();
 
-  let isValid = true;
-  let errorMessage = "";
+  if (validation.isValid) {
+    // 선택된 데이터 수집
+    const ai = document.querySelector('input[name="ai"]:checked').value;
+    const fortunes = Array.from(document.querySelectorAll('input[name="fortune"]:checked')).map(f => f.value);
+    const period = document.querySelector('input[name="period"]:checked').value;
 
-  if (!ai) {
-    isValid = false;
-    errorMessage += "AI를 선택해주세요!\n";
-    // AI 카드들에 에러 효과
-    document.querySelectorAll(".ai-option label").forEach((label) => {
-      label.style.borderColor = "#e74c3c";
-      setTimeout(() => (label.style.borderColor = ""), 2000);
-    });
-  }
+    // 선택 데이터 정리
+    const selectionData = {
+      ai: ai,
+      fortunes: fortunes,
+      period: period
+    };
 
-  if (fortunes.length === 0) {
-    isValid = false;
-    errorMessage += "최소 하나의 운세를 선택해주세요!\n";
-    // 운세 카드들에 에러 효과
-    document.querySelectorAll(".fortune-option label").forEach((label) => {
-      label.style.borderColor = "#e74c3c";
-      setTimeout(() => (label.style.borderColor = ""), 2000);
-    });
-  }
+    // SessionStorage에 선택 데이터 저장
+    sessionStorage.setItem("selectionData", JSON.stringify(selectionData));
 
-  if (!period) {
-    isValid = false;
-    errorMessage += "기간을 선택해주세요!\n";
-    // 기간 카드들에 에러 효과
-    document.querySelectorAll(".period-option label").forEach((label) => {
-      label.style.borderColor = "#e74c3c";
-      setTimeout(() => (label.style.borderColor = ""), 2000);
-    });
-  }
-
-  if (isValid) {
-    // 선택된 값들 정리
-    const selectedFortunes = Array.from(fortunes).map((f) => f.value);
-
-    alert(
-      `🔮 설정 완료!\n\nAI: ${ai.value.toUpperCase()}\n운세: ${
-        selectedFortunes.length
-      }개 선택\n기간: ${period.value}\n\n운세 분석을 시작합니다! ✨`
-    );
-
-    // 여기에 다음 단계 또는 결과 페이지로 이동하는 로직 추가
-    // window.location.href = 'result.html';
+    // 다음 페이지로 이동
+    window.location.href = "/fortune.html";
   } else {
-    alert(errorMessage.trim());
+    showErrorMessages(validation.errors);
   }
+});
+
+// 모든 입력 변경 시 에러 메시지 숨기기
+document.querySelectorAll('input[name="ai"], input[name="fortune"], input[name="period"]').forEach((input) => {
+  input.addEventListener("change", hideErrorMessages);
 });
 
 // 운세 선택 시 시각적 피드백
@@ -90,10 +152,7 @@ document.querySelectorAll('input[name="fortune"]').forEach((checkbox) => {
     const selectedCount = document.querySelectorAll(
       'input[name="fortune"]:checked'
     ).length;
-    const label =
-      document.querySelector('label[for="fortune"]') ||
-      document.querySelector(".field-label");
-
+    
     if (selectedCount > 0) {
       // 선택된 개수를 표시할 수 있음
       console.log(`${selectedCount}개의 운세가 선택됨`);
