@@ -1,175 +1,259 @@
-// selection.html에서 데이터 읽기
-const userData = JSON.parse(sessionStorage.getItem("userFormData"));
-
-// 사용자 정보 표시 업데이트
-if (userData) {
- // 성별 텍스트 변환
- const genderText = userData.gender === 'male' ? '남성' : '여성';
-
- // 달력 타입 텍스트 변환
- const calendarMap = {
-   'solar': '양력',
-   'lunar': '음력(평달)',
-   'lunar_leap': '음력(윤달)'
- };
- const calendarText = calendarMap[userData.calendar] || '양력';
-
- const timeText = userData.time;
-
- // 년월일 포맷팅 (숫자를 2자리로)
- const formattedMonth = userData.month.padStart(2, '0');
- const formattedDay = userData.day.padStart(2, '0');
-
- // HTML 업데이트
- document.querySelector('.logo p').innerHTML =
-   `${userData.city} ${genderText} ${calendarText}<br>${userData.year}년 ${formattedMonth}월 ${formattedDay}일${timeText ? ' ' + timeText : ''}`;
-}
-
-// 에러 애니메이션 적용 함수
-function applyErrorAnimation(element, animationClass) {
-  element.classList.add(animationClass);
-  setTimeout(() => {
-    element.classList.remove(animationClass);
-  }, 1000);
-}
-
-// 에러 메시지 스택 표시 함수
-function showErrorMessages(messages) {
-  // 기존 에러 컨테이너 제거
-  const existingContainer = document.querySelector(".error-container");
-  if (existingContainer) {
-    existingContainer.remove();
-  }
-
-  if (messages.length === 0) return;
-
-  // 에러 컨테이너 생성
-  const errorContainer = document.createElement("div");
-  errorContainer.className = "error-container";
-
-  // 각 에러 메시지를 스택으로 추가
-  messages.forEach((message, index) => {
-    const errorDiv = document.createElement("div");
-    errorDiv.className = "error-message";
-    errorDiv.textContent = message;
-
-    // 순차적으로 나타나는 애니메이션 효과
-    errorDiv.style.animationDelay = `${index * 0.1}s`;
-
-    errorContainer.appendChild(errorDiv);
-  });
-
-  // 버튼 컨테이너 위에 삽입
-  const btnContainer = document.querySelector(".retro-btn-container");
-  btnContainer.parentNode.insertBefore(errorContainer, btnContainer);
-}
-
-// 에러 메시지 숨기기 함수
-function hideErrorMessages() {
-  const errorContainer = document.querySelector(".error-container");
-  if (errorContainer) {
-    errorContainer.remove();
-  }
-}
-
-// 전체 폼 유효성 검사 함수
-function validateForm() {
-  const errors = [];
-
-  // AI 선택 확인
-  const ai = document.querySelector('input[name="ai"]:checked');
-  if (!ai) {
-    errors.push("🤖 AI를 선택해주세요!");
-    const aiContainer = document.querySelector(".ai-cards");
-    if (aiContainer) {
-      applyErrorAnimation(aiContainer, "field-error-jump");
+  // 상수 정의
+  const CONSTANTS = {
+    ANIMATION_DURATION: 1000,
+    ERROR_DELAY_STEP: 0.1,
+    NEXT_PAGE_URL: "/fortune.html",
+    STORAGE_KEYS: {
+      USER_DATA: "userFormData",
+      SELECTION_DATA: "selectionData"
     }
-  }
-
-  // 운세 종류 선택 확인 (최소 1개 이상)
-  const fortunes = document.querySelectorAll('input[name="fortune"]:checked');
-  if (fortunes.length === 0) {
-    errors.push("🍀 최소 하나의 운세를 선택해주세요!");
-    const fortuneContainer = document.querySelector(".fortune-grid");
-    if (fortuneContainer) {
-      applyErrorAnimation(fortuneContainer, "field-error-jump");
-    }
-  }
-
-  // 운세 주기 선택 확인
-  const period = document.querySelector('input[name="period"]:checked');
-  if (!period) {
-    errors.push("📊 운세 주기를 선택해주세요!");
-    const periodContainer = document.querySelector(".period-cards");
-    if (periodContainer) {
-      applyErrorAnimation(periodContainer, "field-error-jump");
-    }
-  }
-
-  return {
-    isValid: errors.length === 0,
-    errors: errors,
   };
-}
-
-// 폼 제출 이벤트 핸들러
-document.querySelector("form").addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  const validation = validateForm();
-
-  if (validation.isValid) {
-    // 선택된 데이터 수집
-    const ai = document.querySelector('input[name="ai"]:checked').value;
-    const fortunes = Array.from(document.querySelectorAll('input[name="fortune"]:checked')).map(f => f.value);
-    const period = document.querySelector('input[name="period"]:checked').value;
-
-    // 선택 데이터 정리
-    const selectionData = {
-      ai: ai,
-      fortunes: fortunes,
-      period: period
-    };
-
-    // SessionStorage에 선택 데이터 저장
-    sessionStorage.setItem("selectionData", JSON.stringify(selectionData));
-
-    // 다음 페이지로 이동
-    window.location.href = "/fortune.html";
-  } else {
-    showErrorMessages(validation.errors);
-  }
-});
-
-// 모든 입력 변경 시 에러 메시지 숨기기
-document.querySelectorAll('input[name="ai"], input[name="fortune"], input[name="period"]').forEach((input) => {
-  input.addEventListener("change", hideErrorMessages);
-});
-
-// 운세 선택 시 시각적 피드백
-document.querySelectorAll('input[name="fortune"]').forEach((checkbox) => {
-  checkbox.addEventListener("change", function () {
-    const selectedCount = document.querySelectorAll(
-      'input[name="fortune"]:checked'
-    ).length;
-    
-    if (selectedCount > 0) {
-      // 선택된 개수를 표시할 수 있음
-      console.log(`${selectedCount}개의 운세가 선택됨`);
+  
+  // DOM 요소 캐싱
+  const elements = {
+    form: null,
+    logoText: null,
+    aiInputs: null,
+    fortuneInputs: null,
+    periodInputs: null,
+    containers: {
+      ai: null,
+      fortune: null,
+      period: null,
+      button: null
     }
-  });
-});
-
-// 애니메이션 효과를 위한 인터랙션
-document
-  .querySelectorAll('input[type="radio"], input[type="checkbox"]')
-  .forEach((input) => {
-    input.addEventListener("change", function () {
-      // 선택 시 약간의 진동 효과
-      const label = this.nextElementSibling;
-      label.style.animation = "none";
-      setTimeout(() => {
-        label.style.animation = "";
-      }, 10);
+  };
+  
+  // 유틸리티 함수들
+  const utils = {
+    // 안전한 2자리 패딩
+    padZero: (str) => str.length === 1 ? '0' + str : str,
+    
+    // 안전한 sessionStorage 읽기
+    getStorageData: (key) => {
+      try {
+        const stored = sessionStorage.getItem(key);
+        return stored ? JSON.parse(stored) : null;
+      } catch (e) {
+        console.error(`${key} 파싱 실패:`, e);
+        return null;
+      }
+    },
+    
+    // 안전한 sessionStorage 저장
+    setStorageData: (key, data) => {
+      try {
+        sessionStorage.setItem(key, JSON.stringify(data));
+        return true;
+      } catch (e) {
+        console.error(`${key} 저장 실패:`, e);
+        return false;
+      }
+    }
+  };
+  
+  // 에러 관리자
+  const ErrorManager = {
+    container: null,
+    
+    show(messages) {
+      this.hide(); // 기존 에러 제거
+      
+      if (!messages.length) return;
+      
+      this.container = document.createElement("div");
+      this.container.className = "error-container";
+      
+      messages.forEach((message, index) => {
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "error-message";
+        errorDiv.textContent = message;
+        errorDiv.style.animationDelay = `${index * CONSTANTS.ERROR_DELAY_STEP}s`;
+        this.container.appendChild(errorDiv);
+      });
+      
+      // 안전한 DOM 삽입
+      if (elements.containers.button?.parentNode) {
+        elements.containers.button.parentNode.insertBefore(
+          this.container, 
+          elements.containers.button
+        );
+      }
+    },
+    
+    hide() {
+      if (this.container) {
+        this.container.remove();
+        this.container = null;
+      }
+    }
+  };
+  
+  // 애니메이션 관리자
+  const AnimationManager = {
+    timers: new Map(),
+    
+    applyError(element, animationClass) {
+      if (!element) return;
+      
+      // 기존 타이머 정리
+      if (this.timers.has(element)) {
+        clearTimeout(this.timers.get(element));
+      }
+      
+      element.classList.add(animationClass);
+      
+      const timer = setTimeout(() => {
+        element.classList.remove(animationClass);
+        this.timers.delete(element);
+      }, CONSTANTS.ANIMATION_DURATION);
+      
+      this.timers.set(element, timer);
+    },
+    
+    cleanup() {
+      this.timers.forEach(timer => clearTimeout(timer));
+      this.timers.clear();
+    }
+  };
+  
+  // 폼 검증기
+  const FormValidator = {
+    validate() {
+      const errors = [];
+      
+      // AI 선택 확인
+      const selectedAI = elements.aiInputs?.querySelector(':checked');
+      if (!selectedAI) {
+        errors.push("🤖 AI를 선택해주세요!");
+        AnimationManager.applyError(elements.containers.ai, "field-error-jump");
+      }
+      
+      // 운세 종류 선택 확인
+      const selectedFortunes = elements.fortuneInputs?.querySelectorAll(':checked');
+      if (!selectedFortunes?.length) {
+        errors.push("🍀 최소 하나의 운세를 선택해주세요!");
+        AnimationManager.applyError(elements.containers.fortune, "field-error-jump");
+      }
+      
+      // 운세 주기 선택 확인
+      const selectedPeriod = elements.periodInputs?.querySelector(':checked');
+      if (!selectedPeriod) {
+        errors.push("📊 운세 주기를 선택해주세요!");
+        AnimationManager.applyError(elements.containers.period, "field-error-jump");
+      }
+      
+      return {
+        isValid: errors.length === 0,
+        errors: errors
+      };
+    }
+  };
+  
+  // 사용자 정보 표시 업데이트
+  function updateUserDisplay() {
+    const userData = utils.getStorageData(CONSTANTS.STORAGE_KEYS.USER_DATA);
+    
+    if (!userData || !elements.logoText) return;
+    
+    const genderText = userData.gender === "male" ? "남성" : "여성";
+    
+    const calendarMap = {
+      solar: "양력",
+      lunar: "음력(평달)",
+      lunar_leap: "음력(윤달)"
+    };
+    const calendarText = calendarMap[userData.calendar] || "양력";
+    
+    const formattedMonth = utils.padZero(userData.month);
+    const formattedDay = utils.padZero(userData.day);
+    
+    elements.logoText.innerHTML = `${userData.city} ${genderText} ${calendarText}<br>${userData.year}년 ${formattedMonth}월 ${formattedDay}일${userData.time ? ' ' + userData.time : ''}`;
+  }
+  
+  // 폼 데이터 수집 및 저장
+  function handleFormSubmit() {
+    const selectedAI = elements.aiInputs?.querySelector(':checked')?.value;
+    const selectedFortunes = Array.from(elements.fortuneInputs?.querySelectorAll(':checked') || [])
+      .map(input => input.value);
+    const selectedPeriod = elements.periodInputs?.querySelector(':checked')?.value;
+    
+    const selectionData = {
+      ai: selectedAI,
+      fortunes: selectedFortunes,
+      period: selectedPeriod
+    };
+    
+    if (utils.setStorageData(CONSTANTS.STORAGE_KEYS.SELECTION_DATA, selectionData)) {
+      window.location.href = CONSTANTS.NEXT_PAGE_URL;
+    } else {
+      ErrorManager.show(["데이터 저장에 실패했습니다. 다시 시도해주세요."]);
+    }
+  }
+  
+  // DOM 요소 초기화
+  function initializeElements() {
+    elements.form = document.querySelector("form");
+    elements.logoText = document.querySelector(".logo p");
+    elements.aiInputs = document.querySelector(".ai-cards");
+    elements.fortuneInputs = document.querySelector(".fortune-grid");
+    elements.periodInputs = document.querySelector(".period-cards");
+    
+    elements.containers.ai = document.querySelector(".ai-cards");
+    elements.containers.fortune = document.querySelector(".fortune-grid");
+    elements.containers.period = document.querySelector(".period-cards");
+    elements.containers.button = document.querySelector(".retro-btn-container");
+  }
+  
+  // 이벤트 리스너 등록
+  function attachEventListeners() {
+    // 폼 제출 이벤트
+    if (elements.form) {
+      elements.form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        
+        const validation = FormValidator.validate();
+        
+        if (validation.isValid) {
+          handleFormSubmit();
+        } else {
+          ErrorManager.show(validation.errors);
+        }
+      });
+    }
+    
+    // 이벤트 위임을 사용한 입력 변경 감지
+    document.addEventListener("change", function(e) {
+      const inputName = e.target.name;
+      
+      // 모든 폼 입력에 대해 에러 메시지 숨기기
+      if (["ai", "fortune", "period"].includes(inputName)) {
+        ErrorManager.hide();
+      }
+      
+      // 운세 선택 카운팅 (필요시)
+      if (inputName === "fortune") {
+        const selectedCount = document.querySelectorAll('input[name="fortune"]:checked').length;
+        // console.log(`${selectedCount}개의 운세가 선택됨`); // 필요시 주석 해제
+      }
     });
+  }
+  
+  // 페이지 초기화
+  function initializePage() {
+    initializeElements();
+    updateUserDisplay();
+    attachEventListeners();
+  }
+  
+  // DOM 로드 완료 후 초기화
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializePage);
+  } else {
+    initializePage();
+  }
+  
+  // 페이지 언로드 시 정리
+  window.addEventListener("beforeunload", () => {
+    AnimationManager.cleanup();
   });
