@@ -65,18 +65,18 @@ function validateInputRange(input, min, max) {
 
 // 성별 선택 확인 함수
 function isGenderSelected() {
-  return Array.from(genderInputs).some(input => input.checked);
+  return Array.from(genderInputs).some((input) => input.checked);
 }
 
 // 양력/음력 선택 확인 함수
 function isCalendarSelected() {
-  return Array.from(calendarInputs).some(input => input.checked);
+  return Array.from(calendarInputs).some((input) => input.checked);
 }
 
 // 에러 메시지 스택 표시 함수
 function showErrorMessages(messages) {
   // 기존 에러 컨테이너 제거
-  const existingContainer = document.querySelector('.error-container');
+  const existingContainer = document.querySelector(".error-container");
   if (existingContainer) {
     existingContainer.remove();
   }
@@ -84,29 +84,29 @@ function showErrorMessages(messages) {
   if (messages.length === 0) return;
 
   // 에러 컨테이너 생성
-  const errorContainer = document.createElement('div');
-  errorContainer.className = 'error-container';
+  const errorContainer = document.createElement("div");
+  errorContainer.className = "error-container";
 
   // 각 에러 메시지를 스택으로 추가
   messages.forEach((message, index) => {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
+    const errorDiv = document.createElement("div");
+    errorDiv.className = "error-message";
     errorDiv.textContent = message;
-    
+
     // 순차적으로 나타나는 애니메이션 효과
     errorDiv.style.animationDelay = `${index * 0.1}s`;
-    
+
     errorContainer.appendChild(errorDiv);
   });
 
   // 버튼 컨테이너 위에 삽입
-  const btnContainer = document.querySelector('.retro-btn-container');
+  const btnContainer = document.querySelector(".retro-btn-container");
   btnContainer.parentNode.insertBefore(errorContainer, btnContainer);
 }
 
 // 에러 메시지 숨기기 함수
 function hideErrorMessages() {
-  const errorContainer = document.querySelector('.error-container');
+  const errorContainer = document.querySelector(".error-container");
   if (errorContainer) {
     errorContainer.remove();
   }
@@ -118,8 +118,8 @@ function validateForm() {
 
   // 성별 선택 확인
   if (!isGenderSelected()) {
-    errors.push('👶 성별을 선택해주세요!');
-    const genderContainer = document.querySelector('.gender-cards');
+    errors.push("👶 성별을 선택해주세요!");
+    const genderContainer = document.querySelector(".gender-cards");
     if (genderContainer) {
       applyErrorAnimation(genderContainer, "field-error-jump");
     }
@@ -127,8 +127,8 @@ function validateForm() {
 
   // 양력/음력 선택 확인
   if (!isCalendarSelected()) {
-    errors.push('📅 양력 또는 음력을 선택해주세요!');
-    const calendarContainer = document.querySelector('.calendar-toggle');
+    errors.push("📅 양력 또는 음력을 선택해주세요!");
+    const calendarContainer = document.querySelector(".calendar-toggle");
     if (calendarContainer) {
       applyErrorAnimation(calendarContainer, "field-error-jump");
     }
@@ -144,7 +144,7 @@ function validateForm() {
   });
 
   if (emptyFields.length > 0) {
-    errors.push('🎂 생년월일을 모두 입력해주세요!');
+    errors.push("🎂 생년월일을 모두 입력해주세요!");
   }
 
   // 날짜 유효성 확인 (모든 필드가 입력된 경우에만)
@@ -154,13 +154,15 @@ function validateForm() {
     const day = parseInt(dayInput.value);
 
     if (year < MIN_YEAR || year > CURRENT_YEAR) {
-      errors.push(`📅 년도는 ${MIN_YEAR}년부터 ${CURRENT_YEAR}년까지 입력 가능합니다!`);
+      errors.push(
+        `📅 년도는 ${MIN_YEAR}년부터 ${CURRENT_YEAR}년까지 입력 가능합니다!`
+      );
     }
-    
+
     if (month < 1 || month > 12) {
-      errors.push('📅 월은 1월부터 12월까지 입력 가능합니다!');
+      errors.push("📅 월은 1월부터 12월까지 입력 가능합니다!");
     }
-    
+
     if (year >= MIN_YEAR && year <= CURRENT_YEAR && month >= 1 && month <= 12) {
       const maxDay = getDaysInMonth(year, month);
       if (day < 1 || day > maxDay) {
@@ -171,7 +173,7 @@ function validateForm() {
 
   return {
     isValid: errors.length === 0,
-    errors: errors
+    errors: errors,
   };
 }
 
@@ -211,8 +213,46 @@ document.querySelector("form").addEventListener("submit", function (e) {
   const validation = validateForm();
 
   if (validation.isValid) {
-    window.location.href = '/selection.html';
+    // 폼 데이터 수집
+    const formData = {
+      gender: document.querySelector('[name="gender"]:checked').value,
+      calendar: document.querySelector('[name="calendar"]:checked').value,
+      year: yearInput.value,
+      month: monthInput.value,
+      day: dayInput.value,
+      time: document.querySelector('[name="time"]').value || "",
+      city: document.querySelector('[name="city"]').value || "",
+    };
+
+    // SessionStorage에 데이터 저장
+    sessionStorage.setItem("userFormData", JSON.stringify(formData));
+
+    window.location.href = "/selection.html";
   } else {
     showErrorMessages(validation.errors);
+  }
+});
+
+// index.html 로드 시 저장된 데이터 복원
+document.addEventListener('DOMContentLoaded', function() {
+  const savedData = sessionStorage.getItem('userFormData');
+  
+  if (savedData) {
+    const formData = JSON.parse(savedData);
+    
+    // 저장된 데이터로 폼 복원
+    if (formData.gender) {
+      document.querySelector(`[name="gender"][value="${formData.gender}"]`).checked = true;
+    }
+    if (formData.calendar) {
+      document.querySelector(`[name="calendar"][value="${formData.calendar}"]`).checked = true;
+    }
+    if (formData.year) yearInput.value = formData.year;
+    if (formData.month) monthInput.value = formData.month;
+    if (formData.day) dayInput.value = formData.day;
+    if (formData.time) document.querySelector('[name="time"]').value = formData.time;
+    if (formData.city) document.querySelector('[name="city"]').value = formData.city;
+    
+    updateMaxDay(); // 일 최대값 업데이트
   }
 });
