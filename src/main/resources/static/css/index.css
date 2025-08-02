@@ -168,7 +168,7 @@ body {
   background: rgba(255, 255, 255, 0.8);
   border: 3px solid #ff6b6b;
   border-radius: 10px;
-  padding: 10px 8px;
+  padding: 8px 6px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -244,7 +244,8 @@ body {
 }
 
 .date-inputs.single {
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
 }
 
 .retro-input {
@@ -252,7 +253,7 @@ body {
   background: rgba(255, 255, 255, 0.8);
   border: 3px solid #f1c40f;
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: 10px 0px;
   color: rgba(45, 52, 54, 0.6);
   font-size: 0.75em;
   font-weight: 600;
@@ -484,5 +485,33 @@ body {
   }
   50% {
     transform: translateY(-12px); /* 점프 높이 */
+  }
+}
+
+/* 에러 메시지 스타일 */
+.error-message {
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.8em;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+  animation: slideDown 0.3s ease-out;
+}
+
+.error-container {
+  margin-bottom: 15px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
