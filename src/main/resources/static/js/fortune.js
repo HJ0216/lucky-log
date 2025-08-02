@@ -1,3 +1,39 @@
+// selection.html에서 데이터 읽기
+const userData = JSON.parse(sessionStorage.getItem("userFormData"));
+const selectionData = JSON.parse(sessionStorage.getItem("selectionData"));
+
+// 사용자 정보 표시 업데이트
+if (userData) {
+  // 성별 텍스트 변환
+  const genderText = userData.gender === "male" ? "남성" : "여성";
+
+  // 달력 타입 텍스트 변환
+  const calendarMap = {
+    solar: "양력",
+    lunar: "음력(평달)",
+    lunar_leap: "음력(윤달)",
+  };
+  const calendarText = calendarMap[userData.calendar] || "양력";
+
+  const timeText = userData.time;
+
+  // 년월일 포맷팅 (숫자를 2자리로)
+  const formattedMonth = userData.month.padStart(2, "0");
+  const formattedDay = userData.day.padStart(2, "0");
+
+  // HTML 업데이트
+  document.getElementById("user-info").innerHTML = `${
+    userData.city
+  } ${genderText} ${calendarText}<br>${
+    userData.year
+  }년 ${formattedMonth}월 ${formattedDay}일${timeText ? " " + timeText : ""}`;
+} else {
+  // userData가 없는 경우 기본값 사용
+  document.getElementById(
+    "user-info"
+  ).innerHTML = `사용자 정보를 불러올 수 없습니다😱.<br>다시 시도해주세요😵.`;
+}
+
 // 운세 종류별 아이콘 매핑
 const fortuneIcons = {
   overall: "🔮",
@@ -49,24 +85,41 @@ const dummyFortuneData = {
 
 // 페이지 로드 시 초기화
 document.addEventListener("DOMContentLoaded", function () {
-  // URL 파라미터에서 선택 정보 가져오기 (실제로는 이전 페이지에서 전달받음)
-  const selectedAI = "claude"; // 예시
-  const selectedFortunes = ["overall", "money", "love", "career"]; // 예시
-  const selectedPeriod = "monthly"; // 예시
+  // selectionData에서 실제 선택된 값들 사용
+  if (selectionData) {
+    const selectedAI = selectionData.ai;
+    const selectedFortunes = selectionData.fortunes;
+    const selectedPeriod = selectionData.period;
 
-  // AI 정보 표시
-  updateAIInfo(selectedAI);
+    // AI 정보 표시
+    updateAIInfo(selectedAI);
 
-  // 로딩 시작
-  startLoading(selectedFortunes, selectedPeriod);
+    // 로딩 시작
+    startLoading(selectedFortunes, selectedPeriod);
+  } else {
+    // selectionData가 없는 경우 기본값 사용
+    console.error("선택 데이터가 없습니다. 기본값을 사용합니다.");
+    const selectedAI = "gpt"; // 기본값
+    const selectedFortunes = ["overall"]; // 기본값
+    const selectedPeriod = "monthly"; // 기본값
+
+    updateAIInfo(selectedAI);
+    startLoading(selectedFortunes, selectedPeriod);
+  }
 });
 
 function updateAIInfo(ai) {
   const aiIcon = document.getElementById("ai-icon");
   const aiName = document.getElementById("ai-name");
 
-  aiIcon.textContent = aiInfo[ai].icon;
-  aiName.textContent = aiInfo[ai].name;
+  if (aiInfo[ai]) {
+    aiIcon.textContent = aiInfo[ai].icon;
+    aiName.textContent = aiInfo[ai].name;
+  } else {
+    // 기본값 설정
+    aiIcon.textContent = "🚀";
+    aiName.textContent = "GPT";
+  }
 }
 
 function startLoading(fortunes, period) {
@@ -84,12 +137,15 @@ function showResults(fortunes, period) {
   // 로딩 화면 숨기기
   loadingScreen.style.display = "none";
 
-  // 결과 생성
+  // 결과 생성 - 선택된 운세만 표시
   resultsContainer.innerHTML = "";
 
   fortunes.forEach((fortuneType, index) => {
-    const section = createFortuneSection(fortuneType, period);
-    resultsContainer.appendChild(section);
+    // 선택된 운세 타입만 결과에 포함
+    if (dummyFortuneData[fortuneType]) {
+      const section = createFortuneSection(fortuneType, period);
+      resultsContainer.appendChild(section);
+    }
   });
 
   // 결과 화면 표시
@@ -101,34 +157,24 @@ function createFortuneSection(fortuneType, period) {
   const section = document.createElement("div");
   section.className = "fortune-section";
 
-  const periodText =
-    period === "monthly"
-      ? "월별"
-      : period === "quarterly"
-      ? "분기별"
-      : "올 한해";
-
   section.innerHTML = `
-                <div class="fortune-title">
-                    <span class="fortune-icon">${fortuneIcons[fortuneType]}</span>
-                    <span>${fortuneNames[fortuneType]}</span>
-                </div>
-                <div class="fortune-content-wrapper">
-                    <div class="fortune-content">
-                        ${dummyFortuneData[fortuneType]}
-                    </div>
-                </div>
-            `;
+    <div class="fortune-title">
+      <span class="fortune-icon">${fortuneIcons[fortuneType]}</span>
+      <span>${fortuneNames[fortuneType]}</span>
+    </div>
+    <div class="fortune-content-wrapper">
+      <div class="fortune-content">
+        ${dummyFortuneData[fortuneType]}
+      </div>
+    </div>
+  `;
 
   return section;
 }
 
 function goToSelection() {
-  // 실제로는 이전 페이지로 이동하면서 기존 선택 값들을 유지
-  alert(
-    "🔄 선택 화면으로 이동합니다!\n기존 설정을 유지한 채로 다시 선택할 수 있습니다."
-  );
-  // window.location.href = 'index.html?preset=true';
+  // 선택 화면으로 돌아가기
+  window.location.href = "/selection.html";
 }
 
 function copyResults() {
@@ -156,8 +202,8 @@ function copyResults() {
 }
 
 function shareResults() {
-  // URL 공유 기능 (추후 구현)
-  const shareUrl = window.location.href; // 현재 URL 또는 파라미터 포함된 URL
+  // URL 공유 기능
+  const shareUrl = window.location.href;
 
   if (navigator.clipboard) {
     navigator.clipboard
@@ -181,7 +227,7 @@ function shareResults() {
 
 function saveResults() {
   // 로그인 체크 로직 (추후 구현)
-  const isLoggedIn = false; // 실제로는 로그인 상태 확인
+  const isLoggedIn = false;
 
   if (!isLoggedIn) {
     if (
@@ -189,7 +235,6 @@ function saveResults() {
         "저장하려면 로그인이 필요합니다.\n로그인 페이지로 이동하시겠습니까?"
       )
     ) {
-      // window.location.href = '/login';
       showToast("로그인 페이지로 이동합니다! 🔐");
     }
     return;
@@ -227,16 +272,22 @@ function generateShareText() {
   let shareText = `🔮 ${aiName} AI 운세 결과\n\n👤 ${userInfo}\n\n`;
 
   sections.forEach((section) => {
-    const title = section.querySelector(
+    const titleElement = section.querySelector(
       ".fortune-title span:nth-child(2)"
-    ).textContent;
-    const period = section.querySelector(".fortune-period").textContent;
-    const content = section.querySelector(".fortune-content").textContent;
+    );
+    const periodElement = section.querySelector(".fortune-period");
+    const contentElement = section.querySelector(".fortune-content");
 
-    shareText += `${title} (${period})\n${content}\n\n`;
+    if (titleElement && contentElement) {
+      const title = titleElement.textContent;
+      const period = periodElement ? periodElement.textContent : "";
+      const content = contentElement.textContent;
+
+      shareText += `${title} ${period}\n${content}\n\n`;
+    }
   });
 
-  shareText += "✨ Y2K 운세에서 확인하세요!";
+  shareText += "✨ LUCKY LOG에서 확인하세요!";
 
   return shareText;
 }
@@ -280,7 +331,7 @@ function observeScrollAnimations() {
 
 // 결과 표시 후 스크롤 애니메이션 관찰 시작
 setTimeout(() => {
-  if (document.getElementById("results-screen").style.display === "block") {
+  if (document.getElementById("results-screen").style.display !== "none") {
     observeScrollAnimations();
   }
 }, 4000);
