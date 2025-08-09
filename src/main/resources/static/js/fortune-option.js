@@ -11,32 +11,29 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 실시간 선택 개수 표시 (운세 종류)
-  const fortuneCheckboxes = document.querySelectorAll('input[name="fortunes"]');
-  const fortuneLabel = document.querySelector(".field-label");
+  // fortune checkbox 클릭 이벤트 처리
+  const fortuneCheckboxes = document.querySelectorAll(
+    '.fortune-option input[type="checkbox"]'
+  );
 
-  if (fortuneCheckboxes.length > 0 && fortuneLabel) {
-    function updateFortuneCount() {
-      const selectedCount = document.querySelectorAll(
-        'input[name="fortunes"]:checked'
-      ).length;
-      const labelText = fortuneLabel.textContent
-        .replace(/\(\d+개 선택됨\)/, "")
-        .trim();
+  fortuneCheckboxes.forEach(function (checkbox) {
+    // 초기 상태 설정 (페이지 로드 시)
+    updateFortuneOptionStyle(checkbox);
 
-      if (selectedCount > 0) {
-        fortuneLabel.textContent = `${labelText} (${selectedCount}개 선택됨)`;
-      } else {
-        fortuneLabel.textContent = labelText;
-      }
-    }
-
-    fortuneCheckboxes.forEach((checkbox) => {
-      checkbox.addEventListener("change", updateFortuneCount);
+    // 클릭 이벤트 리스너
+    checkbox.addEventListener("change", function () {
+      updateFortuneOptionStyle(this);
     });
+  });
 
-    // 초기 로드 시 실행
-    updateFortuneCount();
+  function updateFortuneOptionStyle(checkbox) {
+    const fortuneOption = checkbox.closest(".fortune-option");
+
+    if (checkbox.checked) {
+      fortuneOption.classList.add("checked");
+    } else {
+      fortuneOption.classList.remove("checked");
+    }
   }
 
   // 에러 메시지 자동 숨기기 (5초 후)
