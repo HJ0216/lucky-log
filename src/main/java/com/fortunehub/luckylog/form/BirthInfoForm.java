@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 public class BirthInfoForm {
 
-  private String gender;
-  private String calendar;
+  private String gender = "female";
+  private String calendar = "solar";
   private Integer year;
   private Integer month;
   private Integer day;
