@@ -273,7 +273,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 600;
-  font-size: 1.0em;
+  font-size: 1em;
   margin: 0;
   color: rgba(45, 52, 54, 0.6);
   box-shadow: 0 2px 0 #6c5ce7, 0 4px 10px rgba(162, 155, 254, 0.2);
@@ -286,7 +286,7 @@ body {
 }
 
 .fortune-option label::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -303,14 +303,38 @@ body {
   text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
 }
 
-.fortune-option[data-tooltip="종합"]:hover label::after { content: "종합"; opacity: 1; }
-.fortune-option[data-tooltip="재물"]:hover label::after { content: "재물"; opacity: 1; }
-.fortune-option[data-tooltip="애정"]:hover label::after { content: "애정"; opacity: 1; }
-.fortune-option[data-tooltip="직장 사업"]:hover label::after { content: "직장 사업"; opacity: 1; }
-.fortune-option[data-tooltip="학업 시험"]:hover label::after { content: "학업 시험"; opacity: 1; }
-.fortune-option[data-tooltip="행운"]:hover label::after { content: "행운"; opacity: 1; }
-.fortune-option[data-tooltip="가정"]:hover label::after { content: "가정"; opacity: 1; }
-.fortune-option[data-tooltip="건강"]:hover label::after { content: "건강"; opacity: 1; }
+.fortune-option[data-tooltip="종합"]:hover label::after {
+  content: "종합";
+  opacity: 1;
+}
+.fortune-option[data-tooltip="재물"]:hover label::after {
+  content: "재물";
+  opacity: 1;
+}
+.fortune-option[data-tooltip="애정"]:hover label::after {
+  content: "애정";
+  opacity: 1;
+}
+.fortune-option[data-tooltip="직장 사업"]:hover label::after {
+  content: "직장 사업";
+  opacity: 1;
+}
+.fortune-option[data-tooltip="학업 시험"]:hover label::after {
+  content: "학업 시험";
+  opacity: 1;
+}
+.fortune-option[data-tooltip="행운"]:hover label::after {
+  content: "행운";
+  opacity: 1;
+}
+.fortune-option[data-tooltip="가정"]:hover label::after {
+  content: "가정";
+  opacity: 1;
+}
+.fortune-option[data-tooltip="건강"]:hover label::after {
+  content: "건강";
+  opacity: 1;
+}
 
 .fortune-option input[type="checkbox"]:checked + label {
   border-color: #74b9ff;

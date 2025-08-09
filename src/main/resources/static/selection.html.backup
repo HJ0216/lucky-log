@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUCKY LOG</title>
     <link rel="icon" href="./images/lucky-log-logo.png" type="image/x-icon">
-    <link href="./css/selection.css" rel="stylesheet">
+    <link href="css/fortune-option.css" rel="stylesheet">
 </head>
 
 <body>
@@ -37,14 +37,14 @@
                         </label>
                     </div>
                     <div class="ai-option">
-                        <input type="radio" id="gemini" name="ai" value="gemini" disabled>
+                        <input type="radio" id="gemini" name="ai" value="gemini" checked>
                         <label for="gemini">
                             <div>🪂</div>
                             <div>Gemini</div>
                         </label>
                     </div>
                     <div class="ai-option">
-                        <input type="radio" id="gpt" name="ai" value="gpt" checked>
+                        <input type="radio" id="gpt" name="ai" value="gpt" disabled>
                         <label for="gpt">
                             <div>🚀</div>
                             <div>GPT</div>
@@ -86,7 +86,7 @@
                         <label for="family">🏠</label>
                     </div>
                     <div class="fortune-option" data-tooltip="건강"">
-                        <input type="checkbox" id="health" name="fortune" value="health" disabled>
+                        <input type=" checkbox" id="health" name="fortune" value="health" disabled>
                         <label for="health">💪</label>
                     </div>
                 </div>
