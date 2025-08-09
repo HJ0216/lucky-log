@@ -1,10 +1,19 @@
 package com.fortunehub.luckylog.controller.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.form.BirthInfoForm;
+import com.fortunehub.luckylog.form.FortuneOptionForm;
+import jakarta.validation.Valid;
 import java.time.Year;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +39,11 @@ public class IndexController {
   }
 
   @PostMapping("/")
-  public String submit(@ModelAttribute BirthInfoForm birthInfoForm, Model model) {
+  public String submit (
+      @Valid @ModelAttribute BirthInfoForm birthInfoForm,
+      BindingResult result,
+      Model model
+  ) throws Exception {
 
     log.debug("사용자 정보 상세: 달력={}, 성별={}, 년도={}, 월={}, 일={}, 시간={}, 도시={}",
         birthInfoForm.getCalendar(),
@@ -41,8 +54,24 @@ public class IndexController {
         birthInfoForm.getTime(),
         birthInfoForm.getCity());
 
-    model.addAttribute("birthInfoForm", birthInfoForm);
+    if (result.hasErrors()) {
+      Set<String> errorMessages = new LinkedHashSet<>();
+      Set<String> errorFields = new LinkedHashSet<>();
 
-    return "selection";
+      result.getFieldErrors().forEach(error -> {
+        errorMessages.add(error.getDefaultMessage());
+        errorFields.add(error.getField());
+      });
+
+      model.addAttribute("errorMessages", errorMessages);
+      model.addAttribute("errorFields", errorFields);
+
+      return "index";
+    }
+
+    model.addAttribute("birthInfo", birthInfoForm);
+    model.addAttribute("fortuneOptionForm", new FortuneOptionForm());
+
+    return "fortune-option";
   }
 }
