@@ -95,7 +95,7 @@ const IndexPage = {
       max = this.getDynamicDayMax();
     }
 
-    if (value && min && value < min) {
+    if (value != null && min && value < min) {
       input.value = min;
       this.wiggleInput(input);
     } else if (value && max && value > max) {
@@ -211,7 +211,7 @@ const IndexPage = {
     setTimeout(() => {
       input.classList.remove(this.config.wiggleClass);
     }, this.config.animationDuration);
-  },
+  }
 };
 
 // 페이지 로드 시 초기화
