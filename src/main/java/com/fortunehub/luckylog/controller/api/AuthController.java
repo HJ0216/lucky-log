@@ -1,4 +1,4 @@
-package com.fortunehub.luckylog.controller;
+package com.fortunehub.luckylog.controller.api;
 
 import com.fortunehub.luckylog.dto.request.auth.LoginRequest;
 import com.fortunehub.luckylog.dto.request.auth.MyNicknameUpdateRequest;

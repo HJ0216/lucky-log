@@ -1,4 +1,4 @@
-package com.fortunehub.luckylog.controller;
+package com.fortunehub.luckylog.controller.api;
 
 import com.fortunehub.luckylog.dto.request.user.UserNicknameUpdateRequest;
 import com.fortunehub.luckylog.dto.request.user.UserProfileImageUpdateRequest;
