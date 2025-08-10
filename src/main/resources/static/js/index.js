@@ -1,3 +1,10 @@
+/**
+ * IndexPage
+ * 인덱스 페이지(사주 정보 입력 폼)의 동적인 UI/UX를 관리하는 모듈 객체
+ * - 실시간 입력 값 검증
+ * - 동적 날짜 계산
+ * - 에러 애니메이션
+ */
 const IndexPage = {
   // 설정 및 상태
   config: {
@@ -6,7 +13,15 @@ const IndexPage = {
     wiggleClass: "field-error-wiggle",
   },
 
-  elements: {},
+  // DOM 요소 캐싱 (Element Cache)
+  elements: {
+    form: null,
+    numberInputs: [],
+    allInputs: [],
+    yearInput: null,
+    monthInput: null,
+    dayInput: null,
+  },
 
   // 초기화
   init() {
@@ -25,6 +40,7 @@ const IndexPage = {
     );
   },
 
+  // 캐싱된 DOM 요소들에 필요한 이벤트 리스너를 등록
   attachEvents() {
     // 숫자 입력 필터링 (실시간 UX)
     this.elements.numberInputs.forEach((input) => {
@@ -84,7 +100,7 @@ const IndexPage = {
     }
   },
 
-  // 입력 범위 체크 (기본적인 클라이언트 검증)
+  // 숫자 입력 필드의 포커스가 해제될 때(blur), min/max 범위를 벗어나는지 검증
   validateRange(e) {
     const input = e.target;
     const value = parseInt(input.value);
@@ -104,6 +120,7 @@ const IndexPage = {
     }
   },
 
+  // 현재 선택된 년/월을 기준으로 해당 월의 마지막 날짜(28, 29, 30, 31)를 계산
   getDynamicDayMax() {
     const yearInput = document.querySelector('input[name="year"]');
     const monthInput = document.querySelector('input[name="month"]');
@@ -126,6 +143,7 @@ const IndexPage = {
     return maxDay;
   },
 
+  // 년 또는 월 입력값이 변경될 때마다 일(day) 필드의 최대값을 업데이트하고, 현재 입력된 일(day)이 새 최대값을 초과하면 조정
   updateDayMaxOnDateChange() {
     const dayInput = document.querySelector('input[name="day"]');
     if (dayInput) {
