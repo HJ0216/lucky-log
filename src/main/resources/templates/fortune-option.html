@@ -34,7 +34,7 @@
       </p>
     </div>
 
-    <form th:action="@{/api/v1/fortune/generate}" method="post" th:object="${fortuneOptionForm}" class="form-grid">
+    <form th:action="@{/fortune-option}" method="post" th:object="${fortuneOptionForm}" class="form-grid">
       <!-- AI 선택 -->
       <div class="field-group">
         <label class="field-label">🤖 AI 선택</label>
@@ -149,6 +149,14 @@
       <div style="position: absolute; top: 20px; left: 20px;">
         <button type="button" class="back-btn" onclick="history.back()">←</button>
       </div>
+
+      <input type="hidden" name="city" th:value="${birthInfo.city}" />
+      <input type="hidden" name="gender" th:value="${birthInfo.gender}" />
+      <input type="hidden" name="calendar" th:value="${birthInfo.calendar}" />
+      <input type="hidden" name="year" th:value="${birthInfo.year}" />
+      <input type="hidden" name="month" th:value="${birthInfo.month}" />
+      <input type="hidden" name="day" th:value="${birthInfo.day}" />
+      <input type="hidden" name="time" th:value="${birthInfo.time}" />
     </form>
   </div>
 
