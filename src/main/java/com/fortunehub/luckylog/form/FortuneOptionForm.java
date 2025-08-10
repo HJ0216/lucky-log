@@ -12,7 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FortuneOptionForm {
-  // NOTE: 어떤 데이터를 담을지에 대한 구조를 정의
 
   @NotNull(message = "🤖 AI를 선택해주세요!")
   private String ai = "gemini";

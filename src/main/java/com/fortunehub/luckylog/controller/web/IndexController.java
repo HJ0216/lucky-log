@@ -1,14 +1,10 @@
 package com.fortunehub.luckylog.controller.web;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.form.BirthInfoForm;
 import com.fortunehub.luckylog.form.FortuneOptionForm;
 import jakarta.validation.Valid;
 import java.time.Year;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,14 +13,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
+@RequestMapping("/")
 public class IndexController {
 
   private static final int MIN_BIRTH_YEAR = 1940;
 
-  @GetMapping("/")
+  @GetMapping
   public String index(Model model) {
     // Model: Controller에서 생성된 데이터를 담아 View로 전달할 때 사용하는 객체
 
@@ -38,8 +36,8 @@ public class IndexController {
     return "index"; // templates/index.html 반환
   }
 
-  @PostMapping("/")
-  public String submit (
+  @PostMapping
+  public String submit(
       @Valid @ModelAttribute BirthInfoForm birthInfoForm,
       BindingResult result,
       Model model
