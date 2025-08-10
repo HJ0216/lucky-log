@@ -1,7 +1,6 @@
 package com.fortunehub.luckylog.controller.web;
 
 import com.fortunehub.luckylog.form.BirthInfoForm;
-import com.fortunehub.luckylog.form.FortuneOptionForm;
 import jakarta.validation.Valid;
 import java.time.Year;
 import java.util.LinkedHashSet;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
@@ -40,7 +40,8 @@ public class IndexController {
   public String submit(
       @Valid @ModelAttribute BirthInfoForm birthInfoForm,
       BindingResult result,
-      Model model
+      Model model,
+      RedirectAttributes redirectAttributes
   ) throws Exception {
 
     log.debug("사용자 정보 상세: 달력={}, 성별={}, 년도={}, 월={}, 일={}, 시간={}, 도시={}",
@@ -67,9 +68,8 @@ public class IndexController {
       return "index";
     }
 
-    model.addAttribute("birthInfo", birthInfoForm);
-    model.addAttribute("fortuneOptionForm", new FortuneOptionForm());
+    redirectAttributes.addFlashAttribute("birthInfo", birthInfoForm);
 
-    return "fortune-option";
+    return "redirect:/fortune/option";
   }
 }
