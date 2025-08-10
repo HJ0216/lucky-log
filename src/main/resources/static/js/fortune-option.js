@@ -11,31 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // fortune checkbox 클릭 이벤트 처리
-  const fortuneCheckboxes = document.querySelectorAll(
-    '.fortune-option input[type="checkbox"]'
-  );
-
-  fortuneCheckboxes.forEach(function (checkbox) {
-    // 초기 상태 설정 (페이지 로드 시)
-    updateFortuneOptionStyle(checkbox);
-
-    // 클릭 이벤트 리스너
-    checkbox.addEventListener("change", function () {
-      updateFortuneOptionStyle(this);
-    });
-  });
-
-  function updateFortuneOptionStyle(checkbox) {
-    const fortuneOption = checkbox.closest(".fortune-option");
-
-    if (checkbox.checked) {
-      fortuneOption.classList.add("checked");
-    } else {
-      fortuneOption.classList.remove("checked");
-    }
-  }
-
   // 에러 메시지 자동 숨기기 (5초 후)
   const errorMessages = document.querySelectorAll(".error-message, .alert");
   errorMessages.forEach(function (errorMsg) {
