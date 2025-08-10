@@ -23,6 +23,8 @@ public class FortuneResultController {
       Model model
   ) {
 
+    log.info("운세 결과 페이지 접근");
+
     model.addAttribute("fortuneResult", fortuneResult);
 
     return "fortune-result";

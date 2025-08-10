@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,8 @@ public class FortuneOptionController {
 
   @GetMapping
   public String show(@ModelAttribute BirthInfoForm birthInfo, Model model) {
+
+    log.info("운세 선택 페이지 접근");
 
     model.addAttribute("fortuneOptionForm", new FortuneOptionForm());
 
@@ -38,21 +41,15 @@ public class FortuneOptionController {
       RedirectAttributes redirectAttributes
   ) throws Exception {
 
-    log.debug("사용자 정보 상세: 달력={}, 성별={}, 년도={}, 월={}, 일={}, 시간={}, 도시={}",
-        birthInfoForm.getCalendar(),
-        birthInfoForm.getGender(),
-        birthInfoForm.getYear(),
-        birthInfoForm.getMonth(),
-        birthInfoForm.getDay(),
-        birthInfoForm.getTime(),
-        birthInfoForm.getCity());
-
-    log.debug("운세 옵션 상세: ai={}, 종류={}, 기간별={}",
-        fortuneOptionForm.getAi(),
-        fortuneOptionForm.getFortunes(),
-        fortuneOptionForm.getPeriod());
+    log.debug("운세 옵션 제출 - 생년월일 정보: {}", birthInfoForm.toString());
+    log.debug("운세 옵션 제출 - 운세 선택 정보: {}", fortuneOptionForm.toString());
 
     if (result.hasErrors()) {
+      log.warn("운세 옵션 검증 실패: {}",
+          result.getFieldErrors().stream()
+                .map(FieldError::getField)
+                .toList());
+
       Set<String> errorMessages = new LinkedHashSet<>();
       Set<String> errorFields = new LinkedHashSet<>();
 
@@ -66,6 +63,8 @@ public class FortuneOptionController {
 
       return "fortune-option";
     }
+
+    log.info("운세 옵션 검증 완료 - 운세 결과 페이지로 이동");
 
     redirectAttributes.addFlashAttribute("birthInfo", birthInfoForm);
     redirectAttributes.addFlashAttribute("fortuneOption", fortuneOptionForm);

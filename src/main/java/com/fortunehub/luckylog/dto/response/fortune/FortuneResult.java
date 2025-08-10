@@ -3,9 +3,11 @@ package com.fortunehub.luckylog.dto.response.fortune;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL) // JSON으로 변환 시 null인 필드는 제외
+@ToString
 public class FortuneResult {
 
   private String overall = "전반적으로 안정된 기운이 흐르는 시기입니다. 새로운 시작을 위한 준비를 하기에 좋은 때이며, 과거의 경험을 바탕으로 현명한 선택을 할 수 있을 것입니다.";
