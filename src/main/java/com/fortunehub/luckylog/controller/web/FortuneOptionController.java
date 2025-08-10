@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.controller.web;
 
+import com.fortunehub.luckylog.dto.response.fortune.FortuneResult;
 import com.fortunehub.luckylog.form.BirthInfoForm;
 import com.fortunehub.luckylog.form.FortuneOptionForm;
 import jakarta.validation.Valid;
@@ -64,10 +65,11 @@ public class FortuneOptionController {
       return "fortune-option";
     }
 
-    // TODO: ai 연결
-
     model.addAttribute("birthInfo", birthInfoForm);
-    model.addAttribute("fortuneOptionForm", new FortuneOptionForm());
+    model.addAttribute("fortuneOption", fortuneOptionForm);
+
+    // TODO: ai 연결
+    model.addAttribute("fortuneResult", new FortuneResult());
 
     return "fortune-result";
   }
