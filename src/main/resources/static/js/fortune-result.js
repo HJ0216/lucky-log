@@ -12,7 +12,7 @@ const FortuneResultPage = {
     loadingDuration: 3000, // 로딩 화면 표시 시간 (ms)
     fadeoutDuration: 300, // 페이드아웃 애니메이션 시간 (ms)
     animationDelay: 100, // 애니메이션 트리거 지연 시간 (ms)
-    selectionPageUrl: "/fortune-option"
+    selectionPageUrl: "/"
   },
 
   // 메시지 상수

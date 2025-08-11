@@ -86,6 +86,9 @@ const IndexPage = {
         this.updateDayMaxOnDateChange.bind(this)
       );
     }
+
+    // 옵션 페이지에서 뒤로가기 버튼 클릭 후, 버튼 상태 복원
+    window.addEventListener('pageshow', this.resetSubmitButton.bind(this));
   },
 
   // 검증
@@ -166,6 +169,14 @@ const IndexPage = {
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.textContent = "처리중...";
+    }
+  },
+
+  resetSubmitButton() {
+    const submitBtn = this.elements.form?.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "🚀 다음 단계 →";
     }
   },
 
