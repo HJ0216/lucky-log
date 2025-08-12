@@ -61,10 +61,6 @@
             </label>
           </div>
         </div>
-        <!-- 서버 검증 에러 메시지 -->
-        <div th:if="${#fields.hasErrors('ai')}" class="error-message">
-          <span th:errors="*{ai}">AI 선택 에러</span>
-        </div>
       </div>
 
       <!-- 운세 종류 선택 -->
@@ -104,10 +100,6 @@
             <label for="health">💪</label>
           </div>
         </div>
-        <!-- 서버 검증 에러 메시지 -->
-        <div th:if="${#fields.hasErrors('fortunes')}" class="error-message">
-          <span th:errors="*{fortunes}">운세 종류 선택 에러</span>
-        </div>
       </div>
 
       <!-- 기간 선택 -->
@@ -136,10 +128,11 @@
             </label>
           </div>
         </div>
-        <!-- 서버 검증 에러 메시지 -->
-        <div th:if="${#fields.hasErrors('period')}" class="error-message">
-          <span th:errors="*{period}">운세 주기 선택 에러</span>
-        </div>
+      </div>
+
+      <!-- 에러 메시지 -->
+      <div th:if="${errorMessages != null and !errorMessages.empty}" class="error-container">
+        <div th:each="message : ${errorMessages}" class="error-message" th:text="${message}"></div>
       </div>
 
       <div class="retro-btn-container">
@@ -159,12 +152,6 @@
       <input type="hidden" name="time" th:value="${birthInfo.time}" />
     </form>
   </div>
-
-  <!-- 일반 알림 메시지 -->
-  <div th:if="${message}" class="alert alert-info" th:text="${message}"></div>
-
-  <!-- 에러 메시지 -->
-  <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
 
   <script defer th:src="@{/js/fortune-option.js}"></script>
 </body>

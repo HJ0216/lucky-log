@@ -60,6 +60,8 @@ public class FortuneOptionController {
 
       model.addAttribute("errorMessages", errorMessages);
       model.addAttribute("errorFields", errorFields);
+      model.addAttribute("fortuneOptionForm", fortuneOptionForm);
+      model.addAttribute("birthInfo", birthInfoForm);
 
       return "fortune-option";
     }
