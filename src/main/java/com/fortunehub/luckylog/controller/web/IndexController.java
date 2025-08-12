@@ -23,6 +23,17 @@ public class IndexController {
 
   private static final int MIN_BIRTH_YEAR = 1940;
 
+  // 모든 요청에서 자동으로 minYear, maxYear가 model에 추가됨
+  @ModelAttribute("minYear")
+  public int getMinYear() {
+    return MIN_BIRTH_YEAR;
+  }
+
+  @ModelAttribute("maxYear")
+  public int getMaxYear() {
+    return Year.now().getValue();
+  }
+
   @GetMapping
   public String index(Model model) {
     // Model: Controller에서 생성된 데이터를 담아 View로 전달할 때 사용하는 객체
@@ -31,10 +42,6 @@ public class IndexController {
 
     // 빈 BirthInfoForm 객체 생성
     model.addAttribute("birthInfoForm", new BirthInfoForm());
-
-    // 년도 범위 설정
-    model.addAttribute("minYear", MIN_BIRTH_YEAR);
-    model.addAttribute("maxYear", Year.now().getValue());
 
     return "index"; // templates/index.html 반환
   }
