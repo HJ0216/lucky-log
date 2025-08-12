@@ -79,6 +79,14 @@ const FortuneOptionPage = {
    * 폼 제출 시 실행될 핸들러
    */
   handleSubmit() {
+    const selectedAI = this.elements.form.querySelectorAll('input[name="ai"]:checked');
+    const selectedFortunes = this.elements.form.querySelectorAll('input[name="fortunes"]:checked');
+    const selectedPeriod = this.elements.form.querySelectorAll('input[name="period"]:checked');
+
+    if (selectedAI.length === 0 || selectedFortunes.length === 0 || selectedPeriod.length === 0) {
+      return;
+    }
+
     if (this.elements.submitBtn) {
       this.elements.submitBtn.disabled = true;
       this.elements.submitBtn.innerHTML = this.config.submitButtonProcessingText; // 이모지 포함 시 innerHTML 사용
