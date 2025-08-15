@@ -95,7 +95,7 @@ const IndexPage = {
   // 숫자만 입력 허용 (실시간 필터링)
   filterNumbers(e) {
     const input = e.target;
-    const value = input.value.replace(/[^0-9]/g, "");
+    const value = input.value.replace(/\D/g, "");
 
     if (input.value !== value) {
       input.value = value;
