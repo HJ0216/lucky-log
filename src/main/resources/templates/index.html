@@ -27,9 +27,6 @@
 
     <!-- 폼을 서버로 POST 요청, Thymeleaf 객체 바인딩 -->
     <form class="form-grid" th:action="@{/}" method="post" th:object="${birthInfoForm}">
-      <!-- CSRF 토큰 추가 (Spring Security 사용 시) -->
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" th:if="${_csrf}" />
-
       <!-- 성별 선택 -->
       <div class="field-group" data-field="gender">
         <label class="field-label">👶성별</label>
