@@ -29,3 +29,7 @@ logging:
     com.fortunehub.luckylog: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %logger{36} - %msg%n"
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
