@@ -54,10 +54,10 @@
         <!-- 결과 화면 -->
         <div class="results-screen" id="results-screen">
             <div class="results-container" id="results-container">
+                <div class="fortune-main-title" th:text="${fortuneTitle}">2025년 월별 운세</div>
 
                 <!-- 전체 운세 결과가 있는 경우에만 표시 -->
-                <div th:if="${fortuneResult != null}">
-
+                <div class="fortune-title" th:if="${fortuneResult != null}">
                     <!-- 종합운 (overall) -->
                     <div th:if="${fortuneResult.overall != null}" class="fortune-section">
                         <div class="fortune-title">
