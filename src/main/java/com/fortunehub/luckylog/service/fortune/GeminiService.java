@@ -30,6 +30,7 @@ public class GeminiService {
     String prompt = buildPrompt(request);
     String response = generateContent(prompt);
 
+    // TODO: overall 하드코딩 변경 예정
     return FortuneResult.builder().overall(response).build();
   }
 
@@ -58,6 +59,8 @@ public class GeminiService {
       String responseText = response.text();
       if (responseText == null || responseText.trim().isEmpty()) {
         log.warn("Gemini API 빈 응답 수신");
+        
+        // TODO: Custom Exception으로 변경 예정
         throw new IllegalStateException("Gemini 응답이 비어있습니다.");
       }
 

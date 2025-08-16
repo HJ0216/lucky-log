@@ -83,6 +83,7 @@ public class FortuneOptionController {
       }
 
       // TODO: 운세별 로깅으로 전환 예정
+      // TODO: overall 하드코딩 변경 예정
       log.info("운세 분석 완료 - 운세 선택 정보: {}, 응답길이: {}",
           fortuneOptionForm.getFortunes(), fortuneResult.getOverall().length());
 
