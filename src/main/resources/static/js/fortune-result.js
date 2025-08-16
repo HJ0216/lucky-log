@@ -54,6 +54,7 @@ const FortuneResultPage = {
     this.elements.shareText = document.getElementById("shareText");
     this.elements.saveButton = document.querySelector("[data-login-required]");
     this.elements.fortuneSections = document.querySelectorAll(".fortune-section");
+    this.elements.fortuneContent = document.querySelector('.fortune-content');
   },
 
   /**
@@ -70,9 +71,22 @@ const FortuneResultPage = {
       this.elements.resultsScreen.style.display = "flex";
       this.elements.resultsScreen.style.flexDirection = "column";
 
+      this.formatFortuneText();
+
       // 애니메이션 트리거
       this.triggerAnimations();
     }, this.config.loadingDuration);
+  },
+
+  /**
+   * 결과 섹션 애니메이션 트리거
+   */
+   formatFortuneText() {
+    if (!this.elements.fortuneContent) return;
+
+    const text = this.elements.fortuneContent.textContent;
+    const formatted = text.replace(/\|/g, '');
+    this.elements.fortuneContent.textContent = formatted;
   },
 
   /**
