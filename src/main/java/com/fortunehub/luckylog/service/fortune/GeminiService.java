@@ -53,8 +53,10 @@ public class GeminiService {
           generateContentConfig
       );
 
-      long duration = System.currentTimeMillis() - startTime;
-      log.info("Gemini API 응답 완료 - {}ms", duration);
+      long durationMillis = System.currentTimeMillis() - startTime;
+      long minutes = durationMillis / 1000 / 60;
+      long seconds = (durationMillis / 1000) % 60;
+      log.info("Gemini API 응답 완료 - {}분 {}초", minutes, seconds);
 
       String responseText = response.text();
       if (responseText == null || responseText.trim().isEmpty()) {

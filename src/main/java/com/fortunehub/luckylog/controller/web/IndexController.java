@@ -52,11 +52,11 @@ public class IndexController {
       RedirectAttributes redirectAttributes
   ) throws Exception {
 
-    log.debug("생년월일 제출: 생년: {}, 성별: {}, 시간: {}, 장소",
+    log.debug("생년월일 제출: 생년: {}, 성별: {}, 시간 선택 여부: {}, 장소 선택 여부: {}",
         birthInfoForm.getYear(),
         birthInfoForm.getGender(),
-        birthInfoForm.getTime().isBlank(),
-        birthInfoForm.getCity().isBlank());
+        !birthInfoForm.getTime().isBlank(),
+        !birthInfoForm.getCity().isBlank());
 
     if (result.hasErrors()) {
       log.warn("생년월일 검증 실패: {}",

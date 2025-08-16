@@ -21,7 +21,6 @@ public class FortuneOptionForm {
   @NotEmpty(message = "🍀 최소 하나의 운세를 선택해주세요!")
   private List<String> fortunes = new ArrayList<>(List.of("overall"));
 
-
   @NotNull(message = "📊 운세 주기를 선택해주세요!")
   private String period = "monthly";
 }
