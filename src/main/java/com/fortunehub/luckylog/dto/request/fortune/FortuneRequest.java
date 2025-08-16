@@ -68,4 +68,14 @@ public record FortuneRequest(
   private boolean hasCity() {
     return city != null && !city.isBlank();
   }
+
+  public String toPromptString() {
+    return new StringBuilder("# 사용자 정보")
+        .append("\n- 생년월일: ").append(getBirthDate())
+        .append("\n- 양력/음력: ").append(getCalendarType())
+        .append("\n- 성별: ").append(getGenderInKorean())
+        .append("\n- 출생시간: ").append(getBirthTime())
+        .append("\n- 출생장소: ").append(getBirthPlace())
+        .toString();
+  }
 }

@@ -39,24 +39,11 @@ public class GeminiService {
 
   private String buildPrompt(FortuneRequest request) {
     int currentYear = LocalDateTime.now().getYear();
+    String basePrompt = promptTemplate.replace("[ANALYSIS_YEAR]", String.valueOf(currentYear));
 
-    return String.format("""
-            %s
-                        
-            # 사용자 정보
-            - 생년월일: %s
-            - 양력/음력: %s
-            - 성별: %s
-            - 출생시간: %s
-            - 출생장소: %s
-            """,
-        promptTemplate.replace("[ANALYSIS_YEAR]", String.valueOf(currentYear)),
-        request.getBirthDate(),
-        request.getCalendarType(),
-        request.getGenderInKorean(),
-        request.getBirthTime(),
-        request.getBirthPlace()
-    );
+    return new StringBuilder(basePrompt)
+        .append(request.toPromptString())
+        .toString();
   }
 
   private String generateContent(String prompt) {
