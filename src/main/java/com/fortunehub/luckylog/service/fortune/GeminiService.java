@@ -27,12 +27,8 @@ public class GeminiService {
 
   public FortuneResult analyzeFortune(FortuneRequest request) {
 
-    log.info("운세 분석 시작: {}", request.getBirthDate());
-
     String prompt = buildPrompt(request);
     String response = generateContent(prompt);
-
-    log.info("운세 분석 완료: {} characters", response.length());
 
     return FortuneResult.builder().overall(response).build();
   }
@@ -47,12 +43,17 @@ public class GeminiService {
   }
 
   private String generateContent(String prompt) {
+    long startTime = System.currentTimeMillis();
+
     try {
       GenerateContentResponse response = client.models.generateContent(
           modelName,
           prompt,
           generateContentConfig
       );
+
+      long duration = System.currentTimeMillis() - startTime;
+      log.info("Gemini API 응답 완료 - {}ms", duration);
 
       String responseText = response.text();
       if (responseText == null || responseText.trim().isEmpty()) {
@@ -62,7 +63,7 @@ public class GeminiService {
 
       return responseText;
     } catch (Exception e) {
-      log.error("Gemini API 호출 실패: {}", e.getMessage(), e);
+      log.error("Gemini API 호출 실패: 모델: {}, 에러: {}", modelName, e.getMessage(), e);
       throw new IllegalStateException("Gemini API 호출에 실패하였습니다.", e);
     }
   }
