@@ -57,6 +57,8 @@ Thumbs.db
 # 보안 관련 파일
 # =========================================
 .env
+application-prompts.yaml
+application-prompts-*.yaml
 
 # =========================================
 # script 파일

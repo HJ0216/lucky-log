@@ -54,7 +54,7 @@
             </label>
           </div>
           <div class="ai-option">
-            <input type="radio" id="gpt" th:field="*{ai}" value="🚀 GPT">
+            <input type="radio" id="gpt" th:field="*{ai}" value="🚀 GPT" disabled>
             <label for="gpt">
               <div>🚀</div>
               <div>GPT</div>
@@ -72,11 +72,11 @@
             <label for="overall">🔮</label>
           </div>
           <div class="fortune-option" data-tooltip="재물">
-            <input type="checkbox" id="money" th:field="*{fortunes}" value="money">
+            <input type="checkbox" id="money" th:field="*{fortunes}" value="money" disabled>
             <label for="money">💰</label>
           </div>
           <div class="fortune-option" data-tooltip="애정">
-            <input type="checkbox" id="love" th:field="*{fortunes}" value="love">
+            <input type="checkbox" id="love" th:field="*{fortunes}" value="love" disabled>
             <label for="love">💕</label>
           </div>
           <div class="fortune-option" data-tooltip="직장 사업">

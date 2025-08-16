@@ -1,11 +1,14 @@
 package com.fortunehub.luckylog.controller.web;
 
+import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResult;
 import com.fortunehub.luckylog.form.BirthInfoForm;
 import com.fortunehub.luckylog.form.FortuneOptionForm;
+import com.fortunehub.luckylog.service.fortune.GeminiService;
 import jakarta.validation.Valid;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,14 +21,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/fortune/option")
 public class FortuneOptionController {
 
+  private static final String AI_GEMINI = "🪂 Gemini";
+
+  private final GeminiService geminiService;
+
   @GetMapping
   public String show(@ModelAttribute BirthInfoForm birthInfo, Model model) {
-
-    log.info("운세 선택 페이지 접근");
 
     model.addAttribute("fortuneOptionForm", new FortuneOptionForm());
 
@@ -39,10 +45,12 @@ public class FortuneOptionController {
       BindingResult result,
       Model model,
       RedirectAttributes redirectAttributes
-  ) throws Exception {
+  ) {
 
-    log.debug("운세 옵션 제출 - 생년월일 정보: {}", birthInfoForm.toString());
-    log.debug("운세 옵션 제출 - 운세 선택 정보: {}", fortuneOptionForm.toString());
+    log.debug("운세 분석 요청 시작 - 생년: {}, 성별: {}, 운세 선택 정보: {}",
+        birthInfoForm.getYear(),
+        birthInfoForm.getGender(),
+        fortuneOptionForm.toString());
 
     if (result.hasErrors()) {
       log.warn("운세 옵션 검증 실패: {}",
@@ -66,13 +74,35 @@ public class FortuneOptionController {
       return "fortune-option";
     }
 
-    log.info("운세 옵션 검증 완료 - 운세 결과 페이지로 이동");
+    try {
+      FortuneResult fortuneResult = FortuneResult.builder().build();
 
-    redirectAttributes.addFlashAttribute("birthInfo", birthInfoForm);
-    redirectAttributes.addFlashAttribute("fortuneOption", fortuneOptionForm);
-    // TODO: ai 연결
-    redirectAttributes.addFlashAttribute("fortuneResult", new FortuneResult());
+      if (AI_GEMINI.equals(fortuneOptionForm.getAi())) {
+        fortuneResult = geminiService.analyzeFortune(
+            FortuneRequest.from(birthInfoForm, fortuneOptionForm));
+      }
 
-    return "redirect:/fortune/result";
+      // TODO: 운세별 로깅으로 전환 예정
+      // TODO: overall 하드코딩 변경 예정
+      log.info("운세 분석 완료 - 운세 선택 정보: {}, 응답길이: {}",
+          fortuneOptionForm.getFortunes(), fortuneResult.getOverall().length());
+
+      redirectAttributes.addFlashAttribute("fortuneResult", fortuneResult);
+      redirectAttributes.addFlashAttribute("birthInfo", birthInfoForm);
+      redirectAttributes.addFlashAttribute("fortuneOption", fortuneOptionForm);
+
+      return "redirect:/fortune/result";
+
+    } catch (Exception e) {
+      log.error("사주 분석 API 호출 실패: {}", e.getMessage(), e);
+
+      model.addAttribute("errorMessages", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요");
+      model.addAttribute("errorFields", "submit");
+
+      model.addAttribute("fortuneOptionForm", fortuneOptionForm);
+      model.addAttribute("birthInfo", birthInfoForm);
+
+      return "fortune-option";
+    }
   }
 }
