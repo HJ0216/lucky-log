@@ -38,8 +38,6 @@ public class IndexController {
   public String index(Model model) {
     // Model: Controller에서 생성된 데이터를 담아 View로 전달할 때 사용하는 객체
 
-    log.info("메인 페이지 접근");
-
     // 빈 BirthInfoForm 객체 생성
     model.addAttribute("birthInfoForm", new BirthInfoForm());
 
@@ -54,7 +52,11 @@ public class IndexController {
       RedirectAttributes redirectAttributes
   ) throws Exception {
 
-    log.debug("생년월일 제출: {}", birthInfoForm.toString());
+    log.debug("생년월일 제출: 생년: {}, 성별: {}, 시간: {}, 장소",
+        birthInfoForm.getYear(),
+        birthInfoForm.getGender(),
+        birthInfoForm.getTime().isBlank(),
+        birthInfoForm.getCity().isBlank());
 
     if (result.hasErrors()) {
       log.warn("생년월일 검증 실패: {}",
@@ -75,8 +77,6 @@ public class IndexController {
 
       return "index";
     }
-
-    log.info("생년월일 검증 완료 - 운세 선택 페이지로 이동");
 
     redirectAttributes.addFlashAttribute("birthInfo", birthInfoForm);
 

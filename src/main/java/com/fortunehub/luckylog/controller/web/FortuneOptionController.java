@@ -33,8 +33,6 @@ public class FortuneOptionController {
   @GetMapping
   public String show(@ModelAttribute BirthInfoForm birthInfo, Model model) {
 
-    log.info("운세 선택 페이지 접근");
-
     model.addAttribute("fortuneOptionForm", new FortuneOptionForm());
 
     return "fortune-option";
@@ -49,8 +47,10 @@ public class FortuneOptionController {
       RedirectAttributes redirectAttributes
   ) {
 
-    log.debug("운세 옵션 제출 - 생년월일 정보: {}", birthInfoForm.toString());
-    log.debug("운세 옵션 제출 - 운세 선택 정보: {}", fortuneOptionForm.toString());
+    log.debug("운세 분석 요청 시작 - 생년: {}, 성별: {}, 운세 선택 정보: {}",
+        birthInfoForm.getYear(),
+        birthInfoForm.getGender(),
+        fortuneOptionForm.toString());
 
     if (result.hasErrors()) {
       log.warn("운세 옵션 검증 실패: {}",
@@ -81,10 +81,19 @@ public class FortuneOptionController {
         fortuneResult = geminiService.analyzeFortune(
             FortuneRequest.from(birthInfoForm, fortuneOptionForm));
       }
+
+      // TODO: 운세별 로깅으로 전환 예정
+      log.info("운세 분석 완료 - 운세 선택 정보: {}, 응답길이: {}",
+          fortuneOptionForm.getFortunes(), fortuneResult.getOverall().length());
+
       redirectAttributes.addFlashAttribute("fortuneResult", fortuneResult);
+      redirectAttributes.addFlashAttribute("birthInfo", birthInfoForm);
+      redirectAttributes.addFlashAttribute("fortuneOption", fortuneOptionForm);
+
+      return "redirect:/fortune/result";
 
     } catch (Exception e) {
-      log.error("사주 분석 API 호출 실패: {}", e);
+      log.error("사주 분석 API 호출 실패: {}", e.getMessage(), e);
 
       model.addAttribute("errorMessages", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요");
       model.addAttribute("errorFields", "submit");
@@ -94,12 +103,5 @@ public class FortuneOptionController {
 
       return "fortune-option";
     }
-
-    log.info("운세 옵션 검증 완료 - 운세 결과 페이지로 이동");
-
-    redirectAttributes.addFlashAttribute("birthInfo", birthInfoForm);
-    redirectAttributes.addFlashAttribute("fortuneOption", fortuneOptionForm);
-
-    return "redirect:/fortune/result";
   }
 }
