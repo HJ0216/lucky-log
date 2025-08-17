@@ -125,10 +125,32 @@ const FortuneOptionPage = {
   goToBirthInfo() {
     window.location.href = this.config.selectionPageUrl;
   },
+
+  initializePageState() {
+      // 로딩 화면 숨기고 컨텐츠 화면 표시
+      if (this.elements.loadingScreen) {
+          this.elements.loadingScreen.style.display = 'none';
+      }
+      if (this.elements.contentsScreen) {
+          this.elements.contentsScreen.style.display = 'contents';
+      }
+
+      // 제출 버튼 활성화
+      if (this.elements.submitBtn) {
+          this.elements.submitBtn.disabled = false;
+      }
+  },
 };
 
 // 전역 함수 노출 (HTML onclick 이벤트용)
 window.goToBirthInfo = () => FortuneOptionPage.goToBirthInfo();
+
+window.addEventListener("pageshow", (event) => {
+    // event.persisted가 true이면 bfcache에서 온 것
+    if (event.persisted) {
+        FortuneOptionPage.initializePageState();
+    }
+});
 
 // 페이지의 모든 DOM 콘텐츠가 로드된 후 모듈을 초기화
 document.addEventListener("DOMContentLoaded", () => {
