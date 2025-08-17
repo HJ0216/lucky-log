@@ -19,138 +19,155 @@
   <div class="emoji-decoration">🎯</div>
 
   <div class="container">
-    <div class="logo">
-      <h1>운 세</h1>
-      <p th:if="${birthInfo != null}">
-        <span th:text="${birthInfo.city}">도시</span>
-        <span th:text="${birthInfo.gender == 'male' ? '남성' : '여성'}">성별</span>
-        <span
-          th:text="${birthInfo.calendar == 'solar' ? '양력' : (birthInfo.calendar == 'lunar' ? '음력(평달)' : '음력(윤달)')}">력</span>
-        <br>
-        <span th:text="${birthInfo.year}">년</span>년
-        <span th:text="${birthInfo.month}">월</span>월
-        <span th:text="${birthInfo.day}">일</span>일
-        <span th:if="${birthInfo.time != null}" th:text="${birthInfo.time}">시간</span>
-      </p>
+
+    <div class="loading-screen" id="loading-screen">
+      <div class="loading-animation">
+        <div class="loading-ring"></div>
+      </div>
+      <div class="loading-text">🕐 약 1분 정도의 시간이 소요됩니다</div>
+      <div class="loading-subtext">
+        📜 역사 속 사주 이야기 📜
+        조선 왕들의 사주
+        조선시대 왕들은 즉위 전 반드시 사주를 봤는데,
+        특히 세종대왕은 완벽한 제왕의 사주를 가졌다고!
+      </div>
+      <div class="scanline"></div>
     </div>
 
-    <form th:action="@{/fortune/option}" method="post" th:object="${fortuneOptionForm}" class="form-grid">
-      <!-- AI 선택 -->
-      <div class="field-group">
-        <label class="field-label">🤖 AI 선택</label>
-        <div class="ai-cards">
-          <div class="ai-option">
-            <input type="radio" id="claude" th:field="*{ai}" value="🎆 Claude" disabled>
-            <label for="claude">
-              <div>🎆</div>
-              <div>Claude</div>
-            </label>
-          </div>
-          <div class="ai-option">
-            <input type="radio" id="gemini" th:field="*{ai}" value="🪂 Gemini">
-            <label for="gemini">
-              <div>🪂</div>
-              <div>Gemini</div>
-            </label>
-          </div>
-          <div class="ai-option">
-            <input type="radio" id="gpt" th:field="*{ai}" value="🚀 GPT" disabled>
-            <label for="gpt">
-              <div>🚀</div>
-              <div>GPT</div>
-            </label>
+    <div class="contents-screen" id="contents-screen">
+      <div class="logo">
+        <h1>운 세</h1>
+        <p th:if="${birthInfo != null}">
+          <span th:text="${birthInfo.city}">도시</span>
+          <span th:text="${birthInfo.gender == 'male' ? '남성' : '여성'}">성별</span>
+          <span
+              th:text="${birthInfo.calendar == 'solar' ? '양력' : (birthInfo.calendar == 'lunar' ? '음력(평달)' : '음력(윤달)')}">력</span>
+          <br>
+          <span th:text="${birthInfo.year}">년</span>년
+          <span th:text="${birthInfo.month}">월</span>월
+          <span th:text="${birthInfo.day}">일</span>일
+          <span th:if="${birthInfo.time != null}" th:text="${birthInfo.time}">시간</span>
+        </p>
+      </div>
+
+      <form th:action="@{/fortune/option}" method="post" th:object="${fortuneOptionForm}" class="form-grid">
+        <!-- AI 선택 -->
+        <div class="field-group">
+          <label class="field-label">🤖 AI 선택</label>
+          <div class="ai-cards">
+            <div class="ai-option">
+              <input type="radio" id="claude" th:field="*{ai}" value="🎆 Claude" disabled>
+              <label for="claude">
+                <div>🎆</div>
+                <div>Claude</div>
+              </label>
+            </div>
+            <div class="ai-option">
+              <input type="radio" id="gemini" th:field="*{ai}" value="🪂 Gemini">
+              <label for="gemini">
+                <div>🪂</div>
+                <div>Gemini</div>
+              </label>
+            </div>
+            <div class="ai-option">
+              <input type="radio" id="gpt" th:field="*{ai}" value="🚀 GPT" disabled>
+              <label for="gpt">
+                <div>🚀</div>
+                <div>GPT</div>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- 운세 종류 선택 -->
-      <div class="field-group">
-        <label class="field-label">🍀 보고 싶은 운세 (복수 선택 가능)</label>
-        <div class="fortune-grid">
-          <div class="fortune-option" data-tooltip="종합">
-            <input type="checkbox" id="overall" th:field="*{fortunes}" value="overall">
-            <label for="overall">🔮</label>
-          </div>
-          <div class="fortune-option" data-tooltip="재물">
-            <input type="checkbox" id="money" th:field="*{fortunes}" value="money" disabled>
-            <label for="money">💰</label>
-          </div>
-          <div class="fortune-option" data-tooltip="애정">
-            <input type="checkbox" id="love" th:field="*{fortunes}" value="love" disabled>
-            <label for="love">💕</label>
-          </div>
-          <div class="fortune-option" data-tooltip="직장 사업">
-            <input type="checkbox" id="career" th:field="*{fortunes}" value="career" disabled>
-            <label for="career">💼</label>
-          </div>
-          <div class="fortune-option" data-tooltip="학업 시험">
-            <input type="checkbox" id="study" th:field="*{fortunes}" value="study" disabled>
-            <label for="study">📚</label>
-          </div>
-          <div class="fortune-option" data-tooltip="행운">
-            <input type="checkbox" id="luck" th:field="*{fortunes}" value="luck" disabled>
-            <label for="luck">🍀</label>
-          </div>
-          <div class="fortune-option" data-tooltip="가정">
-            <input type="checkbox" id="family" th:field="*{fortunes}" value="family" disabled>
-            <label for="family">🏠</label>
-          </div>
-          <div class="fortune-option" data-tooltip="건강">
-            <input type="checkbox" id="health" th:field="*{fortunes}" value="health" disabled>
-            <label for="health">💪</label>
+        <!-- 운세 종류 선택 -->
+        <div class="field-group">
+          <label class="field-label">🍀 보고 싶은 운세 (복수 선택 가능)</label>
+          <div class="fortune-grid">
+            <div class="fortune-option" data-tooltip="종합">
+              <input type="checkbox" id="overall" th:field="*{fortunes}" value="overall">
+              <label for="overall">🔮</label>
+            </div>
+            <div class="fortune-option" data-tooltip="재물">
+              <input type="checkbox" id="money" th:field="*{fortunes}" value="money" disabled>
+              <label for="money">💰</label>
+            </div>
+            <div class="fortune-option" data-tooltip="애정">
+              <input type="checkbox" id="love" th:field="*{fortunes}" value="love" disabled>
+              <label for="love">💕</label>
+            </div>
+            <div class="fortune-option" data-tooltip="직장 사업">
+              <input type="checkbox" id="career" th:field="*{fortunes}" value="career" disabled>
+              <label for="career">💼</label>
+            </div>
+            <div class="fortune-option" data-tooltip="학업 시험">
+              <input type="checkbox" id="study" th:field="*{fortunes}" value="study" disabled>
+              <label for="study">📚</label>
+            </div>
+            <div class="fortune-option" data-tooltip="행운">
+              <input type="checkbox" id="luck" th:field="*{fortunes}" value="luck" disabled>
+              <label for="luck">🍀</label>
+            </div>
+            <div class="fortune-option" data-tooltip="가정">
+              <input type="checkbox" id="family" th:field="*{fortunes}" value="family" disabled>
+              <label for="family">🏠</label>
+            </div>
+            <div class="fortune-option" data-tooltip="건강">
+              <input type="checkbox" id="health" th:field="*{fortunes}" value="health" disabled>
+              <label for="health">💪</label>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- 기간 선택 -->
-      <div class="field-group">
-        <label class="field-label">📊 운세 주기</label>
-        <div class="period-cards">
-          <div class="period-option">
-            <input type="radio" id="monthly" th:field="*{period}" value="monthly">
-            <label for="monthly">
-              <div>📆</div>
-              <div>월별</div>
-            </label>
-          </div>
-          <div class="period-option">
-            <input type="radio" id="quarterly" th:field="*{period}" value="quarterly" disabled>
-            <label for="quarterly">
-              <div>📊</div>
-              <div>분기별</div>
-            </label>
-          </div>
-          <div class="period-option">
-            <input type="radio" id="yearly" th:field="*{period}" value="yearly" disabled>
-            <label for="yearly">
-              <div>📋</div>
-              <div>올 한해</div>
-            </label>
+        <!-- 기간 선택 -->
+        <div class="field-group">
+          <label class="field-label">📊 운세 주기</label>
+          <div class="period-cards">
+            <div class="period-option">
+              <input type="radio" id="monthly" th:field="*{period}" value="monthly">
+              <label for="monthly">
+                <div>📆</div>
+                <div>월별</div>
+              </label>
+            </div>
+            <div class="period-option">
+              <input type="radio" id="quarterly" th:field="*{period}" value="quarterly" disabled>
+              <label for="quarterly">
+                <div>📊</div>
+                <div>분기별</div>
+              </label>
+            </div>
+            <div class="period-option">
+              <input type="radio" id="yearly" th:field="*{period}" value="yearly" disabled>
+              <label for="yearly">
+                <div>📋</div>
+                <div>올 한해</div>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- 에러 메시지 -->
-      <div th:if="${errorMessages != null and !errorMessages.empty}" class="error-container">
-        <div th:each="message : ${errorMessages}" class="error-message" th:text="${message}"></div>
-      </div>
+        <!-- 에러 메시지 -->
+        <div th:if="${errorMessages != null and !errorMessages.empty}" class="error-container">
+          <div th:each="message : ${errorMessages}" class="error-message" th:text="${message}"></div>
+        </div>
 
-      <div class="retro-btn-container">
-        <button type="submit" class="retro-btn">✨ 운세 확인 ✨</button>
-      </div>
+        <div class="retro-btn-container">
+          <button type="submit" class="retro-btn">✨ 운세 확인 ✨</button>
+        </div>
 
-      <div style="position: absolute; top: 20px; left: 20px;">
-        <button type="button" class="back-btn" onclick="history.back()">←</button>
-      </div>
+        <div style="position: absolute; top: 20px; left: 20px;">
+          <button type="button" class="back-btn" onclick="history.back()">←</button>
+        </div>
 
-      <input type="hidden" name="city" th:value="${birthInfo.city}" />
-      <input type="hidden" name="gender" th:value="${birthInfo.gender}" />
-      <input type="hidden" name="calendar" th:value="${birthInfo.calendar}" />
-      <input type="hidden" name="year" th:value="${birthInfo.year}" />
-      <input type="hidden" name="month" th:value="${birthInfo.month}" />
-      <input type="hidden" name="day" th:value="${birthInfo.day}" />
-      <input type="hidden" name="time" th:value="${birthInfo.time}" />
-    </form>
+        <input type="hidden" name="city" th:value="${birthInfo.city}" />
+        <input type="hidden" name="gender" th:value="${birthInfo.gender}" />
+        <input type="hidden" name="calendar" th:value="${birthInfo.calendar}" />
+        <input type="hidden" name="year" th:value="${birthInfo.year}" />
+        <input type="hidden" name="month" th:value="${birthInfo.month}" />
+        <input type="hidden" name="day" th:value="${birthInfo.day}" />
+        <input type="hidden" name="time" th:value="${birthInfo.time}" />
+      </form>
+    </div>
   </div>
 
   <script defer th:src="@{/js/fortune-option.js}"></script>

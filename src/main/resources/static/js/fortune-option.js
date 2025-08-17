@@ -8,7 +8,6 @@
 const FortuneOptionPage = {
   // 설정값
   config: {
-    submitButtonProcessingText: "⏳ 운세 생성 중...",
     errorHideDelay: 1000, // ms (1초)
     fadeoutDuration: 300, // ms (0.3초)
     disabledOptionTooltip: "준비 중인 기능입니다."
@@ -16,6 +15,8 @@ const FortuneOptionPage = {
 
   // DOM 요소 캐싱: 반복적인 DOM 탐색을 피해 성능을 향상
   elements: {
+    loadingScreen: null,
+    contentsScreen: null,
     form: null,
     submitBtn: null,
     errorMessages: [],
@@ -37,6 +38,8 @@ const FortuneOptionPage = {
    * 필요한 DOM 요소를 찾아 캐싱
    */
   cacheElements() {
+    this.elements.loadingScreen = document.getElementById("loading-screen");
+    this.elements.contentsScreen = document.getElementById("contents-screen");
     this.elements.form = document.querySelector("form");
     if (this.elements.form) {
       this.elements.submitBtn = this.elements.form.querySelector('.retro-btn');
@@ -89,7 +92,8 @@ const FortuneOptionPage = {
 
     if (this.elements.submitBtn) {
       this.elements.submitBtn.disabled = true;
-      this.elements.submitBtn.innerHTML = this.config.submitButtonProcessingText; // 이모지 포함 시 innerHTML 사용
+      this.elements.loadingScreen.style.display = "flex";
+      this.elements.contentsScreen.style.display = "none";
     }
   },
 

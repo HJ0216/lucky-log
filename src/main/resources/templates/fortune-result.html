@@ -19,6 +19,7 @@
     <div class="emoji-decoration">🪂</div>
 
     <div class="container">
+
         <div class="header">
             <div class="ai-badge">
                 <span class="ai-icon" th:text="${fortuneOption.ai != null and #strings.contains(fortuneOption.ai, ' ') ?
@@ -40,15 +41,6 @@
                 <span th:text="${birthInfo.day}">일</span>일
                 <span th:if="${birthInfo.time != null}" th:text="${birthInfo.time}">시간</span>
             </p>
-        </div>
-
-        <div class="loading-screen" id="loading-screen">
-            <div class="loading-animation">
-                <div class="loading-ring"></div>
-            </div>
-            <div class="loading-text">🔮 운세 분석 중...</div>
-            <div class="loading-subtext">AI가 당신의 사주를 분석하고 있습니다</div>
-            <div class="scanline"></div>
         </div>
 
         <!-- 결과 화면 -->

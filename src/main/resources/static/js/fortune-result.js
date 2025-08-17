@@ -29,7 +29,6 @@ const FortuneResultPage = {
 
   // DOM 요소 캐싱
   elements: {
-    loadingScreen: null,
     resultsScreen: null,
     shareText: null,
     saveButton: null,
@@ -49,7 +48,6 @@ const FortuneResultPage = {
    * 필요한 DOM 요소를 찾아 캐싱
    */
   cacheElements() {
-    this.elements.loadingScreen = document.getElementById("loading-screen");
     this.elements.resultsScreen = document.getElementById("results-screen");
     this.elements.shareText = document.getElementById("shareText");
     this.elements.saveButton = document.querySelector("[data-login-required]");
@@ -57,20 +55,10 @@ const FortuneResultPage = {
     this.elements.fortuneContent = document.querySelector('.fortune-content');
   },
 
-  /**
-   * 로딩 화면에서 결과 화면으로 전환
-   */
   showResults() {
-    if (!this.elements.loadingScreen || !this.elements.resultsScreen) return;
-
-    // 이미 결과가 표시된 상태라면 처리하지 않음
-    if (this.elements.loadingScreen.style.display === "none") return;
+    if (!this.elements.resultsScreen) return;
 
     setTimeout(() => {
-      this.elements.loadingScreen.style.display = "none";
-      this.elements.resultsScreen.style.display = "flex";
-      this.elements.resultsScreen.style.flexDirection = "column";
-
       this.formatFortuneText();
 
       // 애니메이션 트리거
