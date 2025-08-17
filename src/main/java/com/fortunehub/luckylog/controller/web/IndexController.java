@@ -1,6 +1,7 @@
 package com.fortunehub.luckylog.controller.web;
 
 import com.fortunehub.luckylog.form.BirthInfoForm;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.time.Year;
 import java.util.LinkedHashSet;
@@ -49,6 +50,7 @@ public class IndexController {
       @Valid @ModelAttribute BirthInfoForm birthInfoForm,
       BindingResult result,
       Model model,
+      HttpSession session,
       RedirectAttributes redirectAttributes
   ) throws Exception {
 
@@ -77,6 +79,9 @@ public class IndexController {
 
       return "index";
     }
+
+    // option 페이지에서 뒤로가기 시, 기존 데이터 저장
+    session.setAttribute("birthInfo", birthInfoForm);
 
     redirectAttributes.addFlashAttribute("birthInfo", birthInfoForm);
 

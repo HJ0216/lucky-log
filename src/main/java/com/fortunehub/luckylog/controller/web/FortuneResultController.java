@@ -3,6 +3,7 @@ package com.fortunehub.luckylog.controller.web;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResult;
 import com.fortunehub.luckylog.form.BirthInfoForm;
 import com.fortunehub.luckylog.form.FortuneOptionForm;
+import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -21,8 +22,11 @@ public class FortuneResultController {
       @ModelAttribute BirthInfoForm birthInfo,
       @ModelAttribute FortuneOptionForm fortuneOption,
       @ModelAttribute FortuneResult fortuneResult,
+      HttpSession session,
       Model model
   ) {
+
+    session.removeAttribute("birthInfo");
 
     int currentYear = LocalDate.now().getYear();
     String periodText = getPeriodText(fortuneOption.getPeriod());

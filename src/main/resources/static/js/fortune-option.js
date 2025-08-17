@@ -8,6 +8,7 @@
 const FortuneOptionPage = {
   // 설정값
   config: {
+    selectionPageUrl: "/fortune/option/back",
     errorHideDelay: 1000, // ms (1초)
     fadeoutDuration: 300, // ms (0.3초)
     disabledOptionTooltip: "준비 중인 기능입니다."
@@ -116,8 +117,18 @@ const FortuneOptionPage = {
         }, this.config.errorHideDelay);
       }
     });
-  }
+  },
+
+  /**
+   * 생년월일 선택 페이지로 이동
+   */
+  goToBirthInfo() {
+    window.location.href = this.config.selectionPageUrl;
+  },
 };
+
+// 전역 함수 노출 (HTML onclick 이벤트용)
+window.goToBirthInfo = () => FortuneOptionPage.goToBirthInfo();
 
 // 페이지의 모든 DOM 콘텐츠가 로드된 후 모듈을 초기화
 document.addEventListener("DOMContentLoaded", () => {

@@ -5,6 +5,7 @@ import com.fortunehub.luckylog.dto.response.fortune.FortuneResult;
 import com.fortunehub.luckylog.form.BirthInfoForm;
 import com.fortunehub.luckylog.form.FortuneOptionForm;
 import com.fortunehub.luckylog.service.fortune.GeminiService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -104,5 +105,21 @@ public class FortuneOptionController {
 
       return "fortune-option";
     }
+  }
+
+  @GetMapping("/back")
+  public String backToIndex(HttpSession session, Model model) {
+
+    BirthInfoForm savedBirthInfo = (BirthInfoForm) session.getAttribute("birthInfo");
+
+    if (savedBirthInfo != null) {
+      model.addAttribute("birthInfoForm", savedBirthInfo);
+    } else {
+      log.warn("뒤로가기 처리 - 세션에 저장된 데이터가 없음");
+      
+      model.addAttribute("birthInfoForm", new BirthInfoForm());
+    }
+
+    return "index";
   }
 }

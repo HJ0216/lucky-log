@@ -1,3 +1,8 @@
+server:
+  servlet:
+    session:
+      timeout: 10m  # 10분 후 자동 만료
+
 spring:
   config:
     activate:
