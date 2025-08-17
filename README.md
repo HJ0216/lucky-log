@@ -1,3 +1,12 @@
+# 🍀 Lucky Log 🍀
+운세 예측 내용을 기록해두고 실제 결과와 비교하는 플랫폼입니다.
+
+## 📜사용 기술
+* Thymeleaf
+* Java 17
+* Spring Boot 3.5.3
+* `dev` H2 Database / `prod` MySql
+
 ### 🗒️커밋 메시지 규칙
 ```txt
 🎉Init: #이슈번호 프로젝트 시작
