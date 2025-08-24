@@ -15,7 +15,7 @@ public enum CityType {
   JEOLLA("전라도"),
   GYEONGSANG("경상도"),
   JEJU("제주특별자치도"),
-  ETC("기타");
+  UNKNOWN("모름");
 
   private final String displayName;
 }

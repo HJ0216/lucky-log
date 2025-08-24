@@ -26,16 +26,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/")
 public class IndexController {
 
-  private static final int MIN_BIRTH_YEAR = 1940;
-
   // 모든 요청에서 자동으로 minYear, maxYear가 model에 추가됨
   @ModelAttribute("minYear")
-  public int getMinYear() {
-    return MIN_BIRTH_YEAR;
+  public int getMinBirthYear() {
+    return 1940;
   }
 
   @ModelAttribute("maxYear")
-  public int getMaxYear() {
+  public int getMaxBirthYear() {
     return Year.now().getValue();
   }
 
@@ -50,12 +48,12 @@ public class IndexController {
   }
 
   @ModelAttribute("timeTypes")
-  public TimeType[] timeTypess() {
+  public TimeType[] timeTypes() {
     return TimeType.values();
   }
 
   @ModelAttribute("cityTypes")
-  public CityType[] cityTypess() {
+  public CityType[] cityTypes() {
     return CityType.values();
   }
 
@@ -78,11 +76,11 @@ public class IndexController {
       RedirectAttributes redirectAttributes
   ) throws Exception {
 
-    log.debug("생년월일 제출: 생년: {}, 성별: {}, 시간 선택 여부: {}, 장소 선택 여부: {}",
+    log.debug("생년월일 제출: 생년: {}, 성별: {}, 시간: {}, 장소: {}",
         birthInfoForm.getYear(),
         birthInfoForm.getGender(),
-        !birthInfoForm.getTime().isBlank(),
-        !birthInfoForm.getCity().isBlank());
+        birthInfoForm.getTime(),
+        birthInfoForm.getCity());
 
     if (result.hasErrors()) {
       log.warn("생년월일 검증 실패: {}",

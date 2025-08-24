@@ -33,7 +33,7 @@
         <div class="gender-cards">
           <div class="card-option" th:each="type : ${genderTypes}">
             <input type="radio" th:field="*{gender}" th:value="${type.name()}"/>
-            <label th:for="${#ids.prev('gender')}" th:text="${type.displayName}">🙋‍♀️ 여성</label>
+            <label th:for="${#ids.prev('gender')}" th:text="|${type.icon} ${type.displayName}|">🙋‍♀️ 여성</label>
           </div>
         </div>
       </div>
@@ -61,18 +61,18 @@
           <!-- 시간 및 도시 선택 -->
           <div class="date-inputs single">
             <select class="retro-input time-input" th:field="*{time}">
-              <option value="">(모름) 태어난 시간 🕐</option>
+              <option value="" selected hidden>태어난 시간 🕐</option>
               <option th:each="type : ${timeTypes}"
                       th:value="${type.name()}" th:text="${type.displayName}">
-                자시(23:30 - 01:29)
+                모름
               </option>
             </select>
 
             <select class="retro-input city-input" th:field="*{city}">
-              <option value="">(모름) 태어난 도시 🏙️</option>
+              <option value="" selected hidden>태어난 도시 🏙️</option>
               <option th:each="type : ${cityTypes}"
                       th:value="${type.name()}" th:text="${type.displayName}">
-                서울특별시
+                모름
               </option>
             </select>
           </div>

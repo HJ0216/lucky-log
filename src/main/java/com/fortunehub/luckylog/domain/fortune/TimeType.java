@@ -18,7 +18,8 @@ public enum TimeType {
   TIME_15_30("신시(15:30 - 17:29)"),
   TIME_17_30("유시(17:30 - 19:29)"),
   TIME_19_30("술시(19:30 - 21:29)"),
-  TIME_21_30("해시(21:30 - 23:29)");
+  TIME_21_30("해시(21:30 - 23:29)"),
+  UNKNOWN("모름");
 
   private final String displayName;
 }
