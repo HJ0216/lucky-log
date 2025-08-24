@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.controller.web;
 
+import com.fortunehub.luckylog.domain.GenderType;
 import com.fortunehub.luckylog.form.BirthInfoForm;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -33,6 +34,11 @@ public class IndexController {
   @ModelAttribute("maxYear")
   public int getMaxYear() {
     return Year.now().getValue();
+  }
+
+  @ModelAttribute("genderTypes")
+  public GenderType[] genderTypes() {
+    return GenderType.values();
   }
 
   @GetMapping

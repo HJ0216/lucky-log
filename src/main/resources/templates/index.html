@@ -28,16 +28,12 @@
     <!-- 폼을 서버로 POST 요청, Thymeleaf 객체 바인딩 -->
     <form class="form-grid" action="/" th:action="@{/}" method="post" th:object="${birthInfoForm}">
       <!-- 성별 선택 -->
-      <div class="field-group" data-field="gender">
+      <div class="field-group">
         <label class="field-label">👶성별</label>
         <div class="gender-cards">
-          <div class="card-option">
-            <input type="radio" id="female" name="gender" value="female" th:field="*{gender}">
-            <label for="female">🙋‍♀️ 여성</label>
-          </div>
-          <div class="card-option">
-            <input type="radio" id="male" name="gender" value="male" th:field="*{gender}">
-            <label for="male">🙋‍♂️ 남성</label>
+          <div class="card-option" th:each="type : ${genderTypes}">
+            <input type="radio" th:field="*{gender}" th:value="${type.name()}"/>
+            <label th:for="${#ids.prev('gender')}" th:text="${type.displayName}"/>
           </div>
         </div>
       </div>
