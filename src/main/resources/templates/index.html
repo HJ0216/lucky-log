@@ -26,7 +26,7 @@
     </div>
 
     <!-- 폼을 서버로 POST 요청, Thymeleaf 객체 바인딩 -->
-    <form class="form-grid" th:action="@{/}" method="post" th:object="${birthInfoForm}">
+    <form class="form-grid" action="/" th:action="@{/}" method="post" th:object="${birthInfoForm}">
       <!-- 성별 선택 -->
       <div class="field-group" data-field="gender">
         <label class="field-label">👶성별</label>
