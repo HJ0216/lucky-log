@@ -33,7 +33,6 @@ public class FortuneOptionController {
 
   @GetMapping
   public String show(
-      @ModelAttribute BirthInfoForm birthInfo,
       Model model,
       HttpSession session
   ) {
