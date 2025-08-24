@@ -58,12 +58,7 @@ public class IndexController {
   }
 
   @GetMapping
-  public String index(Model model) {
-    // Model: Controller에서 생성된 데이터를 담아 View로 전달할 때 사용하는 객체
-
-    // 빈 BirthInfoForm 객체 생성
-    model.addAttribute("birthInfoForm", new BirthInfoForm());
-
+  public String index(@ModelAttribute BirthInfoForm birthInfoForm) {
     return "index"; // templates/index.html 반환
   }
 
@@ -74,7 +69,7 @@ public class IndexController {
       Model model,
       HttpSession session,
       RedirectAttributes redirectAttributes
-  ) throws Exception {
+  ) {
 
     log.debug("생년월일 제출: 생년: {}, 성별: {}, 시간: {}, 장소: {}",
         birthInfoForm.getYear(),
@@ -104,8 +99,6 @@ public class IndexController {
 
     // option 페이지에서 뒤로가기 시, 기존 데이터 저장
     session.setAttribute("birthInfo", birthInfoForm);
-
-    redirectAttributes.addFlashAttribute("birthInfo", birthInfoForm);
 
     return "redirect:/fortune/option";
   }

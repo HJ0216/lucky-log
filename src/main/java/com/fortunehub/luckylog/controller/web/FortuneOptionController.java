@@ -32,8 +32,15 @@ public class FortuneOptionController {
   private final GeminiService geminiService;
 
   @GetMapping
-  public String show(@ModelAttribute BirthInfoForm birthInfo, Model model) {
+  public String show(
+      @ModelAttribute BirthInfoForm birthInfo,
+      Model model,
+      HttpSession session
+  ) {
 
+    BirthInfoForm savedBirthInfo = (BirthInfoForm) session.getAttribute("birthInfo");
+
+    model.addAttribute("birthInfo", savedBirthInfo);
     model.addAttribute("fortuneOptionForm", new FortuneOptionForm());
 
     return "fortune-option";
@@ -41,16 +48,18 @@ public class FortuneOptionController {
 
   @PostMapping
   public String submit(
-      @Valid @ModelAttribute BirthInfoForm birthInfoForm,
       @Valid @ModelAttribute FortuneOptionForm fortuneOptionForm,
       BindingResult result,
       Model model,
+      HttpSession session,
       RedirectAttributes redirectAttributes
   ) {
 
+    BirthInfoForm savedBirthInfo = (BirthInfoForm) session.getAttribute("birthInfo");
+
     log.debug("운세 분석 요청 시작 - 생년: {}, 성별: {}, 운세 선택 정보: {}",
-        birthInfoForm.getYear(),
-        birthInfoForm.getGender(),
+        savedBirthInfo.getYear(),
+        savedBirthInfo.getGender(),
         fortuneOptionForm.toString());
 
     if (result.hasErrors()) {
@@ -70,7 +79,7 @@ public class FortuneOptionController {
       model.addAttribute("errorMessages", errorMessages);
       model.addAttribute("errorFields", errorFields);
       model.addAttribute("fortuneOptionForm", fortuneOptionForm);
-      model.addAttribute("birthInfo", birthInfoForm);
+      model.addAttribute("birthInfo", savedBirthInfo);
 
       return "fortune-option";
     }
@@ -80,7 +89,7 @@ public class FortuneOptionController {
 
       if (AI_GEMINI.equals(fortuneOptionForm.getAi())) {
         fortuneResult = geminiService.analyzeFortune(
-            FortuneRequest.from(birthInfoForm, fortuneOptionForm));
+            FortuneRequest.from(savedBirthInfo, fortuneOptionForm));
       }
 
       // TODO: 운세별 로깅으로 전환 예정
@@ -89,7 +98,7 @@ public class FortuneOptionController {
           fortuneOptionForm.getFortunes(), fortuneResult.getOverall().length());
 
       redirectAttributes.addFlashAttribute("fortuneResult", fortuneResult);
-      redirectAttributes.addFlashAttribute("birthInfo", birthInfoForm);
+      redirectAttributes.addFlashAttribute("birthInfo", savedBirthInfo);
       redirectAttributes.addFlashAttribute("fortuneOption", fortuneOptionForm);
 
       return "redirect:/fortune/result";
@@ -101,25 +110,28 @@ public class FortuneOptionController {
       model.addAttribute("errorFields", "submit");
 
       model.addAttribute("fortuneOptionForm", fortuneOptionForm);
-      model.addAttribute("birthInfo", birthInfoForm);
+      model.addAttribute("birthInfo", savedBirthInfo);
 
       return "fortune-option";
     }
   }
 
   @GetMapping("/back")
-  public String backToIndex(HttpSession session, Model model) {
+  public String backToIndex(
+      HttpSession session,
+      RedirectAttributes redirectAttributes
+  ) {
 
     BirthInfoForm savedBirthInfo = (BirthInfoForm) session.getAttribute("birthInfo");
 
     if (savedBirthInfo != null) {
-      model.addAttribute("birthInfoForm", savedBirthInfo);
+      redirectAttributes.addFlashAttribute("birthInfoForm", savedBirthInfo);
     } else {
       log.warn("뒤로가기 처리 - 세션에 저장된 데이터가 없음");
-      
-      model.addAttribute("birthInfoForm", new BirthInfoForm());
+
+      redirectAttributes.addFlashAttribute("birthInfoForm", new BirthInfoForm());
     }
 
-    return "index";
+    return "redirect:/";
   }
 }
