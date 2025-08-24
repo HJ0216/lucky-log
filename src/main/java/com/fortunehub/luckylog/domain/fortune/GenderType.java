@@ -1,4 +1,4 @@
-package com.fortunehub.luckylog.domain;
+package com.fortunehub.luckylog.domain.fortune;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

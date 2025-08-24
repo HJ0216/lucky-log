@@ -1,6 +1,6 @@
 package com.fortunehub.luckylog.controller.web;
 
-import com.fortunehub.luckylog.domain.GenderType;
+import com.fortunehub.luckylog.domain.fortune.GenderType;
 import com.fortunehub.luckylog.form.BirthInfoForm;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
