@@ -80,25 +80,11 @@
         <div class="field-group">
           <label class="field-label">📊 운세 주기</label>
           <div class="period-cards">
-            <div class="period-option">
-              <input type="radio" id="monthly" th:field="*{period}" value="monthly">
-              <label for="monthly">
-                <div>📆</div>
-                <div>월별</div>
-              </label>
-            </div>
-            <div class="period-option">
-              <input type="radio" id="quarterly" th:field="*{period}" value="quarterly" disabled>
-              <label for="quarterly">
-                <div>📊</div>
-                <div>분기별</div>
-              </label>
-            </div>
-            <div class="period-option">
-              <input type="radio" id="yearly" th:field="*{period}" value="yearly" disabled>
-              <label for="yearly">
-                <div>📋</div>
-                <div>올 한해</div>
+            <div th:each="type : ${periodTypes}" class="period-option">
+              <input type="radio"th:field="*{period}" th:value="${type.name()}" th:disabled="${!type.enabled}">
+              <label th:for="${#ids.prev('period')}">
+                <div th:text="${type.icon}">📆</div>
+                <div th:text="${type.displayName}">월별</div>
               </label>
             </div>
           </div>

@@ -1,7 +1,6 @@
 package com.fortunehub.luckylog.controller.web;
 
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResult;
-import com.fortunehub.luckylog.form.BirthInfoForm;
 import com.fortunehub.luckylog.form.FortuneOptionForm;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
@@ -19,7 +18,6 @@ public class FortuneResultController {
 
   @GetMapping
   public String show(
-      @ModelAttribute BirthInfoForm birthInfo,
       @ModelAttribute FortuneOptionForm fortuneOption,
       @ModelAttribute FortuneResult fortuneResult,
       HttpSession session,
@@ -29,21 +27,12 @@ public class FortuneResultController {
     session.removeAttribute("birthInfo");
 
     int currentYear = LocalDate.now().getYear();
-    String periodText = getPeriodText(fortuneOption.getPeriod());
+    String periodText = fortuneOption.getPeriod().getDisplayName();
     String title = currentYear + "년 " + periodText + " 운세";
 
     model.addAttribute("fortuneTitle", title);
     model.addAttribute("fortuneResult", fortuneResult);
 
     return "fortune-result";
-  }
-
-  private String getPeriodText(String period) {
-    return switch (period) {
-      case "monthly" -> "월별";
-      case "quarterly" -> "분기별";
-      case "yearly" -> "연간";
-      default -> "월별";
-    };
   }
 }

@@ -4,6 +4,7 @@ import com.fortunehub.luckylog.domain.fortune.CalendarType;
 import com.fortunehub.luckylog.domain.fortune.CityType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
+import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.form.BirthInfoForm;
 import com.fortunehub.luckylog.form.FortuneOptionForm;
@@ -22,7 +23,7 @@ public record FortuneRequest(
 
     // 운세 옵션 정보
     List<FortuneType> fortunes,
-    String period
+    PeriodType period
 ) {
 
   public static FortuneRequest from(BirthInfoForm birthInfo, FortuneOptionForm fortuneOption) {

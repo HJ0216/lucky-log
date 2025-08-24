@@ -2,6 +2,7 @@ package com.fortunehub.luckylog.form;
 
 import com.fortunehub.luckylog.domain.fortune.AIType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
+import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -24,5 +25,5 @@ public class FortuneOptionForm {
   private List<FortuneType> fortunes = new ArrayList<>(List.of(FortuneType.OVERALL));
 
   @NotNull(message = "📊 운세 주기를 선택해주세요!")
-  private String period = "monthly";
+  private PeriodType period = PeriodType.MONTHLY;
 }

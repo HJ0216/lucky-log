@@ -2,6 +2,7 @@ package com.fortunehub.luckylog.controller.web;
 
 import com.fortunehub.luckylog.domain.fortune.AIType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
+import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResult;
 import com.fortunehub.luckylog.form.BirthInfoForm;
@@ -40,6 +41,11 @@ public class FortuneOptionController {
   @ModelAttribute("fortuneTypes")
   public List<FortuneType> fortuneTypes() {
     return FortuneType.ALL_TYPES;
+  }
+
+  @ModelAttribute("periodTypes")
+  public List<PeriodType> periodTypes(){
+    return PeriodType.ALL_TYPES;
   }
 
   @GetMapping
