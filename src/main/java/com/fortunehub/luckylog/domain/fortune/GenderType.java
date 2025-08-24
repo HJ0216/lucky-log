@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.domain.fortune;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -11,4 +12,6 @@ public enum GenderType {
 
   private final String icon;
   private final String displayName;
+
+  public static final List<GenderType> ALL_TYPES = List.of(values());
 }

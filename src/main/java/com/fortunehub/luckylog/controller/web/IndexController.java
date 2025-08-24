@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.time.Year;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -38,23 +39,23 @@ public class IndexController {
   }
 
   @ModelAttribute("genderTypes")
-  public GenderType[] genderTypes() {
-    return GenderType.values();
+  public List<GenderType> genderTypes() {
+    return GenderType.ALL_TYPES;
   }
 
   @ModelAttribute("calendarTypes")
-  public CalendarType[] calendarTypes() {
-    return CalendarType.values();
+  public List<CalendarType> calendarTypes() {
+    return CalendarType.ALL_TYPES;
   }
 
   @ModelAttribute("timeTypes")
-  public TimeType[] timeTypes() {
-    return TimeType.values();
+  public List<TimeType> timeTypes() {
+    return TimeType.ALL_TYPES;
   }
 
   @ModelAttribute("cityTypes")
-  public CityType[] cityTypes() {
-    return CityType.values();
+  public List<CityType> cityTypes() {
+    return CityType.ALL_TYPES;
   }
 
   @GetMapping

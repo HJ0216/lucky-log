@@ -10,6 +10,7 @@ import com.fortunehub.luckylog.service.fortune.GeminiService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,13 +33,13 @@ public class FortuneOptionController {
   private final GeminiService geminiService;
 
   @ModelAttribute("aiTypes")
-  public AIType[] aiTypes() {
-    return AIType.values();
+  public List<AIType> aiTypes() {
+    return AIType.ALL_TYPES;
   }
 
   @ModelAttribute("fortuneTypes")
-  public FortuneType[] fortuneTypes() {
-    return FortuneType.values();
+  public List<FortuneType> fortuneTypes() {
+    return FortuneType.ALL_TYPES;
   }
 
   @GetMapping

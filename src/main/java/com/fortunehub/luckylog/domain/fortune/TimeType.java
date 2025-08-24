@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.domain.fortune;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -22,4 +23,6 @@ public enum TimeType {
   UNKNOWN("모름");
 
   private final String displayName;
+
+  public static final List<TimeType> ALL_TYPES = List.of(values());
 }

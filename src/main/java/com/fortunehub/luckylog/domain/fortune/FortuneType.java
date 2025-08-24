@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.domain.fortune;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -19,4 +20,6 @@ public enum FortuneType {
   private final String icon;
   private final String tooltip;
   private final boolean enabled;
+
+  public static final List<FortuneType> ALL_TYPES = List.of(values());
 }

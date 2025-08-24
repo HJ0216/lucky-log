@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.domain.fortune;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -18,4 +19,6 @@ public enum CityType {
   UNKNOWN("모름");
 
   private final String displayName;
+
+  public static final List<CityType> ALL_TYPES = List.of(values());
 }
