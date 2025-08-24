@@ -60,20 +60,12 @@
 
           <!-- 시간 및 도시 선택 -->
           <div class="date-inputs single">
-            <select class="retro-input time-input" name="time" th:field="*{time}" data-field="time">
+            <select class="retro-input time-input" th:field="*{time}">
               <option value="">(모름) 태어난 시간 🕐</option>
-              <option value="자시(23:30 - 01:29)">자시(23:30 - 01:29)</option>
-              <option value="축시(01:30 - 03:29)">축시(01:30 - 03:29)</option>
-              <option value="인시(03:30 - 05:29)">인시(03:30 - 05:29)</option>
-              <option value="묘시(05:30 - 07:29)">묘시(05:30 - 07:29)</option>
-              <option value="진시(07:30 - 09:29)">진시(07:30 - 09:29)</option>
-              <option value="사시(09:30 - 11:29)">사시(09:30 - 11:29)</option>
-              <option value="오시(11:30 - 13:29)">오시(11:30 - 13:29)</option>
-              <option value="미시(13:30 - 15:29)">미시(13:30 - 15:29)</option>
-              <option value="신시(15:30 - 17:29)">신시(15:30 - 17:29)</option>
-              <option value="유시(17:30 - 19:29)">유시(17:30 - 19:29)</option>
-              <option value="술시(19:30 - 21:29)">술시(19:30 - 21:29)</option>
-              <option value="해시(21:30 - 23:29)">해시(21:30 - 23:29)</option>
+              <option th:each="type : ${timeTypes}"
+                      th:value="${type.name()}" th:text="${type.displayName}">
+                자시(23:30 - 01:29)
+              </option>
             </select>
 
             <select class="retro-input city-input" name="city" th:field="*{city}" data-field="city">
