@@ -52,12 +52,10 @@
 
           <!-- 년월일 입력 -->
           <div class="date-inputs">
-            <input type="number" class="retro-input" name="year" th:field="*{year}" placeholder="연도" th:min="${minYear}"
-              th:max="${maxYear}" data-field="year">
-            <input type="number" class="retro-input" name="month" th:field="*{month}" placeholder="월" min="1" max="12"
-              data-field="month">
-            <input type="number" class="retro-input" name="day" th:field="*{day}" placeholder="일" min="1" max="31"
-              data-field="day">
+            <input type="number" placeholder="연도" class="retro-input"
+                   th:field="*{year}" th:min="${minYear}" th:max="${maxYear}">
+            <input type="number" placeholder="월" class="retro-input" th:field="*{month}" min="1" max="12">
+            <input type="number" placeholder="일" class="retro-input" th:field="*{day}" min="1" max="31">
           </div>
 
           <!-- 시간 및 도시 선택 -->
