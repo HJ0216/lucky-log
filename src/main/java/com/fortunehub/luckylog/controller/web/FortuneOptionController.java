@@ -1,6 +1,7 @@
 package com.fortunehub.luckylog.controller.web;
 
 import com.fortunehub.luckylog.domain.fortune.AIType;
+import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResult;
 import com.fortunehub.luckylog.form.BirthInfoForm;
@@ -35,6 +36,10 @@ public class FortuneOptionController {
     return AIType.values();
   }
 
+  @ModelAttribute("fortuneTypes")
+  public FortuneType[] fortuneTypes() {
+    return FortuneType.values();
+  }
 
   @GetMapping
   public String show(

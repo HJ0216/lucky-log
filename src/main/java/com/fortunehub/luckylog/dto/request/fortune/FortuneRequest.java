@@ -2,11 +2,13 @@ package com.fortunehub.luckylog.dto.request.fortune;
 
 import com.fortunehub.luckylog.domain.fortune.CalendarType;
 import com.fortunehub.luckylog.domain.fortune.CityType;
+import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.form.BirthInfoForm;
 import com.fortunehub.luckylog.form.FortuneOptionForm;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record FortuneRequest(
     // 생년월일 정보
@@ -19,7 +21,7 @@ public record FortuneRequest(
     CityType city,
 
     // 운세 옵션 정보
-    List<String> fortunes,
+    List<FortuneType> fortunes,
     String period
 ) {
 
@@ -38,8 +40,9 @@ public record FortuneRequest(
   }
 
   public String getFortuneTypesAsString() {
-    return String.join(", ", fortunes);
-  }
+    return fortunes.stream()
+                   .map(FortuneType::getTooltip)
+                   .collect(Collectors.joining(", "));  }
 
   public String getBirthTime(){
     return time == null ? "모름" : time.getDisplayName();

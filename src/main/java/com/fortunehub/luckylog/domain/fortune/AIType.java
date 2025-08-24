@@ -12,5 +12,5 @@ public enum AIType {
 
   private final String icon;
   private final String displayName;
-  private final boolean enable;
+  private final boolean enabled;
 }
