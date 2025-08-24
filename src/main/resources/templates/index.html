@@ -33,7 +33,7 @@
         <div class="gender-cards">
           <div class="card-option" th:each="type : ${genderTypes}">
             <input type="radio" th:field="*{gender}" th:value="${type.name()}"/>
-            <label th:for="${#ids.prev('gender')}" th:text="${type.displayName}"/>
+            <label th:for="${#ids.prev('gender')}" th:text="${type.displayName}">🙋‍♀️ 여성</label>
           </div>
         </div>
       </div>
@@ -43,20 +43,12 @@
         <label class="field-label">🎂생년월일</label>
         <div class="birth-section">
           <!-- 양력/음력 선택 -->
-          <div class="calendar-toggle" data-field="calendar">
-            <div class="toggle-option">
-              <input type="radio" id="solar" name="calendar" value="solar" th:field="*{calendar}">
-              <label for="solar">양력</label>
+          <div class="calendar-toggle">
+            <div class="toggle-option" th:each="type: ${calendarTypes}">
+              <input type="radio" th:field="*{calendar}" th:value="${type.name()}">
+              <label th:for="${#ids.prev('calendar')}" th:text="${type.displayName}">양력</label>
             </div>
-            <div class="toggle-option">
-              <input type="radio" id="lunar" name="calendar" value="lunar" th:field="*{calendar}">
-              <label for="lunar">음력(평달)</label>
-            </div>
-            <div class="toggle-option">
-              <input type="radio" id="lunar_leap" name="calendar" value="lunar_leap" th:field="*{calendar}">
-              <label for="lunar_leap">음력(윤달)</label>
-            </div>
-          </div>
+         </div>
 
           <!-- 년월일 입력 -->
           <div class="date-inputs">

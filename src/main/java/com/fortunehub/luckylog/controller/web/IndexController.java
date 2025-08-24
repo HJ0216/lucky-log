@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.controller.web;
 
+import com.fortunehub.luckylog.domain.fortune.CalendarType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
 import com.fortunehub.luckylog.form.BirthInfoForm;
 import jakarta.servlet.http.HttpSession;
@@ -39,6 +40,11 @@ public class IndexController {
   @ModelAttribute("genderTypes")
   public GenderType[] genderTypes() {
     return GenderType.values();
+  }
+
+  @ModelAttribute("calendarTypes")
+  public CalendarType[] calendarTypes() {
+    return CalendarType.values();
   }
 
   @GetMapping
