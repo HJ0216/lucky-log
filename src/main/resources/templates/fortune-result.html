@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUCKY LOG</title>
     <link rel="icon" href="../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
-    <link href="../static/css/fortune-result.css" th:href="@{/css/fortune-result.css}">
+    <link rel="stylesheet" href="../static/css/fortune-result.css" th:href="@{/css/fortune-result.css}">
 </head>
 
 <body>
@@ -22,24 +22,18 @@
 
         <div class="header">
             <div class="ai-badge">
-                <span class="ai-icon" th:text="${fortuneOption.ai != null and #strings.contains(fortuneOption.ai, ' ') ?
-                #strings.substringBefore(fortuneOption.ai, ' ') :
-                (fortuneOption.ai != null ? fortuneOption.ai : '🤖')}">
-                </span>
-                <span id="ai-name" th:text="${fortuneOption.ai != null and #strings.contains(fortuneOption.ai, ' ') ?
-                #strings.substringAfter(fortuneOption.ai, ' ') : 'AI'}">
-                </span>
+                <span class="ai-icon" th:text="${fortuneOption.ai.icon}">🪂</span>
+                <span id="ai-name" th:text="${fortuneOption.ai.displayName}">Gemini</span>
             </div>
-            <p class="user-info" th:if="${birthInfo != null}">
-                <span th:text="${birthInfo.city}">도시</span>
-                <span th:text="${birthInfo.gender == 'male' ? '남성' : '여성'}">성별</span>
-                <span
-                    th:text="${birthInfo.calendar == 'solar' ? '양력' : (birthInfo.calendar == 'lunar' ? '음력(평달)' : '음력(윤달)')}">력</span>
+            <p class="user-info" th:if="${birthInfo != null}" th:object="${birthInfo}">
+                <span th:if="*{city != null && city.displayName != '모름'}" th:text="*{city.displayName}">서울특별시</span>
+                <span th:text="*{gender.displayName}">여성</span>
+                <span th:text="*{calendar.displayName}">양력</span>
                 <br>
-                <span th:text="${birthInfo.year}">년</span>년
-                <span th:text="${birthInfo.month}">월</span>월
-                <span th:text="${birthInfo.day}">일</span>일
-                <span th:if="${birthInfo.time != null}" th:text="${birthInfo.time}">시간</span>
+                <span th:text="*{year}">1995년</span>년
+                <span th:text="*{month}">02월</span>월
+                <span th:text="*{day}">16일</span>일
+                <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">자시(23:30 - 01:29)</span>
             </p>
         </div>
 

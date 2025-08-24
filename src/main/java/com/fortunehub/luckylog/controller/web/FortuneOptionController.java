@@ -114,7 +114,6 @@ public class FortuneOptionController {
           fortuneOptionForm.getFortunes(), fortuneResult.getOverall().length());
 
       redirectAttributes.addFlashAttribute("fortuneResult", fortuneResult);
-      redirectAttributes.addFlashAttribute("birthInfo", savedBirthInfo);
       redirectAttributes.addFlashAttribute("fortuneOption", fortuneOptionForm);
 
       return "redirect:/fortune/result";
