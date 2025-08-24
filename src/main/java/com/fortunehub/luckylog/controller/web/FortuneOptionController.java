@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.controller.web;
 
+import com.fortunehub.luckylog.domain.fortune.AIType;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResult;
 import com.fortunehub.luckylog.form.BirthInfoForm;
@@ -27,9 +28,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/fortune/option")
 public class FortuneOptionController {
 
-  private static final String AI_GEMINI = "🪂 Gemini";
-
   private final GeminiService geminiService;
+
+  @ModelAttribute("aiTypes")
+  public AIType[] aiTypes() {
+    return AIType.values();
+  }
+
 
   @GetMapping
   public String show(
@@ -86,7 +91,7 @@ public class FortuneOptionController {
     try {
       FortuneResult fortuneResult = FortuneResult.builder().build();
 
-      if (AI_GEMINI.equals(fortuneOptionForm.getAi())) {
+      if (fortuneOptionForm.getAi() == AIType.GEMINI) {
         fortuneResult = geminiService.analyzeFortune(
             FortuneRequest.from(savedBirthInfo, fortuneOptionForm));
       }

@@ -49,30 +49,17 @@
         </p>
       </div>
 
-      <form th:action="@{/fortune/option}" method="post" th:object="${fortuneOptionForm}" class="form-grid">
+      <form action="/fortune/option" th:action="@{/fortune/option}" method="post"
+            th:object="${fortuneOptionForm}" class="form-grid">
         <!-- AI 선택 -->
         <div class="field-group">
           <label class="field-label">🤖 AI 선택</label>
           <div class="ai-cards">
-            <div class="ai-option">
-              <input type="radio" id="claude" th:field="*{ai}" value="🎆 Claude" disabled>
-              <label for="claude">
-                <div>🎆</div>
-                <div>Claude</div>
-              </label>
-            </div>
-            <div class="ai-option">
-              <input type="radio" id="gemini" th:field="*{ai}" value="🪂 Gemini">
-              <label for="gemini">
-                <div>🪂</div>
-                <div>Gemini</div>
-              </label>
-            </div>
-            <div class="ai-option">
-              <input type="radio" id="gpt" th:field="*{ai}" value="🚀 GPT" disabled>
-              <label for="gpt">
-                <div>🚀</div>
-                <div>GPT</div>
+            <div th:each="type: ${aiTypes}" class="ai-option">
+              <input type="radio" th:field="*{ai}" th:value="${type.name()}" th:disabled="${!type.enable}">
+              <label th:for="${#ids.prev('ai')}">
+                <div th:text="${type.icon}">🎆</div>
+                <div th:text="${type.displayName}">Claude</div>
               </label>
             </div>
           </div>
