@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LUCKY LOG</title>
-  <link rel="icon" th:href="@{/images/lucky-log-logo.png}" type="image/x-icon">
-  <link th:href="@{/css/index.css}" rel="stylesheet">
+  <link rel="icon" href="../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
+  <link rel="stylesheet" href="../static/css/index.css" th:href="@{/css/index.css}">
 </head>
 
 <body>
@@ -93,7 +93,7 @@
   <script th:inline="javascript" th:if="${errorFields != null}">
     window.errorFields = [[${ errorFields }]];
   </script>
-  <script defer th:src="@{/js/index.js}"></script>
+  <script defer src="../static/js/index.js"  th:src="@{/js/index.js}"></script>
 </body>
 
 </html>
