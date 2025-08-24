@@ -1,6 +1,7 @@
 package com.fortunehub.luckylog.controller.web;
 
 import com.fortunehub.luckylog.domain.fortune.CalendarType;
+import com.fortunehub.luckylog.domain.fortune.CityType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.form.BirthInfoForm;
@@ -51,6 +52,11 @@ public class IndexController {
   @ModelAttribute("timeTypes")
   public TimeType[] timeTypess() {
     return TimeType.values();
+  }
+
+  @ModelAttribute("cityTypes")
+  public CityType[] cityTypess() {
+    return CityType.values();
   }
 
   @GetMapping
