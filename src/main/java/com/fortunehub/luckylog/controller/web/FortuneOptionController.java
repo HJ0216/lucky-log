@@ -44,21 +44,12 @@ public class FortuneOptionController {
   }
 
   @ModelAttribute("periodTypes")
-  public List<PeriodType> periodTypes(){
+  public List<PeriodType> periodTypes() {
     return PeriodType.ALL_TYPES;
   }
 
   @GetMapping
-  public String show(
-      Model model,
-      HttpSession session
-  ) {
-
-    BirthInfoForm savedBirthInfo = (BirthInfoForm) session.getAttribute("birthInfo");
-
-    model.addAttribute("birthInfo", savedBirthInfo);
-    model.addAttribute("fortuneOptionForm", new FortuneOptionForm());
-
+  public String show(@ModelAttribute FortuneOptionForm fortuneOptionForm) {
     return "fortune-option";
   }
 
