@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,7 +57,6 @@ public class FortuneOptionController {
   public String submit(
       @Valid @ModelAttribute FortuneOptionForm fortuneOptionForm,
       BindingResult result,
-      Model model,
       HttpSession session,
       RedirectAttributes redirectAttributes
   ) {
@@ -100,8 +100,9 @@ public class FortuneOptionController {
     } catch (Exception e) {
       log.error("사주 분석 API 호출 실패: {}", e.getMessage(), e);
 
-      model.addAttribute("errorMessages", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요");
-      model.addAttribute("errorFields", "submit");
+      result.addError(
+          new ObjectError("FortuneOptionForm", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요"));
+      // @ModelAttribute로 선언된 객체에만 사용
 
       return "fortune-option";
     }
