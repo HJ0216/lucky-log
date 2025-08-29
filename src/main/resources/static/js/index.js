@@ -9,6 +9,8 @@ const IndexPage = {
   // 설정 및 상태
   config: {
     animationDuration: 1000,
+    errorHideDelay: 1000, // ms (1초)
+    fadeoutDuration: 300, // ms (0.3초)
     wiggleClass: "field-error-wiggle",
   },
 
@@ -20,13 +22,14 @@ const IndexPage = {
     yearInput: null,
     monthInput: null,
     dayInput: null,
+    errorMessages: [],
   },
 
   // 초기화
   init() {
     this.cacheElements();
     this.attachEvents();
-    this.showErrorAnimations(); // 서버에서 온 에러들에 애니메이션 적용
+    this.startErrorAutoHide();
   },
 
   cacheElements() {
@@ -37,6 +40,7 @@ const IndexPage = {
     this.elements.allInputs = document.querySelectorAll(
       'input[type="radio"], input[type="checkbox"], input[type="number"], input[type="text"], select'
     );
+    this.elements.errorMessages = document.querySelectorAll(".error-message, .alert");
   },
 
   // 캐싱된 DOM 요소들에 필요한 이벤트 리스너를 등록
@@ -222,7 +226,28 @@ const IndexPage = {
     setTimeout(() => {
       input.classList.remove(this.config.wiggleClass);
     }, this.config.animationDuration);
-  }
+  },
+
+    /**
+     * 에러 메시지를 일정 시간 후 자동으로 숨기는 로직
+     */
+    startErrorAutoHide() {
+      this.elements.errorMessages.forEach(msg => {
+        // 메시지에 내용이 있을 때만 타이머 작동
+        if (msg.textContent.trim()) {
+          setTimeout(() => {
+            msg.style.transition = `opacity ${this.config.fadeoutDuration}ms ease-out`;
+            msg.style.opacity = "0";
+
+            // fade-out 애니메이션이 끝난 후 display: none 처리
+            setTimeout(() => {
+              msg.style.display = "none";
+            }, this.config.fadeoutDuration);
+
+          }, this.config.errorHideDelay);
+        }
+      });
+    }
 };
 
 // 페이지 로드 시 초기화
