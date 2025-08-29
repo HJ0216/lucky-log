@@ -56,7 +56,10 @@ public class IndexController {
   }
 
   @GetMapping
-  public String index(@ModelAttribute BirthInfoForm birthInfoForm) {
+  public String index(HttpSession session, Model model) {
+    BirthInfoForm birthInfo = (BirthInfoForm) session.getAttribute("birthInfo");
+    model.addAttribute("birthInfoForm", birthInfo != null ? birthInfo : new BirthInfoForm());
+
     return "index"; // templates/index.html 반환
   }
 
@@ -64,10 +67,10 @@ public class IndexController {
   public String submit(
       @Valid @ModelAttribute BirthInfoForm birthInfoForm,
       BindingResult result,
-      Model model,
-      HttpSession session,
-      RedirectAttributes redirectAttributes
+      HttpSession session
   ) {
+    // @ModelAttribute: 자동으로 Model에 추가 (birthInfoForm 이름으로)
+    // 사용자 입력값이 그대로 유지됨
 
     log.debug("생년월일 제출: 생년: {}, 성별: {}, 시간 선택 여부: {}, 장소 선택 여부: {}",
         birthInfoForm.getYear(),
@@ -77,7 +80,7 @@ public class IndexController {
 
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
-          log.debug("검증 실패 - 필드: {}, 입력값: {}, 메시지: {}",
+          log.debug("생년월일 검증 실패: 필드: {}, 입력값: {}, 메시지: {}",
               error.getField(),
               error.getRejectedValue(),
               error.getDefaultMessage())

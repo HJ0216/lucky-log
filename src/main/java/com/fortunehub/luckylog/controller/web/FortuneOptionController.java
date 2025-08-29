@@ -10,15 +10,12 @@ import com.fortunehub.luckylog.form.FortuneOptionForm;
 import com.fortunehub.luckylog.service.fortune.GeminiService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +47,8 @@ public class FortuneOptionController {
 
   @GetMapping
   public String show(@ModelAttribute FortuneOptionForm fortuneOptionForm) {
+    // @ModelAttribute는 넘어오는 데이터가 없어도 자동으로 빈 객체를 생성
+
     return "fortune-option";
   }
 
@@ -123,21 +122,7 @@ public class FortuneOptionController {
   }
 
   @GetMapping("/back")
-  public String backToIndex(
-      HttpSession session,
-      RedirectAttributes redirectAttributes
-  ) {
-
-    BirthInfoForm savedBirthInfo = (BirthInfoForm) session.getAttribute("birthInfo");
-
-    if (savedBirthInfo != null) {
-      redirectAttributes.addFlashAttribute("birthInfoForm", savedBirthInfo);
-    } else {
-      log.warn("뒤로가기 처리 - 세션에 저장된 데이터가 없음");
-
-      redirectAttributes.addFlashAttribute("birthInfoForm", new BirthInfoForm());
-    }
-
+  public String backToIndex() {
     return "redirect:/";
   }
 }
