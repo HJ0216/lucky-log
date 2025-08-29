@@ -9,7 +9,6 @@ const IndexPage = {
   // 설정 및 상태
   config: {
     animationDuration: 1000,
-    errorClass: "field-error-jump",
     wiggleClass: "field-error-wiggle",
   },
 
@@ -192,15 +191,6 @@ const IndexPage = {
     }
   },
 
-  // 서버에서 전달된 에러 필드들에 애니메이션 적용
-  showErrorAnimations() {
-    if (window.errorFields && window.errorFields.length > 0) {
-      window.errorFields.forEach((fieldName) => {
-        this.animateErrorField(fieldName);
-      });
-    }
-  },
-
   // 필드별 에러 애니메이션
   animateErrorField(fieldName) {
     let element = null;
@@ -226,14 +216,6 @@ const IndexPage = {
   },
 
   // 애니메이션
-  // 점프 애니메이션
-  jumpAnimation(element) {
-    element.classList.add(this.config.errorClass);
-    setTimeout(() => {
-      element.classList.remove(this.config.errorClass);
-    }, this.config.animationDuration);
-  },
-
   // 흔들기 애니메이션
   wiggleInput(input) {
     input.classList.add(this.config.wiggleClass);

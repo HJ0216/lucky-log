@@ -8,14 +8,11 @@ import com.fortunehub.luckylog.form.BirthInfoForm;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.time.Year;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -79,21 +76,12 @@ public class IndexController {
         birthInfoForm.getCity() != null && birthInfoForm.getCity() != CityType.UNKNOWN);
 
     if (result.hasErrors()) {
-      log.warn("생년월일 검증 실패: {}",
-          result.getFieldErrors().stream()
-                .map(FieldError::getField)
-                .toList());
-
-      Set<String> errorMessages = new LinkedHashSet<>();
-      Set<String> errorFields = new LinkedHashSet<>();
-
-      result.getFieldErrors().forEach(error -> {
-        errorMessages.add(error.getDefaultMessage());
-        errorFields.add(error.getField());
-      });
-
-      model.addAttribute("errorMessages", errorMessages);
-      model.addAttribute("errorFields", errorFields);
+      result.getFieldErrors().forEach(error ->
+          log.debug("검증 실패 - 필드: {}, 입력값: {}, 메시지: {}",
+              error.getField(),
+              error.getRejectedValue(),
+              error.getDefaultMessage())
+      );
 
       return "index";
     }

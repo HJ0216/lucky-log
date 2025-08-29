@@ -1,6 +1,5 @@
 package com.fortunehub.luckylog.dto.response.fortune;
 
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,5 +19,4 @@ public class FortuneResult {
   private String luck;
   private String family;
   private String health;
-
 }
