@@ -69,23 +69,12 @@ public class FortuneOptionController {
         fortuneOptionForm.toString());
 
     if (result.hasErrors()) {
-      log.warn("운세 옵션 검증 실패: {}",
-          result.getFieldErrors().stream()
-                .map(FieldError::getField)
-                .toList());
-
-      Set<String> errorMessages = new LinkedHashSet<>();
-      Set<String> errorFields = new LinkedHashSet<>();
-
-      result.getFieldErrors().forEach(error -> {
-        errorMessages.add(error.getDefaultMessage());
-        errorFields.add(error.getField());
-      });
-
-      model.addAttribute("errorMessages", errorMessages);
-      model.addAttribute("errorFields", errorFields);
-      model.addAttribute("fortuneOptionForm", fortuneOptionForm);
-      model.addAttribute("birthInfo", savedBirthInfo);
+      result.getFieldErrors().forEach(error ->
+          log.debug("운세 옵션 검증 실패: 필드: {}, 입력값: {}, 메시지: {}",
+              error.getField(),
+              error.getRejectedValue(),
+              error.getDefaultMessage())
+      );
 
       return "fortune-option";
     }
@@ -113,9 +102,6 @@ public class FortuneOptionController {
 
       model.addAttribute("errorMessages", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요");
       model.addAttribute("errorFields", "submit");
-
-      model.addAttribute("fortuneOptionForm", fortuneOptionForm);
-      model.addAttribute("birthInfo", savedBirthInfo);
 
       return "fortune-option";
     }

@@ -91,8 +91,8 @@
         </div>
 
         <!-- 에러 메시지 -->
-        <div th:if="${errorMessages != null and !errorMessages.empty}" class="error-container">
-          <div th:each="message : ${errorMessages}" class="error-message" th:text="${message}"></div>
+        <div th:if="${#fields.hasErrors()}" class="error-container">
+          <div th:each="err : ${#fields.errors('*')}" th:text="${err}" class="error-message"></div>
         </div>
 
         <div class="retro-btn-container">
