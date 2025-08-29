@@ -25,7 +25,7 @@
                 <span class="ai-icon" th:text="${fortuneOption.ai.icon}">🪂</span>
                 <span id="ai-name" th:text="${fortuneOption.ai.displayName}">Gemini</span>
             </div>
-            <p class="user-info" th:if="${birthInfo != null}" th:object="${birthInfo}">
+            <p class="user-info" th:if="${session.birthInfo != null}" th:object="${birthInfo}">
                 <span th:if="*{city != null && city.displayName != '모름'}" th:text="*{city.displayName}">서울특별시</span>
                 <span th:text="*{gender.displayName}">여성</span>
                 <span th:text="*{calendar.displayName}">양력</span>
