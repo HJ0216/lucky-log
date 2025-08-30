@@ -1,11 +1,16 @@
 package com.fortunehub.luckylog.service.fortune;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
-import com.fortunehub.luckylog.dto.response.fortune.FortuneResult;
+import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
+import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +23,7 @@ public class GeminiService {
 
   private final Client client;
   private final GenerateContentConfig generateContentConfig;
+  private final ObjectMapper objectMapper;
 
   @Value("${gemini.model}")
   private String modelName;
@@ -25,25 +31,24 @@ public class GeminiService {
   @Value("${fortune.prompts.overall}")
   private String promptTemplate;
 
-  public FortuneResult analyzeFortune(FortuneRequest request) {
+  public List<FortuneResponseView> analyzeFortune(FortuneRequest request) {
 
     String prompt = buildPrompt(request);
-    String response = generateContent(prompt);
+    List<FortuneResponse> responses = generateContent(prompt);
 
-    // TODO: overall 하드코딩 변경 예정
-    return FortuneResult.builder().overall(response).build();
+    return FortuneResponseView.from(responses);
   }
-
   private String buildPrompt(FortuneRequest request) {
     int currentYear = LocalDateTime.now().getYear();
-    String basePrompt = promptTemplate.replace("[ANALYSIS_YEAR]", String.valueOf(currentYear));
+    String basePrompt = promptTemplate.replace("[ANALYSIS_YEAR]", String.valueOf(currentYear))
+        .replace("[FORTUNE_TYPES]", request.getFortuneTypesAsString());
 
     return new StringBuilder(basePrompt)
-        .append(request.toPromptString())
+        .append(request.toBirthInfo())
         .toString();
   }
 
-  private String generateContent(String prompt) {
+  private List<FortuneResponse> generateContent(String prompt) {
     long startTime = System.currentTimeMillis();
 
     try {
@@ -58,18 +63,30 @@ public class GeminiService {
       long seconds = (durationMillis / 1000) % 60;
       log.info("Gemini API 응답 완료 - {}분 {}초", minutes, seconds);
 
-      String responseText = response.text();
-      if (responseText == null || responseText.trim().isEmpty()) {
+      List<FortuneResponse> responses = parseFortuneResponse(response.text());
+
+      if (responses == null || responses.isEmpty()) {
         log.warn("Gemini API 빈 응답 수신");
-        
+
         // TODO: Custom Exception으로 변경 예정
         throw new IllegalStateException("Gemini 응답이 비어있습니다.");
       }
 
-      return responseText;
+      return responses;
     } catch (Exception e) {
       log.error("Gemini API 호출 실패: 모델: {}, 에러: {}", modelName, e.getMessage(), e);
       throw new IllegalStateException("Gemini API 호출에 실패하였습니다.", e);
     }
+  }
+
+  private List<FortuneResponse> parseFortuneResponse(String jsonResponse)
+      throws JsonProcessingException {
+
+    return objectMapper.readValue(
+        jsonResponse.replace("```json", "")
+                    .replace("```", "")
+                    .trim(),
+        new TypeReference<List<FortuneResponse>>() {}
+    );
   }
 }

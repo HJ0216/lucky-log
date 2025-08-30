@@ -57,7 +57,11 @@ public record FortuneRequest(
     return String.format("%d년 %d월 %d일", year, month, day);
   }
 
-  public String toPromptString() {
+  public List<FortuneType> getFortunes(){
+    return fortunes;
+  }
+
+  public String toBirthInfo() {
     return new StringBuilder("# 사용자 정보")
         .append("\n- 생년월일: ").append(getBirthDate())
         .append("\n- 양력/음력: ").append(calendar.getDisplayName())

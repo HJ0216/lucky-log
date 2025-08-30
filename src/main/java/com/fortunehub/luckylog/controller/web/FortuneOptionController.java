@@ -4,12 +4,13 @@ import com.fortunehub.luckylog.domain.fortune.AIType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
-import com.fortunehub.luckylog.dto.response.fortune.FortuneResult;
+import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
 import com.fortunehub.luckylog.form.BirthInfoForm;
 import com.fortunehub.luckylog.form.FortuneOptionForm;
 import com.fortunehub.luckylog.service.fortune.GeminiService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,7 @@ public class FortuneOptionController {
 
   @PostMapping
   public String submit(
-      @Valid @ModelAttribute FortuneOptionForm fortuneOptionForm,
+      @Valid @ModelAttribute FortuneOptionForm option,
       BindingResult result,
       HttpSession session,
       RedirectAttributes redirectAttributes
@@ -65,7 +66,7 @@ public class FortuneOptionController {
     log.debug("운세 분석 요청 시작 - 생년: {}, 성별: {}, 운세 선택 정보: {}",
         savedBirthInfo.getYear(),
         savedBirthInfo.getGender(),
-        fortuneOptionForm.toString());
+        option.toString());
 
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
@@ -79,20 +80,15 @@ public class FortuneOptionController {
     }
 
     try {
-      FortuneResult fortuneResult = FortuneResult.builder().build();
+      List<FortuneResponseView> responses = null;
 
-      if (fortuneOptionForm.getAi() == AIType.GEMINI) {
-        fortuneResult = geminiService.analyzeFortune(
-            FortuneRequest.from(savedBirthInfo, fortuneOptionForm));
+      if (option.getAi() == AIType.GEMINI) {
+        responses = geminiService.analyzeFortune(
+            FortuneRequest.from(savedBirthInfo, option));
       }
 
-      // TODO: 운세별 로깅으로 전환 예정
-      // TODO: overall 하드코딩 변경 예정
-      log.info("운세 분석 완료 - 운세 선택 정보: {}, 응답길이: {}",
-          fortuneOptionForm.getFortunes(), fortuneResult.getOverall().length());
-
-      redirectAttributes.addFlashAttribute("fortuneResult", fortuneResult);
-      redirectAttributes.addFlashAttribute("fortuneOption", fortuneOptionForm);
+      redirectAttributes.addFlashAttribute("option", option); //자동으로 Model에 포함
+      redirectAttributes.addFlashAttribute("response", responses);
 
       return "redirect:/fortune/result";
 
@@ -101,7 +97,7 @@ public class FortuneOptionController {
 
       result.addError(
           new ObjectError("FortuneOptionForm", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요"));
-      // @ModelAttribute로 선언된 객체에만 사용
+      // @ModelAttribute로 선언된 객체(FortuneOptionForm)에만 사용
 
       return "fortune-option";
     }

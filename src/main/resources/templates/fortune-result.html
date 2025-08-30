@@ -22,10 +22,10 @@
 
         <div class="header">
             <div class="ai-badge">
-                <span class="ai-icon" th:text="${fortuneOption.ai.icon}">🪂</span>
-                <span id="ai-name" th:text="${fortuneOption.ai.displayName}">Gemini</span>
+                <span class="ai-icon" th:text="${option.ai.icon}">🪂</span>
+                <span id="ai-name" th:text="${option.ai.displayName}">Gemini</span>
             </div>
-            <p class="user-info" th:if="${session.birthInfo != null}" th:object="${birthInfo}">
+            <p class="user-info" th:if="${session.birthInfo != null}" th:object="${session.birthInfo}">
                 <span th:if="*{city != null && city.displayName != '모름'}" th:text="*{city.displayName}">서울특별시</span>
                 <span th:text="*{gender.displayName}">여성</span>
                 <span th:text="*{calendar.displayName}">양력</span>
@@ -42,116 +42,25 @@
             <div class="results-container" id="results-container">
                 <div class="fortune-main-title" th:text="${fortuneTitle}">2025년 월별 운세</div>
 
-                <!-- 전체 운세 결과가 있는 경우에만 표시 -->
-                <div class="fortune-title" th:if="${fortuneResult != null}">
-                    <!-- 종합운 (overall) -->
-                    <div th:if="${fortuneResult.overall != null}" class="fortune-section">
-                        <div class="fortune-title">
-                            <span class="fortune-icon">🔮</span>
-                            <span>종합운</span>
+                <div th:if="${response != null}" th:each="res : ${response}" class="fortune-title">
+                    <div class="fortune-section">
+                        <div>
+                            <span th:text="${res.type.icon}" class="fortune-icon">🔮</span>
+                            <span th:text="|${res.type.tooltip}운|">종합운</span>
                         </div>
                         <div class="fortune-content-wrapper">
-                            <div class="fortune-content" th:text="${fortuneResult.overall}">
-                                종합운 내용이 여기에 표시됩니다.
+                            <div class="fortune-content" th:each="content : ${res.contents}">
+                                <div class="month-item">
+                                    <p th:text="${content.key.displayName}">1월</p>
+                                    <p th:text="${content.value}">1월 운세 내용</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- 금전운 (money) -->
-                    <div th:if="${fortuneResult.money != null}" class="fortune-section">
-                        <div class="fortune-title">
-                            <span class="fortune-icon">💰</span>
-                            <span>금전운</span>
-                        </div>
-                        <div class="fortune-content-wrapper">
-                            <div class="fortune-content" th:text="${fortuneResult.money}">
-                                금전운 내용이 여기에 표시됩니다.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 사랑운 (love) -->
-                    <div th:if="${fortuneResult.love != null}" class="fortune-section">
-                        <div class="fortune-title">
-                            <span class="fortune-icon">💕</span>
-                            <span>사랑운</span>
-                        </div>
-                        <div class="fortune-content-wrapper">
-                            <div class="fortune-content" th:text="${fortuneResult.love}">
-                                사랑운 내용이 여기에 표시됩니다.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 직업운 (career) -->
-                    <div th:if="${fortuneResult.career != null}" class="fortune-section">
-                        <div class="fortune-title">
-                            <span class="fortune-icon">💼</span>
-                            <span>직업운</span>
-                        </div>
-                        <div class="fortune-content-wrapper">
-                            <div class="fortune-content" th:text="${fortuneResult.career}">
-                                직업운 내용이 여기에 표시됩니다.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 학업운 (study) -->
-                    <div th:if="${fortuneResult.study != null}" class="fortune-section">
-                        <div class="fortune-title">
-                            <span class="fortune-icon">📚</span>
-                            <span>학업운</span>
-                        </div>
-                        <div class="fortune-content-wrapper">
-                            <div class="fortune-content" th:text="${fortuneResult.study}">
-                                학업운 내용이 여기에 표시됩니다.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 행운 (luck) -->
-                    <div th:if="${fortuneResult.luck != null}" class="fortune-section">
-                        <div class="fortune-title">
-                            <span class="fortune-icon">🍀</span>
-                            <span>행운</span>
-                        </div>
-                        <div class="fortune-content-wrapper">
-                            <div class="fortune-content" th:text="${fortuneResult.luck}">
-                                행운 내용이 여기에 표시됩니다.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 가족운 (family) -->
-                    <div th:if="${fortuneResult.family != null}" class="fortune-section">
-                        <div class="fortune-title">
-                            <span class="fortune-icon">👨‍👩‍👧‍👦</span>
-                            <span>가족운</span>
-                        </div>
-                        <div class="fortune-content-wrapper">
-                            <div class="fortune-content" th:text="${fortuneResult.family}">
-                                가족운 내용이 여기에 표시됩니다.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 건강운 (health) -->
-                    <div th:if="${fortuneResult.health != null}" class="fortune-section">
-                        <div class="fortune-title">
-                            <span class="fortune-icon">🏥</span>
-                            <span>건강운</span>
-                        </div>
-                        <div class="fortune-content-wrapper">
-                            <div class="fortune-content" th:text="${fortuneResult.health}">
-                                건강운 내용이 여기에 표시됩니다.
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
                 <!-- 운세 결과가 없는 경우 -->
-                <div th:if="${fortuneResult == null}" class="no-results">
+                <div th:if="${response == null}" class="no-results">
                     <div class="no-results-icon">🔮</div>
                     <div class="no-results-text">운세 결과를 불러올 수 없습니다</div>
                     <div class="no-results-subtext">다시 시도해주세요</div>
