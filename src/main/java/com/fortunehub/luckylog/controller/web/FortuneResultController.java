@@ -1,7 +1,7 @@
 package com.fortunehub.luckylog.controller.web;
 
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
-import com.fortunehub.luckylog.form.FortuneOptionForm;
+import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

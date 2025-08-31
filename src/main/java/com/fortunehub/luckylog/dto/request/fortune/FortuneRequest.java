@@ -6,8 +6,8 @@ import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
-import com.fortunehub.luckylog.form.BirthInfoForm;
-import com.fortunehub.luckylog.form.FortuneOptionForm;
+import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
+import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
 import java.util.List;
 import java.util.stream.Collectors;
 
