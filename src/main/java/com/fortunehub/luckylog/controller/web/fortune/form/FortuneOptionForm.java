@@ -7,15 +7,11 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @NoArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 public class FortuneOptionForm {
 
   @NotNull(message = "🤖 AI를 선택해주세요!")
