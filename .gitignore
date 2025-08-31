@@ -59,9 +59,3 @@ Thumbs.db
 .env
 application-prompts.yaml
 application-prompts-*.yaml
-
-# =========================================
-# script 파일
-# =========================================
-review.sh
-review.diff
