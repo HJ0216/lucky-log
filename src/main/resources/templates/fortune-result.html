@@ -42,19 +42,15 @@
             <div class="results-container" id="results-container">
                 <div class="fortune-main-title" th:text="${fortuneTitle}">2025년 월별 운세</div>
 
-                <div th:if="${response != null}" th:each="res : ${response}" class="fortune-title">
-                    <div class="fortune-section">
-                        <div>
-                            <span th:text="${res.type.icon}" class="fortune-icon">🔮</span>
-                            <span th:text="|${res.type.tooltip}운|">종합운</span>
-                        </div>
-                        <div class="fortune-content-wrapper">
-                            <div class="fortune-content" th:each="content : ${res.contents}">
-                                <div class="month-item">
-                                    <p th:text="${content.key.displayName}">1월</p>
-                                    <p th:text="${content.value}">1월 운세 내용</p>
-                                </div>
-                            </div>
+                <div th:if="${response != null}" th:each="res : ${response}" class="fortune-section">
+                    <div class="fortune-title">
+                        <span th:text="${res.type.icon}" class="fortune-icon">🔮</span>
+                        <span th:text="|${res.type.tooltip}운|">종합운</span>
+                    </div>
+                    <div class="fortune-content-wrapper">
+                        <div class="fortune-content" th:each="content : ${res.contents}">
+                            <p th:text="${content.key.displayName}" class="fortune-month">1월</p>
+                            <p th:text="${content.value}">1월 운세 내용</p>
                         </div>
                     </div>
                 </div>

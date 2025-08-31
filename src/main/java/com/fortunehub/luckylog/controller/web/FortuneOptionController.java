@@ -10,7 +10,6 @@ import com.fortunehub.luckylog.form.FortuneOptionForm;
 import com.fortunehub.luckylog.service.fortune.GeminiService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -251,7 +251,7 @@ body {
   font-size: 0.90em;
   font-weight: 700;
   color: #2d3436;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   position: relative;
   z-index: 1;
 }
@@ -272,12 +272,16 @@ body {
 
 .fortune-content {
   color: rgba(45, 52, 54, 0.8);
-  white-space: pre-line;
+  margin-bottom: 10px;
   line-height: 1.5;
   font-size: 0.80em;
   font-weight: 400;
   position: relative;
   z-index: 1;
+}
+
+.fortune-month {
+  font-weight: 500;
 }
 
 /* 액션 버튼들 */

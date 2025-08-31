@@ -69,17 +69,6 @@ const FortuneResultPage = {
   /**
    * 결과 섹션 애니메이션 트리거
    */
-   formatFortuneText() {
-    if (!this.elements.fortuneContent) return;
-
-    const text = this.elements.fortuneContent.textContent;
-    const formatted = text.replace(/\|/g, '');
-    this.elements.fortuneContent.textContent = formatted;
-  },
-
-  /**
-   * 결과 섹션 애니메이션 트리거
-   */
   triggerAnimations() {
     setTimeout(() => {
       this.elements.fortuneSections.forEach((section) => {
