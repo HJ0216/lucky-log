@@ -1,0 +1,199 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(
+    45deg,
+    #ff9a9e 0%,
+    #fecfef 25%,
+    #fecfef 50%,
+    #fad0c4 100%
+  );
+  color: #2d3436;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.holographic-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+      circle at 25% 25%,
+      rgba(255, 255, 255, 0.3) 0%,
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      rgba(255, 182, 193, 0.4) 0%,
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 75% 25%,
+      rgba(173, 216, 230, 0.4) 0%,
+      transparent 25%
+    );
+  animation: hologram 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes hologram {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: rotate(0deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: rotate(1deg);
+  }
+}
+
+.emoji-decoration {
+  position: fixed;
+  font-size: 1.5em;
+  animation: float-emoji 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.emoji-decoration:nth-child(2) {
+  top: 15%;
+  left: 8%;
+  animation-delay: 0s;
+}
+
+.emoji-decoration:nth-child(3) {
+  top: 25%;
+  right: 12%;
+  animation-delay: 1s;
+}
+
+.emoji-decoration:nth-child(4) {
+  bottom: 35%;
+  left: 10%;
+  animation-delay: 2s;
+}
+
+.emoji-decoration:nth-child(5) {
+  bottom: 20%;
+  right: 8%;
+  animation-delay: 3s;
+}
+
+.emoji-decoration:nth-child(6) {
+  top: 60%;
+  right: 15%;
+  animation-delay: 1.5s;
+}
+
+@keyframes float-emoji {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(10deg);
+  }
+}
+
+.container {
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    min-height: calc(100vh - 40px);
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-title {
+    font-size: clamp(2rem, 8vw, 4rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, #e17055, #74b9ff, #a29bfe, #fd79a8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    animation: rainbow-text 3s ease-in-out infinite;
+    margin-bottom: 50px;
+    line-height: 1.2;
+}
+
+@keyframes rainbow-text {
+    0%, 100% {
+    background-position: 0% 50%;
+    }
+    50% {
+    background-position: 100% 50%;
+    }
+}
+
+.error-message {
+    font-size: clamp(1rem, 4vw, 1.4rem);
+    color: #2d3436;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 4px rgba(255,255,255,0.5);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.retro-btn {
+  width: 200px;
+  background: linear-gradient(135deg, #e17055, #74b9ff, #a29bfe, #fd79a8);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 0.8em;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 0 #d63031, 0 12px 25px rgba(225, 112, 85, 0.3);
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+  text-decoration: none;
+}
+
+.retro-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 0 #d63031, 0 20px 40px rgba(225, 112, 85, 0.4);
+}
+
+.retro-btn:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 #d63031, 0 8px 20px rgba(225, 112, 85, 0.3);
+}
+
+.retro-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  transition: left 0.6s;
+}
+
+.retro-btn:hover::before {
+  left: 100%;
+}

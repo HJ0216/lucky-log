@@ -1,10 +1,10 @@
 package com.fortunehub.luckylog.controller.web;
 
+import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
 import com.fortunehub.luckylog.domain.fortune.CalendarType;
 import com.fortunehub.luckylog.domain.fortune.CityType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
-import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.time.Year;
