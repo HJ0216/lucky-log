@@ -2,6 +2,7 @@ package com.fortunehub.luckylog.controller.web;
 
 import com.fortunehub.luckylog.domain.fortune.AIType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
+import com.fortunehub.luckylog.domain.fortune.LoadingMessage;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
@@ -43,6 +44,11 @@ public class FortuneOptionController {
   @ModelAttribute("periodTypes")
   public List<PeriodType> periodTypes() {
     return PeriodType.ALL_TYPES;
+  }
+
+  @ModelAttribute("loadingMessage")
+  public String loadingMessage(){
+    return LoadingMessage.getRandomMessage();
   }
 
   @GetMapping
