@@ -87,9 +87,12 @@ public class FortuneOptionController {
     try {
       List<FortuneResponseView> responses = null;
 
-      if (option.getAi() == AIType.GEMINI) {
-        responses = geminiService.analyzeFortune(
-            FortuneRequest.from(savedBirthInfo, option));
+      switch (option.getAi()) {
+        case GEMINI:
+          responses = geminiService.analyzeFortune(FortuneRequest.from(savedBirthInfo, option));
+          break;
+        default:
+          throw new IllegalArgumentException("Unsupported AI Type: " + option.getAi());
       }
 
       redirectAttributes.addFlashAttribute("option", option); //자동으로 Model에 포함
