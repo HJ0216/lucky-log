@@ -68,7 +68,6 @@ public class GeminiService {
       if (responses == null || responses.isEmpty()) {
         log.warn("Gemini API 빈 응답 수신");
 
-        // TODO: Custom Exception으로 변경 예정
         throw new IllegalStateException("Gemini 응답이 비어있습니다.");
       }
 
