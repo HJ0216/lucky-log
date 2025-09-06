@@ -172,21 +172,18 @@ class GeminiServiceTest {
   }
 
   private List<FortuneResponse> createFortuneResponses() {
-    FortuneResponse love1 = mock(FortuneResponse.class);
-    when(love1.getFortune()).thenReturn(FortuneType.LOVE);
-    when(love1.getMonth()).thenReturn(MonthType.JANUARY);
-    when(love1.getResult()).thenReturn("");
+    return Arrays.asList(
+        createFortuneResponse(FortuneType.LOVE, MonthType.JANUARY, ""),
+        createFortuneResponse(FortuneType.LOVE, MonthType.FEBRUARY, ""),
+        createFortuneResponse(FortuneType.HEALTH, MonthType.JANUARY, "")
+    );
+  }
 
-    FortuneResponse love2 = mock(FortuneResponse.class);
-    when(love2.getFortune()).thenReturn(FortuneType.LOVE);
-    when(love2.getMonth()).thenReturn(MonthType.FEBRUARY);
-    when(love2.getResult()).thenReturn("");
-
-    FortuneResponse health1 = mock(FortuneResponse.class);
-    when(health1.getFortune()).thenReturn(FortuneType.HEALTH);
-    when(health1.getMonth()).thenReturn(MonthType.JANUARY);
-    when(health1.getResult()).thenReturn("");
-
-    return Arrays.asList(love1, love2, health1);
+  private FortuneResponse createFortuneResponse(FortuneType fortune, MonthType month, String result) {
+    FortuneResponse response = new FortuneResponse();
+    response.setFortune(fortune);
+    response.setMonth(month);
+    response.setResult(result);
+    return response;
   }
 }
