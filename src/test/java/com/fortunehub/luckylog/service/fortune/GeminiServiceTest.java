@@ -1,6 +1,7 @@
 package com.fortunehub.luckylog.service.fortune;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -36,7 +37,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -112,7 +112,7 @@ class GeminiServiceTest {
         List<FortuneResponse> fortuneResponses = createFortuneResponses();
         when(objectMapper.readValue(
             anyString(),
-            ArgumentMatchers.any(TypeReference.class)))
+            any(TypeReference.class)))
             .thenReturn(fortuneResponses);
 
         // when
@@ -120,11 +120,17 @@ class GeminiServiceTest {
         List<FortuneResponseView> views = geminiService.analyzeFortune(request);
 
         // then
-        assertThat(views).isNotNull().hasSize(2);
+        int expectedFortuneTypes = 2;
+        assertThat(views).isNotNull().hasSize(expectedFortuneTypes);
+
         assertThat(views.get(0).getType()).isEqualTo(FortuneType.LOVE);
-        assertThat(views.get(0).getContents()).containsKey(MonthType.JANUARY);
+        assertThat(views.get(0).getContents())
+            .containsEntry(MonthType.JANUARY, "연애운 좋음")
+            .containsEntry(MonthType.FEBRUARY, "연애운 신경");
+
         assertThat(views.get(1).getType()).isEqualTo(FortuneType.HEALTH);
-        assertThat(views.get(1).getContents()).containsKey(MonthType.JANUARY);
+        assertThat(views.get(1).getContents())
+            .containsEntry(MonthType.JANUARY, "건강운 변화");
 
         ArgumentCaptor<String> promptCaptor = ArgumentCaptor.forClass(String.class);
         verify(client.models).generateContent(
@@ -175,13 +181,14 @@ class GeminiServiceTest {
 
   private List<FortuneResponse> createFortuneResponses() {
     return Arrays.asList(
-        createFortuneResponse(FortuneType.LOVE, MonthType.JANUARY, ""),
-        createFortuneResponse(FortuneType.LOVE, MonthType.FEBRUARY, ""),
-        createFortuneResponse(FortuneType.HEALTH, MonthType.JANUARY, "")
+        createFortuneResponse(FortuneType.LOVE, MonthType.JANUARY, "연애운 좋음"),
+        createFortuneResponse(FortuneType.LOVE, MonthType.FEBRUARY, "연애운 신경"),
+        createFortuneResponse(FortuneType.HEALTH, MonthType.JANUARY, "건강운 변화")
     );
   }
 
-  private FortuneResponse createFortuneResponse(FortuneType fortune, MonthType month, String result) {
+  private FortuneResponse createFortuneResponse(FortuneType fortune, MonthType month,
+      String result) {
     FortuneResponse response = new FortuneResponse();
     response.setFortune(fortune);
     response.setMonth(month);
