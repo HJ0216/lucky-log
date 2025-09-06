@@ -123,6 +123,8 @@ class GeminiServiceTest {
         assertThat(views).isNotNull().hasSize(2);
         assertThat(views.get(0).getType()).isEqualTo(FortuneType.LOVE);
         assertThat(views.get(0).getContents()).containsKey(MonthType.JANUARY);
+        assertThat(views.get(1).getType()).isEqualTo(FortuneType.HEALTH);
+        assertThat(views.get(1).getContents()).containsKey(MonthType.JANUARY);
 
         ArgumentCaptor<String> promptCaptor = ArgumentCaptor.forClass(String.class);
         verify(client.models).generateContent(

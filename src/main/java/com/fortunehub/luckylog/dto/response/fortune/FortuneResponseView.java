@@ -2,6 +2,7 @@ package com.fortunehub.luckylog.dto.response.fortune;
 
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.MonthType;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,10 @@ public class FortuneResponseView {
 
   public static List<FortuneResponseView> from(List<FortuneResponse> responses) {
     return responses.stream()
-                    .collect(Collectors.groupingBy(FortuneResponse::getFortune))
+                    .collect(Collectors.groupingBy(
+                        FortuneResponse::getFortune,
+                        LinkedHashMap::new, // 운세별 정렬
+                        Collectors.toList()))
                     .entrySet()
                     .stream()
                     .map(entry -> {
@@ -28,10 +32,10 @@ public class FortuneResponseView {
                       Map<MonthType, String> monthlyContents = entry.getValue()
                                                                     .stream()
                                                                     .collect(Collectors.toMap(
-                                                                        FortuneResponse::getMonth,    // Key: MonthType
-                                                                        FortuneResponse::getResult,    // Value: String (result 내용)
+                                                                        FortuneResponse::getMonth, // Key: MonthType
+                                                                        FortuneResponse::getResult, // Value: String (result 내용)
                                                                         (existing, replacement) -> existing,
-                                                                        LinkedHashMap::new
+                                                                        LinkedHashMap::new // 월별 정렬
                                                                     ));
 
                       view.setContents(monthlyContents);
