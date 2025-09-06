@@ -75,7 +75,7 @@ public class FortuneOptionController {
 
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
-          log.debug("운세 옵션 검증 실패: 필드: {}, 입력값: {}, 메시지: {}",
+          log.debug("운세 옵션 검증 실패 - 필드: {}, 입력값: {}, 메시지: {}",
               error.getField(),
               error.getRejectedValue(),
               error.getDefaultMessage())

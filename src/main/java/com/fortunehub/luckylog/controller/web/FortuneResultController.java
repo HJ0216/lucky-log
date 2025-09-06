@@ -1,7 +1,7 @@
 package com.fortunehub.luckylog.controller.web;
 
-import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
 import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
+import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +21,11 @@ public class FortuneResultController {
   ) {
     FortuneOptionForm form = (FortuneOptionForm) model.getAttribute("option");
     List<FortuneResponseView> response = (List<FortuneResponseView>) model.getAttribute("response");
+
+    if (form == null || response == null) {
+      log.warn("필수 데이터 없음 - option: {}, response: {}", form, response);
+      return "redirect:/";
+    }
 
     int currentYear = LocalDate.now().getYear();
     String periodText = form.getPeriod().getDisplayName();
