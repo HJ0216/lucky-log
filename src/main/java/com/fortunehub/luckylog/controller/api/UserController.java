@@ -39,7 +39,7 @@ public class UserController {
 
   @PatchMapping("/{id}/nickname") // PATCH /api/v1/users/1/nickname
   public ResponseEntity<UserResponse> updateNickname(
-      @PathVariable Long id,
+      @PathVariable("id") Long id,
       @Valid @RequestBody UserNicknameUpdateRequest request) {
     UserResponse response = userService.updateNickname(id, request);
     return ResponseEntity.ok(response);
@@ -47,7 +47,7 @@ public class UserController {
 
   @PatchMapping("/{id}/profile-image") // PATCH /api/v1/users/1/profile-image
   public ResponseEntity<Void> updateProfileImage(
-      @PathVariable Long id,
+      @PathVariable("id") Long id,
       @Valid @RequestBody UserProfileImageUpdateRequest request
   ) {
     userService.updateProfileImage(id, request);
@@ -55,13 +55,13 @@ public class UserController {
   }
 
   @DeleteMapping("/{id}/profile-image") // DELETE /api/v1/users/1/profile-image
-  public ResponseEntity<Void> deleteProfileImage(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteProfileImage(@PathVariable("id") Long id) {
     userService.deleteProfileImage(id);
     return ResponseEntity.noContent().build();
   }
 
   @DeleteMapping("/{id}") // DELETE /api/v1/users/1
-  public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
     userService.deleteUser(id);
     return ResponseEntity.noContent().build();
   }
