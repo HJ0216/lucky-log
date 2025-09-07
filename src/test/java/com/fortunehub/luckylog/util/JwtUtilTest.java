@@ -5,8 +5,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import org.junit.jupiter.api.DisplayName;
@@ -180,6 +182,7 @@ class JwtUtilTest {
       @Test
       @DisplayName("잘못된 서명의 토큰에 대해 false를 반환한다")
       void it_returns_false_when_wrong_signature() {
+        // given
         String differentSecretKey = "differentSecretKeyForTestingValidateTokenMethod";
         JwtUtil differentKeyJwtUtil = new JwtUtil(differentSecretKey, TOKEN_VALIDITY);
         String tokenWithDifferentKey = differentKeyJwtUtil.createToken(1L);
@@ -189,6 +192,72 @@ class JwtUtilTest {
 
         // then
         assertThat(result).isFalse();
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("getUserIdFromToken()는")
+  class Describe_getUserIdFromToken {
+
+    @Nested
+    @DisplayName("유효한 토큰이면")
+    class Context_with_valid_token {
+
+      @Test
+      @DisplayName("올바른 userId를 반환한다")
+      void it_returns_correct_userId() {
+        // given
+        long expectedUserId = 1283L;
+        String token = jwtUtil.createToken(expectedUserId);
+
+        //when
+        Long userIdFromToken = jwtUtil.getUserIdFromToken(token);
+
+        // then
+        assertThat(userIdFromToken).isEqualTo(expectedUserId);
+      }
+    }
+
+    @Nested
+    @DisplayName("유효하지 않은 토큰이면")
+    class Context_with_invalid_token {
+
+      @Test
+      @DisplayName("잘못된 형식의 토큰에 대해 예외를 발생시킨다")
+      void it_throws_exception_when_malformed_token() {
+        // given
+        String malformedToken = "invalid.token.format";
+
+        // when, then
+        assertThatThrownBy(() -> jwtUtil.getUserIdFromToken(malformedToken))
+            .isInstanceOf(MalformedJwtException.class);
+      }
+
+      @Test
+      @DisplayName("null 토큰에 대해 예외를 발생시킨다")
+      void it_throws_exception_when_null_token() {
+        // given
+        String nullToken = null;
+
+        // when, then
+        assertThatThrownBy(() -> jwtUtil.getUserIdFromToken(nullToken))
+            .isInstanceOf(IllegalArgumentException.class);
+      }
+
+      @Test
+      @DisplayName("잘못된 서명의 토큰에 대해 예외를 발생시킨다")
+      void it_throws_exception_when_wrong_signature() {
+        // given
+        String differentSecretKey = "differentSecretKeyForTestingValidateTokenMethod";
+        JwtUtil differentKeyJwtUtil = new JwtUtil(differentSecretKey, TOKEN_VALIDITY);
+
+        // when
+        String tokenWithDifferentKey = differentKeyJwtUtil.createToken(1L);
+
+        // then
+        assertThatThrownBy(() -> jwtUtil.getUserIdFromToken(tokenWithDifferentKey))
+            .isInstanceOf(SignatureException.class);
       }
     }
   }
