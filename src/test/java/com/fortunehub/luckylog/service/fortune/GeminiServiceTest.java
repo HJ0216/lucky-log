@@ -164,6 +164,29 @@ class GeminiServiceTest {
             .hasMessageContaining("Gemini API 호출에 실패하였습니다.");
       }
 
+      @Test
+      @DisplayName("잘못된 JSON 형식이면 예외를 발생시킨다")
+      void it_throws_exception_when_json_parsing_fails() throws JsonProcessingException {
+        // given
+        GenerateContentResponse mockResponse = mock(GenerateContentResponse.class);
+
+        when(client.models.generateContent(
+            eq("gemini-test"),
+            anyString(),
+            eq(generateContentConfig))).thenReturn(mockResponse);
+
+        String invalidJsonResponse = "invalid json";
+        String jsonWithMarkdown = "```json\n" + invalidJsonResponse + "\n```";
+        when(mockResponse.text()).thenReturn(jsonWithMarkdown);
+        when(objectMapper.readValue(anyString(), any(TypeReference.class)))
+            .thenThrow(new JsonProcessingException("Invalid JSON") {});
+
+        // when & then
+        FortuneRequest request = createFortuneRequest();
+        assertThatThrownBy(() -> geminiService.analyzeFortune(request))
+            .isInstanceOf(IllegalStateException.class);
+      }
+
       private FortuneRequest createFortuneRequest() {
         BirthInfoForm birthForm = createBirthInfoForm();
         FortuneOptionForm optionForm = createFortuneOptionForm();
