@@ -6,3 +6,12 @@ spring:
 jwt:
   secret: dGVzdC1zZWNyZXQta2V5LWZvci1qd3QtdG9rZW4tZ2VuZXJhdGlvbi1hbmQtdmFsaWRhdGlvbg==
   token-validity: 60_000
+
+gemini:
+  api:
+    key: test-key
+  model: test-model
+
+fortune:
+  prompts:
+    overall: test-overall-prompt
