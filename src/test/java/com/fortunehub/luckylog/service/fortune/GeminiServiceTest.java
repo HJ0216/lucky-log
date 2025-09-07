@@ -91,7 +91,7 @@ class GeminiServiceTest {
   class Describe_analyzeFortune {
 
     @Nested
-    @DisplayName("유효한 운세 요청이면")
+    @DisplayName("유효한 운세 요청일 때")
     class Context_with_valid_request {
 
       @Test
