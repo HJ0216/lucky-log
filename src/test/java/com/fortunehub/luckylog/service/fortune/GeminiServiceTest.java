@@ -164,50 +164,49 @@ class GeminiServiceTest {
             .hasMessageContaining("Gemini API 호출에 실패하였습니다.");
       }
 
+      private FortuneRequest createFortuneRequest() {
+        BirthInfoForm birthForm = createBirthInfoForm();
+        FortuneOptionForm optionForm = createFortuneOptionForm();
+
+        return FortuneRequest.from(birthForm, optionForm);
+      }
+
+      private BirthInfoForm createBirthInfoForm() {
+        BirthInfoForm birthForm = new BirthInfoForm();
+        birthForm.setGender(GenderType.FEMALE);
+        birthForm.setCalendar(CalendarType.SOLAR);
+        birthForm.setYear(1995);
+        birthForm.setMonth(2);
+        birthForm.setDay(16);
+        birthForm.setTime(TimeType.TIME_11_30);
+        birthForm.setCity(CityType.SEOUL);
+        return birthForm;
+      }
+
+      private FortuneOptionForm createFortuneOptionForm() {
+        FortuneOptionForm optionForm = new FortuneOptionForm();
+        optionForm.setAi(AIType.GEMINI);
+        optionForm.setFortunes(new ArrayList<>(List.of(FortuneType.LOVE, FortuneType.HEALTH)));
+        optionForm.setPeriod(PeriodType.MONTHLY);
+        return optionForm;
+      }
+
+      private List<FortuneResponse> createFortuneResponses() {
+        return Arrays.asList(
+            createFortuneResponse(FortuneType.LOVE, MonthType.JANUARY, "연애운 좋음"),
+            createFortuneResponse(FortuneType.LOVE, MonthType.FEBRUARY, "연애운 신경"),
+            createFortuneResponse(FortuneType.HEALTH, MonthType.JANUARY, "건강운 변화")
+        );
+      }
+
+      private FortuneResponse createFortuneResponse(FortuneType fortune, MonthType month,
+          String result) {
+        FortuneResponse response = new FortuneResponse();
+        response.setFortune(fortune);
+        response.setMonth(month);
+        response.setResult(result);
+        return response;
+      }
     }
-  }
-
-  private FortuneRequest createFortuneRequest() {
-    BirthInfoForm birthForm = createBirthInfoForm();
-    FortuneOptionForm optionForm = createFortuneOptionForm();
-
-    return FortuneRequest.from(birthForm, optionForm);
-  }
-
-  private BirthInfoForm createBirthInfoForm() {
-    BirthInfoForm birthForm = new BirthInfoForm();
-    birthForm.setGender(GenderType.FEMALE);
-    birthForm.setCalendar(CalendarType.SOLAR);
-    birthForm.setYear(1995);
-    birthForm.setMonth(2);
-    birthForm.setDay(16);
-    birthForm.setTime(TimeType.TIME_11_30);
-    birthForm.setCity(CityType.SEOUL);
-    return birthForm;
-  }
-
-  private FortuneOptionForm createFortuneOptionForm() {
-    FortuneOptionForm optionForm = new FortuneOptionForm();
-    optionForm.setAi(AIType.GEMINI);
-    optionForm.setFortunes(new ArrayList<>(List.of(FortuneType.LOVE, FortuneType.HEALTH)));
-    optionForm.setPeriod(PeriodType.MONTHLY);
-    return optionForm;
-  }
-
-  private List<FortuneResponse> createFortuneResponses() {
-    return Arrays.asList(
-        createFortuneResponse(FortuneType.LOVE, MonthType.JANUARY, "연애운 좋음"),
-        createFortuneResponse(FortuneType.LOVE, MonthType.FEBRUARY, "연애운 신경"),
-        createFortuneResponse(FortuneType.HEALTH, MonthType.JANUARY, "건강운 변화")
-    );
-  }
-
-  private FortuneResponse createFortuneResponse(FortuneType fortune, MonthType month,
-      String result) {
-    FortuneResponse response = new FortuneResponse();
-    response.setFortune(fortune);
-    response.setMonth(month);
-    response.setResult(result);
-    return response;
   }
 }
