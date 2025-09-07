@@ -91,7 +91,8 @@ class JwtUtilTest {
 
         // 만료 시간이 현재 시간 + tokenValidity 근처인지 확인 (오차 10초 허용)
         long timeDiff = claims.getExpiration().getTime() - testStartTime.getTime();
-        assertThat(timeDiff).isBetween(TOKEN_VALIDITY - 1000L, TOKEN_VALIDITY + 1000L);      }
+        assertThat(timeDiff).isBetween(TOKEN_VALIDITY - 1000L, TOKEN_VALIDITY + 1000L);
+      }
     }
 
     @Nested
@@ -107,6 +108,87 @@ class JwtUtilTest {
         assertThatThrownBy(() -> jwtUtil.createToken(null))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("아이디는 필수입니다.");
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("validateToken()는")
+  class Describe_validateToken {
+
+    @Nested
+    @DisplayName("유효한 토큰이면")
+    class Context_with_valid_token {
+
+      @Test
+      @DisplayName("true를 반환한다")
+      void it_returns_true() {
+        // given
+        String validToken = jwtUtil.createToken(1L);
+
+        // when
+        boolean result = jwtUtil.validateToken(validToken);
+
+        // then
+        assertThat(result).isTrue();
+      }
+    }
+
+    @Nested
+    @DisplayName("유효하지 않은 토큰이면")
+    class Context_with_invalid_token {
+
+      @Test
+      @DisplayName("잘못된 형식의 토큰에 대해 false를 반환한다")
+      void it_returns_false_when_malformed_token() {
+        // given
+        String malformedToken = "invalid.token.format";
+
+        // when
+        boolean result = jwtUtil.validateToken(malformedToken);
+
+        // then
+        assertThat(result).isFalse();
+      }
+
+      @Test
+      @DisplayName("빈 토큰값에 대해 false를 반환한다")
+      void it_returns_false_when_empty_token() {
+        // given
+        String emptyToken = "";
+
+        // when
+        boolean result = jwtUtil.validateToken(emptyToken);
+
+        // then
+        assertThat(result).isFalse();
+      }
+
+      @Test
+      @DisplayName("null 토큰값에 대해 false를 반환한다")
+      void it_returns_false_when_null_token() {
+        // given
+        String nullToken = null;
+
+        // when
+        boolean result = jwtUtil.validateToken(nullToken);
+
+        // then
+        assertThat(result).isFalse();
+      }
+
+      @Test
+      @DisplayName("잘못된 서명의 토큰에 대해 false를 반환한다")
+      void it_returns_false_when_wrong_signature() {
+        String differentSecretKey = "differentSecretKeyForTestingValidateTokenMethod";
+        JwtUtil differentKeyJwtUtil = new JwtUtil(differentSecretKey, TOKEN_VALIDITY);
+        String tokenWithDifferentKey = differentKeyJwtUtil.createToken(1L);
+
+        // when
+        boolean result = jwtUtil.validateToken(tokenWithDifferentKey);
+
+        // then
+        assertThat(result).isFalse();
       }
     }
   }
