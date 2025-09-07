@@ -42,7 +42,8 @@ public class GeminiService {
   private String buildPrompt(FortuneRequest request) {
     int currentYear = LocalDateTime.now().getYear();
     String basePrompt = promptTemplate.replace("[ANALYSIS_YEAR]", String.valueOf(currentYear))
-        .replace("[FORTUNE_TYPES]", request.getFortuneTypesAsString());
+                                      .replace("[FORTUNE_TYPES]",
+                                          request.getFortuneTypesAsString());
 
     return new StringBuilder(basePrompt)
         .append(request.toBirthInfo())
@@ -70,9 +71,7 @@ public class GeminiService {
         throw new IllegalStateException("Gemini 응답이 비어있습니다.");
       }
 
-      List<FortuneResponse> responses = parseFortuneResponse(responseText);
-
-      return responses;
+      return parseFortuneResponse(responseText);
     } catch (Exception e) {
       log.error("Gemini API 호출 실패: 모델: {}, 에러: {}", modelName, e.getMessage(), e);
       throw new IllegalStateException("Gemini API 호출에 실패하였습니다.", e);
@@ -86,7 +85,8 @@ public class GeminiService {
         jsonResponse.replace("```json", "")
                     .replace("```", "")
                     .trim(),
-        new TypeReference<List<FortuneResponse>>() {}
+        new TypeReference<List<FortuneResponse>>() {
+        }
     );
   }
 }
