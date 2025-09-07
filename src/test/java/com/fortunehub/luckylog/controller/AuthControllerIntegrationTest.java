@@ -51,7 +51,6 @@ class AuthControllerIntegrationTest {
   private static final String TOO_LONG_PASSWORD = "very_long_password_that_exceeds_twenty_characters";
   private static final String WRONG_PASSWORD = "password456";
 
-
   @Autowired
   private MockMvc mockMvc;
 

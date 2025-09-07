@@ -34,7 +34,7 @@ public class AuthController {
   private final AuthService authService;
 
   @GetMapping("/check-email") // GET /api/v1/auth/check-email
-  public ResponseEntity<EmailCheckResponse> checkEmailAvailability(@RequestParam String email) {
+  public ResponseEntity<EmailCheckResponse> checkEmailAvailability(@RequestParam("email") String email) {
     boolean available = authService.isEmailAvailable(email);
     if (available) {
       return ResponseEntity.status(HttpStatus.OK)
