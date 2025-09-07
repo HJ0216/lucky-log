@@ -1,6 +1,7 @@
 package com.fortunehub.luckylog.service.fortune;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -102,9 +103,7 @@ class GeminiServiceTest {
         when(client.models.generateContent(
             eq("gemini-test"),
             anyString(),
-            eq(generateContentConfig))
-        )
-            .thenReturn(mockResponse);
+            eq(generateContentConfig))).thenReturn(mockResponse);
 
         String jsonWithMarkdown = "```json\n" + VALID_JSON_RESPONSE + "\n```";
         when(mockResponse.text()).thenReturn(jsonWithMarkdown);
@@ -112,8 +111,7 @@ class GeminiServiceTest {
         List<FortuneResponse> fortuneResponses = createFortuneResponses();
         when(objectMapper.readValue(
             anyString(),
-            any(TypeReference.class)))
-            .thenReturn(fortuneResponses);
+            any(TypeReference.class))).thenReturn(fortuneResponses);
 
         // when
         FortuneRequest request = createFortuneRequest();
@@ -149,6 +147,23 @@ class GeminiServiceTest {
             .contains("오시")
             .contains("서울특별시");
       }
+
+      @Test
+      @DisplayName("Gemini API 호출 실패 시 예외를 발생시킨다")
+      void it_throws_exception_when_api_call_fails() {
+        // given
+        when(client.models.generateContent(
+            eq("gemini-test"),
+            anyString(),
+            eq(generateContentConfig))).thenThrow(new RuntimeException("API 호출 실패"));
+
+        // when, then
+        FortuneRequest request = createFortuneRequest();
+        assertThatThrownBy(() -> geminiService.analyzeFortune(request))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("Gemini API 호출에 실패하였습니다.");
+      }
+
     }
   }
 
