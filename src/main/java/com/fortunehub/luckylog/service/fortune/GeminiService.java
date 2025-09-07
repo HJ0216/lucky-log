@@ -64,13 +64,13 @@ public class GeminiService {
       long seconds = (durationMillis / 1000) % 60;
       log.info("Gemini API 응답 완료 - {}분 {}초", minutes, seconds);
 
-      List<FortuneResponse> responses = parseFortuneResponse(response.text());
-
-      if (responses == null || responses.isEmpty()) {
+      String responseText = response.text();
+      if (responseText == null || responseText.trim().isEmpty()) {
         log.warn("Gemini API 빈 응답 수신");
-
         throw new IllegalStateException("Gemini 응답이 비어있습니다.");
       }
+
+      List<FortuneResponse> responses = parseFortuneResponse(responseText);
 
       return responses;
     } catch (Exception e) {

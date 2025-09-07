@@ -181,10 +181,52 @@ class GeminiServiceTest {
         when(objectMapper.readValue(anyString(), any(TypeReference.class)))
             .thenThrow(new JsonProcessingException("Invalid JSON") {});
 
-        // when & then
+        // when, then
         FortuneRequest request = createFortuneRequest();
         assertThatThrownBy(() -> geminiService.analyzeFortune(request))
             .isInstanceOf(IllegalStateException.class);
+      }
+
+      @Test
+      @DisplayName("null 응답이면 예외를 발생시킨다")
+      void it_throws_exception_when_response_is_null() {
+        // given
+        GenerateContentResponse mockResponse = mock(GenerateContentResponse.class);
+
+        when(client.models.generateContent(
+            eq("gemini-test"),
+            anyString(),
+            eq(generateContentConfig))).thenReturn(mockResponse);
+
+        when(mockResponse.text()).thenReturn(null);
+
+        // when, then
+        FortuneRequest request = createFortuneRequest();
+        assertThatThrownBy(() -> geminiService.analyzeFortune(request))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("Gemini API 호출에 실패하였습니다.")
+            .hasRootCauseMessage("Gemini 응답이 비어있습니다.");
+      }
+
+      @Test
+      @DisplayName("빈 응답이면 예외를 발생시킨다")
+      void it_throws_exception_when_response_is_empty() {
+        // given
+        GenerateContentResponse mockResponse = mock(GenerateContentResponse.class);
+
+        when(client.models.generateContent(
+            eq("gemini-test"),
+            anyString(),
+            eq(generateContentConfig))).thenReturn(mockResponse);
+
+        when(mockResponse.text()).thenReturn("");
+
+        // when, then
+        FortuneRequest request = createFortuneRequest();
+        assertThatThrownBy(() -> geminiService.analyzeFortune(request))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("Gemini API 호출에 실패하였습니다.")
+            .hasRootCauseMessage("Gemini 응답이 비어있습니다.");
       }
 
       private FortuneRequest createFortuneRequest() {
