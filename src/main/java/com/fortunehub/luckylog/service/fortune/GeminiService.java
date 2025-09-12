@@ -81,12 +81,24 @@ public class GeminiService {
   private List<FortuneResponse> parseFortuneResponse(String jsonResponse)
       throws JsonProcessingException {
 
-    return objectMapper.readValue(
+    List<FortuneResponse> responses = objectMapper.readValue(
         jsonResponse.replace("```json", "")
                     .replace("```", "")
                     .trim(),
         new TypeReference<List<FortuneResponse>>() {
         }
     );
+
+    return formatFortuneContent(responses);
+  }
+
+  private List<FortuneResponse> formatFortuneContent(List<FortuneResponse> responses) {
+
+    responses.forEach(response -> {
+      if (response.getResult() != null) {
+        response.setResult(response.getResult().replace(" | ", "\n"));
+      }
+    });
+    return responses;
   }
 }
