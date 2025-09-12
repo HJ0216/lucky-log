@@ -4,6 +4,8 @@ server:
       timeout: 5m  # 5분 후 자동 만료
 
 spring:
+  profiles:
+    active: local
   config:
     activate:
       on-profile: local
