@@ -515,37 +515,3 @@ body {
     transform: translateY(0);
   }
 }
-
-/* fragement로 분리 예정 */
-.btn-member-container {
-  margin-bottom: 5px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 5px;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-
-.btn-member {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    padding: 1px 10px;
-    color: rgba(45, 52, 54, 0.6);
-    font-weight: 400;
-    font-size: 0.8em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-}
-
-.btn-member:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.4);
-    color: rgba(45, 52, 54, 0.8);
-    font-weight: 500;
-}

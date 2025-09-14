@@ -64,7 +64,7 @@ body {
   backdrop-filter: blur(20px);
   border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 32px;
-  padding: 20px;
+  padding: 10px 20px 20px 20px;
   width: 100%;
   max-width: 350px;
   min-height: calc(100vh - 40px);
@@ -638,32 +638,27 @@ body {
 }
 
 .back-btn {
-  background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  border-radius: 12px;
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
   width: 25px;
   height: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  font-size: 0.9em;
-  font-weight: 700;
-  color: white;
+  font-size: 0.8em;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
 }
 
 .back-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 1);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
-}
-
-.back-btn:active {
-  transform: translateY(0px);
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
 }
 
 .emoji-decoration {

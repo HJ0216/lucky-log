@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUCKY LOG</title>
     <link rel="icon" href="../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
+    <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
     <link rel="stylesheet" href="../static/css/fortune-result.css" th:href="@{/css/fortune-result.css}">
 </head>
 
@@ -19,6 +20,7 @@
     <div class="emoji-decoration">🪂</div>
 
     <div class="container">
+        <div th:replace="~{fragments/header :: authButtons}"></div>
 
         <div class="header">
             <div class="ai-badge">

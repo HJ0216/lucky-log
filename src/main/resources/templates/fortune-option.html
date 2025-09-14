@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LUCKY LOG</title>
   <link rel="icon" href="../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
+  <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
   <link rel="stylesheet" href="../static/css/fortune-option.css" th:href="@{/css/fortune-option.css}">
 </head>
 
@@ -35,6 +36,8 @@
     </div>
 
     <div class="contents-screen" id="contents-screen">
+      <div th:replace="~{fragments/header :: authButtons}"></div>
+
       <div class="logo">
         <h1>운 세</h1>
         <p th:if="${session.birthInfo != null}" th:object="${session.birthInfo}">
@@ -100,9 +103,7 @@
         </div>
       </form>
 
-      <div style="position: absolute; top: 20px; left: 20px;">
-        <button type="button" class="back-btn" onclick="goToBirthInfo()">←</button>
-      </div>
+      <button type="button" class="back-btn" onclick="goToBirthInfo()">←</button>
 
     </div>
   </div>
