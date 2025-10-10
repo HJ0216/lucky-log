@@ -12,9 +12,8 @@ body {
 }
 
 .container {
-  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(20px);
-  border: 2px solid rgba(255, 255, 255, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 25px;
   padding: 10px 20px 20px 20px;
   width: 100vw;
@@ -50,8 +49,8 @@ body {
 
 .logo {
   margin-bottom: 15px;
-  position: relative;
   text-align: center;
+  z-index: 1;
 }
 
 .logo h1 {
@@ -71,39 +70,41 @@ body {
   background: rgba(255, 255, 255, 0.7);
   padding: 6px 0;
   border-radius: 10px;
-  width: 100%;
 }
 
-.form-grid {
+.birth-form {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  height: 100%
+  height: 100%;
 }
 
-.field-group {
-  position: relative;
+.option-container {
+  z-index: 1;
 }
 
-.field-label {
+.option-title {
   display: block;
   margin-bottom: 10px;
   font-size: 0.8rem;
   font-weight: 500;
 }
 
-.gender-cards {
+.option-content {
   display: flex;
   gap: 10px;
+  justify-content: space-between;
+}
+
+.option-gender-content {
   padding: 0 10px;
 }
 
-.card-option, 
-.toggle-option {
+.option-content-item {
   width: 100%;
 }
 
-.card-option input[type="radio"] {
+.option-content-item input[type="radio"] {
   display: none;
 }
 
@@ -120,11 +121,11 @@ body {
   color: #666;
 }
 
-.card-option label {
+.option-gender-content-item label {
   border: 2px solid #ff6b6b;
 }
 
-.card-option input[type="radio"]:checked + label {
+.option-gender-content-item input[type="radio"]:checked + label {
   border-color: #ff7675;
   background: rgba(255, 118, 117, 0.3);
   color: #ff7675;
@@ -132,7 +133,7 @@ body {
   box-shadow: 0 3px 0 #ff7675;
 }
 
-.birth-section {
+.option-content-bg {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -141,21 +142,11 @@ body {
   padding: 15px 10px;
 }
 
-.calendar-toggle {
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
-}
-
-.toggle-option input[type="radio"] {
-  display: none;
-}
-
-.toggle-option label {
+.option-calendar-content-item label {
   border: 2px solid #f1c40f;
 }
 
-.toggle-option input[type="radio"]:checked + label {
+.option-calendar-content-item input[type="radio"]:checked + label {
   border-color: #f39c12;
   background: rgba(241, 196, 15, 0.3);
   color: #f39c12;
@@ -163,64 +154,55 @@ body {
   box-shadow: 0 3px 0 #f39c12;
 }
 
-.date-inputs {
-  display: flex;
-  gap: 10px;
-}
-
-.retro-input {
+.option-input {
   width: 100%;
   text-align: center;
 }
 
-.retro-input:focus {
+.option-input:focus {
   outline: none;
   transform: translateY(-2px);
 }
 
-.retro-input::placeholder {
+.option-input::placeholder {
   text-align: center;
   font-weight: 400;
   font-size: 0.75rem;
   color: #666;
 }
 
-.retro-input[name="year"],
-.retro-input[name="month"],
-.retro-input[name="day"] {
+.option-date-input {
   border: 2px solid #00b894;
   color: #00a085;
 }
 
-.retro-input[name="year"]:focus,
-.retro-input[name="month"]:focus,
-.retro-input[name="day"]:focus {
+.option-date-input:focus {
   box-shadow: 0 3px 0 #00a085;
 }
 
-.time-input {
+.option-time-input {
   border: 2px solid #0984e3;
 }
 
-.time-input:focus {
+.option-time-input:focus {
   box-shadow: 0 3px 0 #0652dd;
 }
 
-.city-input {
+.option-city-input {
   border: 2px solid #a29bfe;
 }
 
-.city-input:focus {
+.option-city-input:focus {
   box-shadow: 0 3px 0 #9f69f8;
 }
 
-.retro-btn-container {
+.next-btn-container {
   margin-top: auto;
   display: flex;
   justify-content: flex-end;
 }
 
-.retro-btn {
+.next-btn {
   width: 125px;
   background: linear-gradient(135deg, #e17055, #74b9ff, #a29bfe, #fd79a8);
   color: #fff;
@@ -237,7 +219,7 @@ body {
   text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
 }
 
-.retro-btn::before {
+.next-btn::before {
   content: "";
   position: absolute;
   top: 0;
@@ -253,12 +235,12 @@ body {
   transition: left 0.6s;
 }
 
-.retro-btn:hover::before {
+.next-btn:hover::before {
   left: 100%;
 }
 
-
-.emoji-decoration {
+/*emoji*/
+.float-emoji {
   position: fixed;
   font-size: 1.5rem;
   animation: float-emoji 4s ease-in-out infinite;
@@ -266,31 +248,31 @@ body {
   z-index: 1;
 }
 
-.emoji-decoration:nth-child(1) {
+.float-emoji:nth-child(1) {
   top: 15%;
   left: 8%;
   animation-delay: 0s;
 }
 
-.emoji-decoration:nth-child(2) {
+.float-emoji:nth-child(2) {
   top: 25%;
   right: 12%;
   animation-delay: 1s;
 }
 
-.emoji-decoration:nth-child(3) {
+.float-emoji:nth-child(3) {
   bottom: 35%;
   left: 10%;
   animation-delay: 2s;
 }
 
-.emoji-decoration:nth-child(4) {
+.float-emoji:nth-child(4) {
   bottom: 20%;
   right: 8%;
   animation-delay: 3s;
 }
 
-.emoji-decoration:nth-child(5) {
+.float-emoji:nth-child(5) {
   top: 60%;
   right: 15%;
   animation-delay: 1.5s;
