@@ -245,7 +245,7 @@ body {
 .float-emoji {
   position: fixed;
   font-size: 1.5rem;
-  animation: float-emoji 4s ease-in-out infinite;
+  animation: float-emoji 3s ease-in-out infinite;
   pointer-events: none;
   z-index: 1;
 }
@@ -291,8 +291,8 @@ body {
 }
 
 /* --- 유효성 검사 오류 효과 --- */
-.field-error-wiggle {
-  animation: wiggle 0.4s ease-in-out;
+.wiggle {
+  animation: wiggle 0.3s ease-in-out;
 }
 
 @keyframes wiggle {
