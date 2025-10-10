@@ -82,7 +82,7 @@
       </div>
 
       <!-- 서버에서 전달된 에러 메시지들 표시 -->
-      <div th:if="${#fields.hasErrors()}" class="error-container">
+      <div th:if="${#fields.hasErrors()}" class="error-message-container">
         <div th:each="err : ${#sets.toSet(#fields.errors('*'))}" th:text="${err}" class="error-message"></div>
       </div>
 

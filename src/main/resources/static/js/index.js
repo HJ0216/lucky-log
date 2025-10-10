@@ -186,7 +186,7 @@ const IndexPage = {
   // Error
   // 에러 메시지 숨기기
   hideErrors() {
-    const errorContainer = document.querySelector(".error-container");
+    const errorContainer = document.querySelector(".error-message-container");
     if (errorContainer) {
       errorContainer.style.opacity = "0";
       setTimeout(() => {

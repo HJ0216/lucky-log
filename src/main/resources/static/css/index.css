@@ -239,6 +239,8 @@ body {
   left: 100%;
 }
 
+/*TODO: 공통 CSS로 분리 예정*/
+
 /*emoji*/
 .float-emoji {
   position: fixed;
@@ -288,7 +290,7 @@ body {
   }
 }
 
-/* --- 유효성 검사 에러 효과 --- */
+/* --- 유효성 검사 오류 효과 --- */
 .field-error-wiggle {
   animation: wiggle 0.4s ease-in-out;
 }
@@ -329,20 +331,20 @@ body {
 }
 
 /* 에러 메시지 스타일 */
-.error-message {
-  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 0.8em;
-  margin-bottom: 8px;
-  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
-  animation: slideDown 0.3s ease-out;
+.error-message-container {
+  z-index: 1;
 }
 
-.error-container {
-  margin-bottom: 15px;
+.error-message {
+  color: #fff;
+  font-size: 0.8em;
+  font-weight: 500;
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  padding: 6px 0;
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 10px;
+  animation: slideDown 0.3s ease-out;
 }
 
 @keyframes slideDown {
