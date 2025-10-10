@@ -1,9 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   background: linear-gradient(
     45deg,
@@ -12,80 +6,36 @@ body {
     #fecfef 50%,
     #fad0c4 100%
   );
-  color: #2d3436;
+  padding: 20px 0;
+  color: #333;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  min-height: 100vh;
-  padding: 20px;
-  position: relative;
-  overflow-x: hidden;
-}
-
-.holographic-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(
-      circle at 25% 25%,
-      rgba(255, 255, 255, 0.3) 0%,
-      transparent 25%
-    ),
-    radial-gradient(
-      circle at 75% 75%,
-      rgba(255, 182, 193, 0.4) 0%,
-      transparent 25%
-    ),
-    radial-gradient(
-      circle at 75% 25%,
-      rgba(173, 216, 230, 0.4) 0%,
-      transparent 25%
-    );
-  animation: hologram 8s ease-in-out infinite;
-  pointer-events: none;
-  z-index: -1;
-}
-
-@keyframes hologram {
-  0%,
-  100% {
-    opacity: 0.6;
-    transform: rotate(0deg);
-  }
-  50% {
-    opacity: 0.8;
-    transform: rotate(1deg);
-  }
 }
 
 .container {
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(20px);
   border: 2px solid rgba(255, 255, 255, 0.6);
-  border-radius: 32px;
+  border-radius: 25px;
   padding: 10px 20px 20px 20px;
-  width: 100%;
+  width: 100vw;
   max-width: 350px;
-  min-height: calc(100vh - 40px);
+  height: calc(100vh - 40px);
+  min-height: 600px;
   margin: 0 auto;
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(255, 182, 193, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  position: relative;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .container::before {
   content: "";
   position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(45deg, #ff9a9e, #fad0c4, #a8edea, #fed6e3);
-  border-radius: 36px;
-  z-index: -1;
+  border-radius: 25px;
   animation: rainbow-border 3s linear infinite;
 }
 
@@ -99,41 +49,36 @@ body {
 }
 
 .logo {
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   position: relative;
-}                                                                                                            
+  text-align: center;
+}
 
 .logo h1 {
-  font-size: 2.2em;
-  margin-bottom: 8px;
-  background: linear-gradient(135deg, #fd79a8, #fdcb6e, #55efc4, #74b9ff);
+  font-size: 2rem;
+  margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.7);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-weight: 900;
-  letter-spacing: -2px;
-  text-shadow: 2px 2px 10px rgba(253, 121, 168, 0.3),
-    0 0 15px rgba(253, 203, 110, 0.2);
+  font-weight: 800;
 }
 
 .logo p {
-  color: rgba(45, 52, 54, 0.6);
-  font-size: 0.8em;
-  font-weight: 600;
+  color: #666;
+  font-size: 0.8rem;
+  font-weight: 500;
   background: rgba(255, 255, 255, 0.7);
   padding: 6px 0;
-  border-radius: 16px;
-  display: block;
+  border-radius: 10px;
   width: 100%;
-  margin: 0 auto;
 }
 
 .form-grid {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  text-align: left;
-  flex: 1;
+  gap: 15px;
+  height: 100%
 }
 
 .field-group {
@@ -143,70 +88,63 @@ body {
 .field-label {
   display: block;
   margin-bottom: 10px;
-  color: #2d3436;
-  font-size: 0.85em;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
 .gender-cards {
   display: flex;
-  gap: 12px;
+  gap: 10px;
+  padding: 0 10px;
 }
 
-.card-option {
-  flex: 1;
+.card-option, 
+.toggle-option {
+  width: 100%;
 }
 
 .card-option input[type="radio"] {
   display: none;
 }
 
-.card-option label {
+.option-btn {
   display: block;
-  background: rgba(255, 255, 255, 0.8);
-  border: 3px solid #ff6b6b;
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 10px;
-  padding: 8px 6px;
+  padding: 8px 0;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-size: 0.75em;
-  margin: 0;
-  color: rgba(45, 52, 54, 0.6);
-  box-shadow: 0 2px 0 #e55656, 0 4px 10px rgba(255, 107, 107, 0.2);
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.card-option label {
+  border: 2px solid #ff6b6b;
 }
 
 .card-option input[type="radio"]:checked + label {
   border-color: #ff7675;
   background: rgba(255, 118, 117, 0.3);
   color: #ff7675;
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 4px 0 #ff7675, 0 8px 15px rgba(255, 118, 117, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 0 #ff7675;
 }
 
 .birth-section {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
   background: rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-  padding: 20px 12px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  padding: 15px 10px;
 }
 
 .calendar-toggle {
   display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.toggle-option {
-  flex: 1;
+  gap: 10px;
+  justify-content: space-between;
 }
 
 .toggle-option input[type="radio"] {
@@ -214,116 +152,66 @@ body {
 }
 
 .toggle-option label {
-  display: block;
-  background: rgba(255, 255, 255, 0.6);
-  border: 3px solid #f1c40f;
-  border-radius: 10px;
-  padding: 8px 6px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 600;
-  font-size: 0.75em;
-  margin: 0;
-  color: rgba(45, 52, 54, 0.6);
-  box-shadow: 0 3px 0 #f39c12;
+  border: 2px solid #f1c40f;
 }
 
 .toggle-option input[type="radio"]:checked + label {
-  background: rgba(241, 196, 15, 0.3);
   border-color: #f39c12;
+  background: rgba(241, 196, 15, 0.3);
   color: #f39c12;
   transform: translateY(-2px);
-  box-shadow: 0 5px 0 #f39c12;
+  box-shadow: 0 3px 0 #f39c12;
 }
 
 .date-inputs {
-  display: grid;
-  grid-template-columns: 1.2fr 0.9fr 0.9fr;
-  gap: 12px;
-}
-
-.date-inputs.single {
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  display: flex;
+  gap: 10px;
 }
 
 .retro-input {
   width: 100%;
-  background: rgba(255, 255, 255, 0.8);
-  border: 3px solid #f1c40f;
-  border-radius: 12px;
-  padding: 10px 0px;
-  color: rgba(45, 52, 54, 0.6);
-  font-size: 0.75em;
-  font-weight: 600;
-  transition: all 0.3s ease;
   text-align: center;
 }
 
 .retro-input:focus {
   outline: none;
-  border-color: #ffeaa7;
   transform: translateY(-2px);
 }
 
-/* 년, 월, 일 입력 필드 (초록색) - 동일한 스타일 적용 */
+.retro-input::placeholder {
+  text-align: center;
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: #666;
+}
+
 .retro-input[name="year"],
 .retro-input[name="month"],
 .retro-input[name="day"] {
-  border: 3px solid #00b894;
-  text-align: center;
-  box-shadow: 0 3px 0 #00a085, 0 6px 15px rgba(0, 184, 148, 0.2);
+  border: 2px solid #00b894;
+  color: #00a085;
 }
 
 .retro-input[name="year"]:focus,
 .retro-input[name="month"]:focus,
 .retro-input[name="day"]:focus {
-  border-color: #00cec9;
-  box-shadow: 0 5px 0 #00b894, 0 10px 20px rgba(0, 206, 201, 0.3);
+  box-shadow: 0 3px 0 #00a085;
 }
 
-/* 시, 분 입력 필드 (파란색) */
 .time-input {
-  border: 3px solid #0984e3;
-  color: rgba(45, 52, 54, 0.6);
-  width: 100%;
-  min-width: 100%;
-  text-align: center;
-  box-shadow: 0 3px 0 #0652dd, 0 6px 15px rgba(9, 132, 227, 0.2);
-  appearance: none;
+  border: 2px solid #0984e3;
 }
 
 .time-input:focus {
-  outline: none;
-  border-color: #74b9ff;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 0 #0984e3, 0 10px 20px rgba(116, 185, 255, 0.3);
-}
-
-.retro-input::placeholder {
-  color: rgba(45, 52, 54, 0.5);
-  font-weight: 600;
-  text-align: center;
-  letter-spacing: 1px;
+  box-shadow: 0 3px 0 #0652dd;
 }
 
 .city-input {
-  background: rgba(255, 255, 255, 0.8);
-  border: 3px solid #a29bfe;
-  color: rgba(45, 52, 54, 0.6);
-  width: 100%;
-  min-width: 100%;
-  text-align: center;
-  box-shadow: 0 3px 0 #6c5ce7, 0 6px 15px rgba(162, 155, 254, 0.2);
-  appearance: none;
+  border: 2px solid #a29bfe;
 }
 
 .city-input:focus {
-  outline: none;
-  border-color: #d63af3;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 0 #a29bfe, 0 10px 20px rgba(214, 58, 243, 0.3);
+  box-shadow: 0 3px 0 #9f69f8;
 }
 
 .retro-btn-container {
@@ -333,38 +221,27 @@ body {
 }
 
 .retro-btn {
-  width: 40%;
+  width: 125px;
   background: linear-gradient(135deg, #e17055, #74b9ff, #a29bfe, #fd79a8);
   color: #fff;
   border: none;
   border-radius: 10px;
-  padding: 10px;
+  padding: 10px 0;
   font-size: 0.8em;
-  font-weight: 900;
-  text-transform: uppercase;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 6px 0 #d63031, 0 12px 25px rgba(225, 112, 85, 0.3);
+  box-shadow: 0 6px 0 #d63031;
   text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
-}
-
-.retro-btn:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 0 #d63031, 0 20px 40px rgba(225, 112, 85, 0.4);
-}
-
-.retro-btn:active {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 0 #d63031, 0 8px 20px rgba(225, 112, 85, 0.3);
 }
 
 .retro-btn::before {
   content: "";
   position: absolute;
   top: 0;
-  left: -100%;
+  left: -100px;
   width: 100%;
   height: 100%;
   background: linear-gradient(
@@ -380,39 +257,40 @@ body {
   left: 100%;
 }
 
+
 .emoji-decoration {
   position: fixed;
-  font-size: 1.5em;
+  font-size: 1.5rem;
   animation: float-emoji 4s ease-in-out infinite;
   pointer-events: none;
   z-index: 1;
 }
 
-.emoji-decoration:nth-child(2) {
+.emoji-decoration:nth-child(1) {
   top: 15%;
   left: 8%;
   animation-delay: 0s;
 }
 
-.emoji-decoration:nth-child(3) {
+.emoji-decoration:nth-child(2) {
   top: 25%;
   right: 12%;
   animation-delay: 1s;
 }
 
-.emoji-decoration:nth-child(4) {
+.emoji-decoration:nth-child(3) {
   bottom: 35%;
   left: 10%;
   animation-delay: 2s;
 }
 
-.emoji-decoration:nth-child(5) {
+.emoji-decoration:nth-child(4) {
   bottom: 20%;
   right: 8%;
   animation-delay: 3s;
 }
 
-.emoji-decoration:nth-child(6) {
+.emoji-decoration:nth-child(5) {
   top: 60%;
   right: 15%;
   animation-delay: 1.5s;
@@ -425,26 +303,6 @@ body {
   }
   50% {
     transform: translateY(-15px) rotate(10deg);
-  }
-}
-
-@media (max-width: 400px) {
-  .container {
-    margin: 10px;
-    padding: 25px 20px;
-  }
-
-  .logo h1 {
-    font-size: 1.8em;
-  }
-
-  .date-inputs {
-    grid-template-columns: 1fr;
-  }
-
-  .calendar-toggle {
-    flex-direction: row;
-    gap: 6px;
   }
 }
 

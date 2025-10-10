@@ -6,14 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LUCKY LOG</title>
   <link rel="icon" href="../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
+  <link rel="stylesheet" href="../static/css/default.css" th:href="@{/css/default.css}">
   <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
   <link rel="stylesheet" href="../static/css/index.css" th:href="@{/css/index.css}">
-  <link rel="stylesheet" href="../static/css/normalize.css" th:href="@{/css/normalize.css}">
 </head>
 
 <body>
-
-  <div class="holographic-bg"></div>
 
   <div class="emoji-decoration">🌈</div>
   <div class="emoji-decoration">💎</div>
@@ -37,7 +35,7 @@
         <div class="gender-cards">
           <div class="card-option" th:each="type : ${genderTypes}">
             <input type="radio" th:field="*{gender}" th:value="${type.name()}" />
-            <label th:for="${#ids.prev('gender')}" th:text="|${type.icon} ${type.displayName}|">🙋‍♀️ 여성</label>
+            <label class="option-btn" th:for="${#ids.prev('gender')}" th:text="|${type.icon} ${type.displayName}|">🙋‍♀️ 여성</label>
           </div>
         </div>
       </div>
@@ -50,30 +48,30 @@
           <div class="calendar-toggle">
             <div class="toggle-option" th:each="type: ${calendarTypes}">
               <input type="radio" th:field="*{calendar}" th:value="${type.name()}">
-              <label th:for="${#ids.prev('calendar')}" th:text="${type.displayName}">양력</label>
+              <label class="option-btn" th:for="${#ids.prev('calendar')}" th:text="${type.displayName}">양력</label>
             </div>
           </div>
 
           <!-- 년월일 입력 -->
           <div class="date-inputs">
-            <input type="number" placeholder="연도" class="retro-input" th:errorclass="field-error-jump"
+            <input type="number" placeholder="연도" class="option-btn retro-input" th:errorclass="field-error-jump"
               th:field="*{year}" th:min="${minYear}" th:max="${maxYear}">
-            <input type="number" placeholder="월" class="retro-input" th:errorclass="field-error-jump"
+            <input type="number" placeholder="월" class="option-btn retro-input" th:errorclass="field-error-jump"
               th:field="*{month}" min="1" max="12">
-            <input type="number" placeholder="일" class="retro-input" th:errorclass="field-error-jump" th:field="*{day}"
+            <input type="number" placeholder="일" class="option-btn retro-input" th:errorclass="field-error-jump" th:field="*{day}"
               min="1" max="31">
           </div>
 
           <!-- 시간 및 도시 선택 -->
           <div class="date-inputs single">
-            <select class="retro-input time-input" th:field="*{time}">
+            <select class="option-btn retro-input time-input" th:field="*{time}">
               <option value="" selected hidden>태어난 시간 🕐</option>
-              <option th:each="type : ${timeTypes}" th:value="${type.name()}" th:text="${type.displayName}">
+              <option class="none-option" th:each="type : ${timeTypes}" th:value="${type.name()}" th:text="${type.displayName}">
                 모름
               </option>
             </select>
 
-            <select class="retro-input city-input" th:field="*{city}">
+            <select class="option-btn retro-input city-input" th:field="*{city}">
               <option value="" selected hidden>태어난 도시 🏙️</option>
               <option th:each="type : ${cityTypes}" th:value="${type.name()}" th:text="${type.displayName}">
                 모름
