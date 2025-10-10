@@ -40,7 +40,9 @@ const IndexPage = {
     this.elements.allInputs = document.querySelectorAll(
       'input[type="radio"], input[type="checkbox"], input[type="number"], input[type="text"], select'
     );
-    this.elements.errorMessages = document.querySelectorAll(".error-message, .alert");
+    this.elements.errorMessages = document.querySelectorAll(
+      ".error-message, .alert"
+    );
   },
 
   // 캐싱된 DOM 요소들에 필요한 이벤트 리스너를 등록
@@ -91,7 +93,7 @@ const IndexPage = {
     }
 
     // 옵션 페이지에서 뒤로가기 버튼 클릭 후, 버튼 상태 복원
-    window.addEventListener('pageshow', this.resetSubmitButton.bind(this));
+    window.addEventListener("pageshow", this.resetSubmitButton.bind(this));
   },
 
   // 검증
@@ -176,7 +178,9 @@ const IndexPage = {
   },
 
   resetSubmitButton() {
-    const submitBtn = this.elements.form?.querySelector('button[type="submit"]');
+    const submitBtn = this.elements.form?.querySelector(
+      'button[type="submit"]'
+    );
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.textContent = "🚀 다음 단계 →";
@@ -228,26 +232,25 @@ const IndexPage = {
     }, this.config.animationDuration);
   },
 
-    /**
-     * 에러 메시지를 일정 시간 후 자동으로 숨기는 로직
-     */
-    startErrorAutoHide() {
-      this.elements.errorMessages.forEach(msg => {
-        // 메시지에 내용이 있을 때만 타이머 작동
-        if (msg.textContent.trim()) {
+  /**
+   * 에러 메시지를 일정 시간 후 자동으로 숨기는 로직
+   */
+  startErrorAutoHide() {
+    this.elements.errorMessages.forEach((msg) => {
+      // 메시지에 내용이 있을 때만 타이머 작동
+      if (msg.textContent.trim()) {
+        setTimeout(() => {
+          msg.style.transition = `opacity ${this.config.fadeoutDuration}ms ease-out`;
+          msg.style.opacity = "0";
+
+          // fade-out 애니메이션이 끝난 후 display: none 처리
           setTimeout(() => {
-            msg.style.transition = `opacity ${this.config.fadeoutDuration}ms ease-out`;
-            msg.style.opacity = "0";
-
-            // fade-out 애니메이션이 끝난 후 display: none 처리
-            setTimeout(() => {
-              msg.style.display = "none";
-            }, this.config.fadeoutDuration);
-
-          }, this.config.errorHideDelay);
-        }
-      });
-    }
+            msg.style.display = "none";
+          }, this.config.fadeoutDuration);
+        }, this.config.errorHideDelay);
+      }
+    });
+  },
 };
 
 // 페이지 로드 시 초기화
