@@ -31,6 +31,7 @@ const IndexPage = {
   // 초기화
   init() {
     this.cacheElements();
+    if (!this.validateRequiredElements()) return;
     this.attachEvents();
     this.startErrorAutoHide();
   },
@@ -59,6 +60,28 @@ const IndexPage = {
     this.elements.errorMessages = document.querySelectorAll(
       "[data-error-message]"
     );
+  },
+
+  validateRequiredElements() {
+    const required = [
+      "form",
+      "submitBtn",
+      "yearInput",
+      "monthInput",
+      "dayInput",
+      "timeInput",
+      "cityInput",
+    ];
+
+    const missing = required.filter((key) => !this.elements[key]);
+    if (missing.length > 0) {
+      const message = `Missing required elements: ${missing.join(", ")}`;
+
+      console.log(message);
+      return false;
+    }
+
+    return true;
   },
 
   // 캐싱된 DOM 요소들에 필요한 이벤트 리스너를 등록
