@@ -53,11 +53,11 @@
         <!-- 년월일 입력 -->
         <div class="option-content">
           <input type="number" placeholder="연도" class="option-btn option-input option-date-input"
-            th:errorclass="field-error-jump" th:field="*{year}" th:min="${minYear}" th:max="${maxYear}">
+            th:errorclass="jump" th:field="*{year}" th:min="${minYear}" th:max="${maxYear}">
           <input type="number" placeholder="월" class="option-btn option-input option-date-input"
-            th:errorclass="field-error-jump" th:field="*{month}" min="1" max="12">
+            th:errorclass="jump" th:field="*{month}" min="1" max="12">
           <input type="number" placeholder="일" class="option-btn option-input option-date-input"
-            th:errorclass="field-error-jump" th:field="*{day}" min="1" max="31">
+            th:errorclass="jump" th:field="*{day}" min="1" max="31">
         </div>
 
         <!-- 시간 및 도시 선택 -->

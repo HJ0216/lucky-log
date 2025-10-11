@@ -77,7 +77,7 @@ const IndexPage = {
     if (missing.length > 0) {
       const message = `Missing required elements: ${missing.join(", ")}`;
 
-      console.log(message);
+      console.error(message);
       return false;
     }
 
