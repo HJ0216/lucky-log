@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LUCKY LOG</title>
   <link rel="icon" href="../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
+  <link rel="stylesheet" href="../static/css/default.css" th:href="@{/css/default.css}">
   <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
   <link rel="stylesheet" href="../static/css/fortune-option.css" th:href="@{/css/fortune-option.css}">
 </head>
@@ -48,12 +49,13 @@
           <span th:text="*{year}">1995년</span>년
           <span th:text="*{month}">02월</span>월
           <span th:text="*{day}">16일</span>일
-          <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">자시(23:30 - 01:29)</span>
+          <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">자시(23:30 -
+            01:29)</span>
         </p>
       </div>
 
-      <form action="/fortune/option" th:action="@{/fortune/option}" method="post"
-            th:object="${fortuneOptionForm}" class="form-grid">
+      <form action="/fortune/option" th:action="@{/fortune/option}" method="post" th:object="${fortuneOptionForm}"
+        class="form-grid">
         <!-- AI 선택 -->
         <div class="field-group">
           <label class="field-label">🤖 AI 선택</label>
@@ -84,7 +86,7 @@
           <label class="field-label">📊 운세 주기</label>
           <div class="period-cards">
             <div th:each="type : ${periodTypes}" class="period-option">
-              <input type="radio"th:field="*{period}" th:value="${type.name()}" th:disabled="${!type.enabled}">
+              <input type="radio" th:field="*{period}" th:value="${type.name()}" th:disabled="${!type.enabled}">
               <label th:for="${#ids.prev('period')}">
                 <div th:text="${type.icon}">📆</div>
                 <div th:text="${type.displayName}">월별</div>
