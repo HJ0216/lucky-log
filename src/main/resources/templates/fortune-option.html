@@ -52,43 +52,37 @@
       </div>
 
       <form action="/fortune/option" th:action="@{/fortune/option}" method="post" th:object="${fortuneOptionForm}"
-        class="form-grid">
+        class="form-container">
         <!-- AI 선택 -->
-        <div class="field-group">
-          <label class="field-label">🤖 AI 선택</label>
-          <div class="ai-cards">
-            <div th:each="type: ${aiTypes}" class="ai-option">
-              <input type="radio" th:field="*{ai}" th:value="${type.name()}" th:disabled="${!type.enabled}">
-              <label th:for="${#ids.prev('ai')}">
-                <div th:text="${type.icon}">🎆</div>
-                <div th:text="${type.displayName}">Claude</div>
-              </label>
-            </div>
+        <label class="form-option-title">🤖 AI 선택</label>
+        <div class="form-option-content">
+          <div th:each="type: ${aiTypes}" class="form-option-content-item option-ai-content-item">
+            <input type="radio" th:field="*{ai}" th:value="${type.name()}" th:disabled="${!type.enabled}">
+            <label class="form-option-btn with-icon-option-btn" th:for="${#ids.prev('ai')}">
+              <div th:text="${type.icon}">🎆</div>
+              <div th:text="${type.displayName}">Claude</div>
+            </label>
           </div>
         </div>
 
         <!-- 운세 종류 선택 -->
-        <div class="field-group">
-          <label class="field-label">🍀 보고 싶은 운세 (복수 선택 가능)</label>
-          <div class="fortune-grid">
-            <div th:each="type: ${fortuneTypes}" th:data-tooltip="${type.tooltip}" class="fortune-option">
-              <input type="checkbox" th:field="*{fortunes}" th:value="${type.name()}" th:disabled="${!type.enabled}">
-              <label th:for="${#ids.prev('fortunes')}" th:text="${type.icon}">🔮</label>
-            </div>
+        <label class="form-option-title">🍀 보고 싶은 운세 (복수 선택 가능)</label>
+        <div class="fortune-type-container">
+          <div th:each="type: ${fortuneTypes}" th:data-tooltip="${type.tooltip}" class="form-option-content-item option-type-content-item">
+            <input type="checkbox" th:field="*{fortunes}" th:value="${type.name()}" th:disabled="${!type.enabled}">
+            <label th:for="${#ids.prev('fortunes')}" th:text="${type.icon}" class="form-option-btn">🔮</label>
           </div>
         </div>
 
         <!-- 기간 선택 -->
-        <div class="field-group">
-          <label class="field-label">📊 운세 주기</label>
-          <div class="period-cards">
-            <div th:each="type : ${periodTypes}" class="period-option">
-              <input type="radio" th:field="*{period}" th:value="${type.name()}" th:disabled="${!type.enabled}">
-              <label th:for="${#ids.prev('period')}">
-                <div th:text="${type.icon}">📆</div>
-                <div th:text="${type.displayName}">월별</div>
-              </label>
-            </div>
+        <label class="form-option-title">📊 운세 주기</label>
+        <div class="form-option-content">
+          <div th:each="type : ${periodTypes}" class="form-option-content-item option-period-content-item">
+            <input type="radio" th:field="*{period}" th:value="${type.name()}" th:disabled="${!type.enabled}">
+            <label th:for="${#ids.prev('period')}" class="form-option-btn with-icon-option-btn">
+              <div th:text="${type.icon}">📆</div>
+              <div th:text="${type.displayName}">월별</div>
+            </label>
           </div>
         </div>
 
@@ -97,8 +91,8 @@
           <div th:each="err : ${#fields.errors('*')}" th:text="${err}" class="error-message"></div>
         </div>
 
-        <div class="retro-btn-container">
-          <button type="submit" class="retro-btn">✨ 운세 확인 ✨</button>
+        <div class="next-btn-container">
+          <button type="submit" class="next-btn">✨ 운세 확인 ✨</button>
         </div>
       </form>
 
