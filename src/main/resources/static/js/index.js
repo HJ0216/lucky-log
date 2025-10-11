@@ -98,7 +98,7 @@ const IndexPage = {
 
     // 폼 제출 시 로딩 상태
     if (this.elements.form) {
-      this.elements.form.addEventListener("submit", () => handleSubmit());
+      this.elements.form.addEventListener("submit", () => this.handleSubmit());
     }
 
     // 옵션 페이지에서 뒤로가기 버튼 클릭 후, 버튼 상태 복원
@@ -150,9 +150,7 @@ const IndexPage = {
     const maxDay = new Date(year, month, 0).getDate();
 
     // 실제 HTML input의 max 속성도 업데이트
-    if (this.elements.dayInput) {
-      dayInput.setAttribute("max", maxDay);
-    }
+    this.elements.dayInput.setAttribute("max", maxDay);
 
     return maxDay;
   },
