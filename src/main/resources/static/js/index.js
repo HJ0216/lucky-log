@@ -210,7 +210,7 @@ const IndexPage = {
   startErrorAutoHide() {
     this.elements.errorMessages.forEach((message) => {
       // 메시지에 내용이 있을 때만 타이머 작동
-      if (!msg.textContent.trim()) return;
+      if (!message.textContent.trim()) return;
 
       setTimeout(() => {
         message.style.transition = `opacity ${this.config.ANIMATION_DURATION}ms ease-in-out`;
