@@ -14,7 +14,6 @@ body {
 .logo {
   margin-bottom: 15px;
   text-align: center;
-  z-index: 1;
 }
 
 .logo h1 {
@@ -41,10 +40,6 @@ body {
   flex-direction: column;
   gap: 15px;
   height: 100%;
-}
-
-.option-container {
-  z-index: 1;
 }
 
 .option-title {

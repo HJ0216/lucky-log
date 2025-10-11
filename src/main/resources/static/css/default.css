@@ -78,6 +78,7 @@ button {
   background: linear-gradient(45deg, #ff9a9e, #fad0c4, #a8edea, #fed6e3);
   border-radius: 25px;
   animation: rainbow-border 3s linear infinite;
+  z-index: -1;
 }
 
 @keyframes rainbow-border {
@@ -177,10 +178,6 @@ button {
   50% {
     transform: translateY(-10px);
   }
-}
-
-.error-message-container {
-  z-index: 1;
 }
 
 .error-message {
