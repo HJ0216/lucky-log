@@ -75,20 +75,23 @@ const IndexPage = {
       input.addEventListener("input", () => this.hideErrors());
     });
 
-    if (this.elements.yearInput) {
-      yearInput.addEventListener("change", () =>
+    const year = this.elements.yearInput;
+    const month = this.elements.monthInput;
+
+    if (year) {
+      year.addEventListener("change", () =>
         this.updateDayMaxOnDateChange()
       );
-      yearInput.addEventListener("input", () =>
+      year.addEventListener("input", () =>
         this.updateDayMaxOnDateChange()
       );
     }
 
-    if (monthInput) {
-      monthInput.addEventListener("change", () =>
+    if (month) {
+      month.addEventListener("change", () =>
         this.updateDayMaxOnDateChange()
       );
-      monthInput.addEventListener("input", () =>
+      month.addEventListener("input", () =>
         this.updateDayMaxOnDateChange()
       );
     }
@@ -158,8 +161,6 @@ const IndexPage = {
   updateDayMaxOnDateChange() {
     const dayInput = this.elements.dayInput;
 
-    if (!dayInput) return;
-
     const maxDay = this.getDynamicDayMax();
 
     // 현재 입력된 일수가 새로운 최대값보다 크면 조정
@@ -173,30 +174,28 @@ const IndexPage = {
   // form
   handleSubmit() {
     const submitBtn = this.elements.submitBtn;
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "처리중...";
-    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "처리중...";
   },
 
   resetSubmitButton() {
     const submitBtn = this.elements.submitBtn;
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "🚀 다음 단계 →";
-    }
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = "🚀 다음 단계 →";
   },
 
   // Error
   // 에러 메시지 숨기기
   hideErrors() {
-    const errorContainer = document.querySelector(".error-message-container");
-    if (errorContainer) {
-      errorContainer.style.opacity = "0";
-      setTimeout(() => {
-        errorContainer.style.display = "none";
-      }, this.config.ANIMATION_DURATION);
-    }
+    const container = this.elements.errorContainer;
+    if (!container) return;
+
+    container.style.opacity = "0";
+    setTimeout(() => {
+      container.style.display = "none";
+    }, this.config.ANIMATION_DURATION);
   },
 
   // wiggle animation
