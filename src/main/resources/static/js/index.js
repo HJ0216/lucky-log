@@ -8,90 +8,108 @@
 const IndexPage = {
   // 설정 및 상태
   config: {
-    animationDuration: 1000,
-    errorHideDelay: 1000, // ms (1초)
-    fadeoutDuration: 300, // ms (0.3초)
-    wiggleClass: "field-error-wiggle",
+    ANIMATION_DURATION: 300, // 0.3s
+    ERROR_DURATION: 5000,
+    wiggleClass: "wiggle",
   },
 
   // DOM 요소 캐싱 (Element Cache)
   elements: {
     form: null,
-    numberInputs: [],
-    allInputs: [],
+    submitBtn: null,
     yearInput: null,
     monthInput: null,
     dayInput: null,
+    timeInput: null,
+    cityInput: null,
+    dateInputs: [],
+    allInputs: [],
+    errorContainer: null,
     errorMessages: [],
   },
 
   // 초기화
   init() {
     this.cacheElements();
+    if (!this.validateRequiredElements()) return;
     this.attachEvents();
     this.startErrorAutoHide();
   },
 
   cacheElements() {
     this.elements.form = document.querySelector("form");
-    this.elements.numberInputs = document.querySelectorAll(
-      'input[type="number"]'
+    this.elements.submitBtn = document.querySelector("[data-submit-btn]");
+    this.elements.yearInput = document.querySelector("#year");
+    this.elements.monthInput = document.querySelector("#month");
+    this.elements.dayInput = document.querySelector("#day");
+    this.elements.timeInput = document.querySelector("#time");
+    this.elements.cityInput = document.querySelector("#city");
+    this.elements.dateInputs = [
+      this.elements.yearInput,
+      this.elements.monthInput,
+      this.elements.dayInput,
+    ];
+    this.elements.allInputs = [
+      ...this.elements.dateInputs,
+      this.elements.timeInput,
+      this.elements.cityInput,
+    ];
+    this.elements.errorContainer = document.querySelector(
+      "[data-error-container]"
     );
-    this.elements.allInputs = document.querySelectorAll(
-      'input[type="radio"], input[type="checkbox"], input[type="number"], input[type="text"], select'
+    this.elements.errorMessages = document.querySelectorAll(
+      "[data-error-message]"
     );
-    this.elements.errorMessages = document.querySelectorAll(".error-message, .alert");
+  },
+
+  validateRequiredElements() {
+    const required = [
+      "form",
+      "submitBtn",
+      "yearInput",
+      "monthInput",
+      "dayInput",
+      "timeInput",
+      "cityInput",
+    ];
+
+    const missing = required.filter((key) => !this.elements[key]);
+    if (missing.length > 0) {
+      const message = `Missing required elements: ${missing.join(", ")}`;
+
+      console.error(message);
+      return false;
+    }
+
+    return true;
   },
 
   // 캐싱된 DOM 요소들에 필요한 이벤트 리스너를 등록
   attachEvents() {
-    // 숫자 입력 필터링 (실시간 UX)
-    this.elements.numberInputs.forEach((input) => {
-      input.addEventListener("input", this.filterNumbers.bind(this));
-      input.addEventListener("blur", this.validateRange.bind(this));
+    // 숫자 입력 필터링
+    this.elements.dateInputs.forEach((input) => {
+      input.addEventListener("input", (e) => this.filterNumbers(e));
+      input.addEventListener("blur", (e) => this.validateRange(e));
+    });
+
+    // 입력 시 에러 메시지 숨기기
+    this.elements.allInputs.forEach((input) => {
+      input.addEventListener("change", () => this.hideErrors());
+      input.addEventListener("input", () => this.hideErrors());
+    });
+
+    [this.elements.yearInput, this.elements.monthInput].forEach((input) => {
+      input.addEventListener("change", () => this.updateDayMaxOnDateChange());
+      input.addEventListener("input", () => this.updateDayMaxOnDateChange());
     });
 
     // 폼 제출 시 로딩 상태
     if (this.elements.form) {
-      this.elements.form.addEventListener(
-        "submit",
-        this.handleSubmit.bind(this)
-      );
-    }
-
-    // 입력 시 에러 메시지 숨기기 (UX)
-    this.elements.allInputs.forEach((input) => {
-      input.addEventListener("change", this.hideErrors.bind(this));
-      input.addEventListener("input", this.hideErrors.bind(this));
-    });
-
-    const yearInput = document.querySelector('input[name="year"]');
-    const monthInput = document.querySelector('input[name="month"]');
-
-    if (yearInput) {
-      yearInput.addEventListener(
-        "change",
-        this.updateDayMaxOnDateChange.bind(this)
-      );
-      yearInput.addEventListener(
-        "input",
-        this.updateDayMaxOnDateChange.bind(this)
-      );
-    }
-
-    if (monthInput) {
-      monthInput.addEventListener(
-        "change",
-        this.updateDayMaxOnDateChange.bind(this)
-      );
-      monthInput.addEventListener(
-        "input",
-        this.updateDayMaxOnDateChange.bind(this)
-      );
+      this.elements.form.addEventListener("submit", () => this.handleSubmit());
     }
 
     // 옵션 페이지에서 뒤로가기 버튼 클릭 후, 버튼 상태 복원
-    window.addEventListener('pageshow', this.resetSubmitButton.bind(this));
+    window.addEventListener("pageshow", () => this.resetSubmitButton());
   },
 
   // 검증
@@ -102,7 +120,7 @@ const IndexPage = {
 
     if (input.value !== value) {
       input.value = value;
-      this.wiggleInput(input);
+      this.addWiggleAnimation(input);
     }
   },
 
@@ -113,26 +131,24 @@ const IndexPage = {
     const min = parseInt(input.min);
     let max = parseInt(input.max);
 
-    if (input.name === "day") {
+    if (input.id === "day") {
       max = this.getDynamicDayMax();
     }
 
-    if (value != null && min && value < min) {
+    if (min && value < min) {
       input.value = min;
-      this.wiggleInput(input);
-    } else if (value && max && value > max) {
+      this.addWiggleAnimation(input);
+    } else if (max && value > max) {
       input.value = max;
-      this.wiggleInput(input);
+      this.addWiggleAnimation(input);
     }
   },
 
   // 현재 선택된 년/월을 기준으로 해당 월의 마지막 날짜(28, 29, 30, 31)를 계산
   getDynamicDayMax() {
-    const yearInput = document.querySelector('input[name="year"]');
-    const monthInput = document.querySelector('input[name="month"]');
-
-    const year = parseInt(yearInput?.value) || new Date().getFullYear();
-    const month = parseInt(monthInput?.value);
+    const year =
+      parseInt(this.elements.yearInput?.value) || new Date().getFullYear();
+    const month = parseInt(this.elements.monthInput?.value);
 
     if (!month || month < 1 || month > 12) {
       return 31;
@@ -141,113 +157,77 @@ const IndexPage = {
     const maxDay = new Date(year, month, 0).getDate();
 
     // 실제 HTML input의 max 속성도 업데이트
-    const dayInput = document.querySelector('input[name="day"]');
-    if (dayInput) {
-      dayInput.setAttribute("max", maxDay);
-    }
+    this.elements.dayInput.setAttribute("max", maxDay);
 
     return maxDay;
   },
 
   // 년 또는 월 입력값이 변경될 때마다 일(day) 필드의 최대값을 업데이트하고, 현재 입력된 일(day)이 새 최대값을 초과하면 조정
   updateDayMaxOnDateChange() {
-    const dayInput = document.querySelector('input[name="day"]');
-    if (dayInput) {
-      const maxDay = this.getDynamicDayMax();
-      dayInput.setAttribute("max", maxDay);
+    const dayInput = this.elements.dayInput;
 
-      // 현재 입력된 일수가 새로운 최대값보다 크면 조정
-      const currentDay = parseInt(dayInput.value);
-      if (currentDay && currentDay > maxDay) {
-        dayInput.value = maxDay;
-        this.wiggleInput(dayInput);
-      }
+    const maxDay = this.getDynamicDayMax();
+
+    // 현재 입력된 일수가 새로운 최대값보다 크면 조정
+    const currentDay = parseInt(dayInput.value);
+    if (currentDay && currentDay > maxDay) {
+      dayInput.value = maxDay;
+      this.addWiggleAnimation(dayInput);
     }
   },
 
   // form
-  // 폼 제출 처리 (로딩 상태만)
-  handleSubmit(e) {
-    const submitBtn = this.elements.form.querySelector('button[type="submit"]');
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "처리중...";
-    }
+  handleSubmit() {
+    const submitBtn = this.elements.submitBtn;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "처리중...";
   },
 
   resetSubmitButton() {
-    const submitBtn = this.elements.form?.querySelector('button[type="submit"]');
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "🚀 다음 단계 →";
-    }
+    const submitBtn = this.elements.submitBtn;
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = "🚀 다음 단계 →";
   },
 
   // Error
   // 에러 메시지 숨기기
   hideErrors() {
-    const errorContainer = document.querySelector(".error-message-container");
-    if (errorContainer) {
-      errorContainer.style.opacity = "0";
-      setTimeout(() => {
-        errorContainer.style.display = "none";
-      }, 300);
-    }
+    const container = this.elements.errorContainer;
+    if (!container) return;
+
+    container.style.opacity = "0";
+    setTimeout(() => {
+      container.style.display = "none";
+    }, this.config.ANIMATION_DURATION);
   },
 
-  // 필드별 에러 애니메이션
-  animateErrorField(fieldName) {
-    let element = null;
-
-    // 필드에 따라 적절한 요소 선택
-    if (fieldName === "gender") {
-      element = document.querySelector(".gender-cards");
-    } else if (fieldName === "calendar") {
-      element = document.querySelector(".calendar-toggle");
-    } else if (
-      fieldName === "year" ||
-      fieldName === "month" ||
-      fieldName === "day"
-    ) {
-      element = document.querySelector(".date-inputs");
-    } else {
-      element = document.querySelector(`[name="${fieldName}"]`);
-    }
-
-    if (element) {
-      this.jumpAnimation(element);
-    }
-  },
-
-  // 애니메이션
-  // 흔들기 애니메이션
-  wiggleInput(input) {
+  // wiggle animation
+  addWiggleAnimation(input) {
     input.classList.add(this.config.wiggleClass);
     setTimeout(() => {
       input.classList.remove(this.config.wiggleClass);
-    }, this.config.animationDuration);
+    }, this.config.ANIMATION_DURATION);
   },
 
-    /**
-     * 에러 메시지를 일정 시간 후 자동으로 숨기는 로직
-     */
-    startErrorAutoHide() {
-      this.elements.errorMessages.forEach(msg => {
-        // 메시지에 내용이 있을 때만 타이머 작동
-        if (msg.textContent.trim()) {
-          setTimeout(() => {
-            msg.style.transition = `opacity ${this.config.fadeoutDuration}ms ease-out`;
-            msg.style.opacity = "0";
+  // error message
+  startErrorAutoHide() {
+    this.elements.errorMessages.forEach((message) => {
+      // 메시지에 내용이 있을 때만 타이머 작동
+      if (!message.textContent.trim()) return;
 
-            // fade-out 애니메이션이 끝난 후 display: none 처리
-            setTimeout(() => {
-              msg.style.display = "none";
-            }, this.config.fadeoutDuration);
+      setTimeout(() => {
+        message.style.transition = `opacity ${this.config.ANIMATION_DURATION}ms ease-in-out`;
+        message.style.opacity = "0";
 
-          }, this.config.errorHideDelay);
-        }
-      });
-    }
+        // fade-out 애니메이션이 끝난 후 display: none 처리
+        setTimeout(() => {
+          message.style.display = "none";
+        }, this.config.ANIMATION_DURATION);
+      }, this.config.ERROR_DURATION);
+    });
+  },
 };
 
 // 페이지 로드 시 초기화
