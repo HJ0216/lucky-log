@@ -16,12 +16,15 @@ const IndexPage = {
   // DOM 요소 캐싱 (Element Cache)
   elements: {
     form: null,
-    allInputs: [],
-    dateInputs: [],
+    submitBtn: null,
     yearInput: null,
     monthInput: null,
     dayInput: null,
-    submitBtn: null,
+    timeInput: null,
+    cityInput: null,
+    dateInputs: [],
+    allInputs: [],
+    errorContainer: [],
     errorMessages: [],
   },
 
@@ -34,13 +37,28 @@ const IndexPage = {
 
   cacheElements() {
     this.elements.form = document.querySelector("form");
-    this.elements.allInputs = document.querySelectorAll("input, select");
-    this.elements.dateInputs = document.querySelectorAll(".option-date-input");
+    this.elements.submitBtn = document.querySelector("[data-submit-btn]");
     this.elements.yearInput = document.querySelector("#year");
     this.elements.monthInput = document.querySelector("#month");
     this.elements.dayInput = document.querySelector("#day");
-    this.elements.submitBtn = document.querySelector("[data-submit-btn]");
-    this.elements.errorMessages = document.querySelectorAll(".error-message");
+    this.elements.timeInput = document.querySelector("#time");
+    this.elements.cityInput = document.querySelector("#city");
+    this.elements.dateInputs = [
+      this.elements.yearInput,
+      this.elements.monthInput,
+      this.elements.dayInput,
+    ];
+    this.elements.allInputs = [
+      ...this.elements.dateInputs,
+      this.elements.timeInput,
+      this.elements.cityInput,
+    ];
+    this.elements.errorContainer = document.querySelector(
+      "[data-error-container]"
+    );
+    this.elements.errorMessages = document.querySelectorAll(
+      "[data-error-message]"
+    );
   },
 
   // 캐싱된 DOM 요소들에 필요한 이벤트 리스너를 등록
