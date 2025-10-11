@@ -12,16 +12,13 @@
 </head>
 
 <body>
-  <div class="holographic-bg"></div>
+  <div class="float-emoji">🔮</div>
+  <div class="float-emoji">✨</div>
+  <div class="float-emoji">🌟</div>
+  <div class="float-emoji">💫</div>
+  <div class="float-emoji">🎯</div>
 
-  <div class="emoji-decoration">🔮</div>
-  <div class="emoji-decoration">✨</div>
-  <div class="emoji-decoration">🌟</div>
-  <div class="emoji-decoration">💫</div>
-  <div class="emoji-decoration">🎯</div>
-
-  <div class="container">
-
+  <div class="fortune-page-container">
     <div class="loading-screen" id="loading-screen">
       <div class="loading-animation">
         <div class="loading-ring"></div>
@@ -96,7 +93,7 @@
         </div>
 
         <!-- 에러 메시지 -->
-        <div th:if="${#fields.hasErrors()}" class="error-container">
+        <div th:if="${#fields.hasErrors()}" data-error-container>
           <div th:each="err : ${#fields.errors('*')}" th:text="${err}" class="error-message"></div>
         </div>
 
