@@ -24,7 +24,7 @@ const IndexPage = {
     cityInput: null,
     dateInputs: [],
     allInputs: [],
-    errorContainer: [],
+    errorContainer: null,
     errorMessages: [],
   },
 
@@ -75,26 +75,10 @@ const IndexPage = {
       input.addEventListener("input", () => this.hideErrors());
     });
 
-    const year = this.elements.yearInput;
-    const month = this.elements.monthInput;
-
-    if (year) {
-      year.addEventListener("change", () =>
-        this.updateDayMaxOnDateChange()
-      );
-      year.addEventListener("input", () =>
-        this.updateDayMaxOnDateChange()
-      );
-    }
-
-    if (month) {
-      month.addEventListener("change", () =>
-        this.updateDayMaxOnDateChange()
-      );
-      month.addEventListener("input", () =>
-        this.updateDayMaxOnDateChange()
-      );
-    }
+    [this.elements.yearInput, this.elements.monthInput].forEach((input) => {
+      input.addEventListener("change", () => this.updateDayMaxOnDateChange());
+      input.addEventListener("input", () => this.updateDayMaxOnDateChange());
+    });
 
     // 폼 제출 시 로딩 상태
     if (this.elements.form) {
