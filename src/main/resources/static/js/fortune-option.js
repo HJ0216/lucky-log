@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * FortuneOptionPage
@@ -10,10 +10,10 @@
 const FortuneOptionPage = {
   // 설정값
   config: {
-    selectionPageUrl: "/fortune/option/back",
+    selectionPageUrl: '/fortune/option/back',
     errorHideDelay: 1000, // ms (1초)
     fadeoutDuration: 300, // ms (0.3초)
-    disabledOptionTooltip: "준비 중인 기능입니다.",
+    disabledOptionTooltip: '준비 중인 기능입니다.',
   },
 
   // DOM 요소 캐싱: 반복적인 DOM 탐색을 피해 성능을 향상
@@ -41,20 +41,20 @@ const FortuneOptionPage = {
    * 필요한 DOM 요소를 찾아 캐싱
    */
   cacheElements() {
-    this.elements.loadingScreen = document.getElementById("loading-screen");
-    this.elements.contentsScreen = document.getElementById("contents-screen");
-    this.elements.form = document.querySelector("form");
+    this.elements.loadingScreen = document.getElementById('loading-screen');
+    this.elements.contentsScreen = document.getElementById('contents-screen');
+    this.elements.form = document.querySelector('form');
     if (this.elements.form) {
-      this.elements.submitBtn = this.elements.form.querySelector(".retro-btn");
+      this.elements.submitBtn = this.elements.form.querySelector('.retro-btn');
     }
     this.elements.errorMessages = document.querySelectorAll(
-      ".error-message, .alert"
+      '.error-message, .alert'
     );
 
     // 비활성화된 input을 감싸는 컨테이너를 직접 캐싱
-    document.querySelectorAll("input:disabled").forEach((input) => {
+    document.querySelectorAll('input:disabled').forEach((input) => {
       const container = input.closest(
-        ".ai-option, .fortune-option, .period-option"
+        '.ai-option, .fortune-option, .period-option'
       );
       if (container) {
         this.elements.disabledOptionContainers.push(container);
@@ -70,7 +70,7 @@ const FortuneOptionPage = {
       // this.handleSubmit 메서드를 이벤트 리스너로 등록
       // .bind(this)를 통해 handleSubmit 내부에서 this가 FortuneOptionPage 객체를 가리키도록 함
       this.elements.form.addEventListener(
-        "submit",
+        'submit',
         this.handleSubmit.bind(this)
       );
     }
@@ -82,8 +82,8 @@ const FortuneOptionPage = {
    */
   applyInitialStyles() {
     this.elements.disabledOptionContainers.forEach((container) => {
-      container.style.opacity = "0.5";
-      container.style.cursor = "not-allowed";
+      container.style.opacity = '0.5';
+      container.style.cursor = 'not-allowed';
       container.title = this.config.disabledOptionTooltip;
     });
   },
@@ -112,8 +112,8 @@ const FortuneOptionPage = {
 
     if (this.elements.submitBtn) {
       this.elements.submitBtn.disabled = true;
-      this.elements.loadingScreen.style.display = "flex";
-      this.elements.contentsScreen.style.display = "none";
+      this.elements.loadingScreen.style.display = 'flex';
+      this.elements.contentsScreen.style.display = 'none';
     }
   },
 
@@ -126,11 +126,11 @@ const FortuneOptionPage = {
       if (msg.textContent.trim()) {
         setTimeout(() => {
           msg.style.transition = `opacity ${this.config.fadeoutDuration}ms ease-out`;
-          msg.style.opacity = "0";
+          msg.style.opacity = '0';
 
           // fade-out 애니메이션이 끝난 후 display: none 처리
           setTimeout(() => {
-            msg.style.display = "none";
+            msg.style.display = 'none';
           }, this.config.fadeoutDuration);
         }, this.config.errorHideDelay);
       }
@@ -147,10 +147,10 @@ const FortuneOptionPage = {
   initializePageState() {
     // 로딩 화면 숨기고 컨텐츠 화면 표시
     if (this.elements.loadingScreen) {
-      this.elements.loadingScreen.style.display = "none";
+      this.elements.loadingScreen.style.display = 'none';
     }
     if (this.elements.contentsScreen) {
-      this.elements.contentsScreen.style.display = "contents";
+      this.elements.contentsScreen.style.display = 'contents';
     }
 
     // 제출 버튼 활성화
@@ -163,7 +163,7 @@ const FortuneOptionPage = {
 // 전역 함수 노출 (HTML onclick 이벤트용)
 window.goToBirthInfo = () => FortuneOptionPage.goToBirthInfo();
 
-window.addEventListener("pageshow", (event) => {
+window.addEventListener('pageshow', (event) => {
   // event.persisted가 true이면 bfcache에서 온 것
   if (event.persisted) {
     FortuneOptionPage.initializePageState();
@@ -171,6 +171,6 @@ window.addEventListener("pageshow", (event) => {
 });
 
 // 페이지의 모든 DOM 콘텐츠가 로드된 후 모듈을 초기화
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   FortuneOptionPage.init();
 });

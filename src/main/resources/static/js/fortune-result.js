@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * FortuneResultPage
@@ -14,20 +14,20 @@ const FortuneResultPage = {
     loadingDuration: 3000, // 로딩 화면 표시 시간 (ms)
     fadeoutDuration: 300, // 페이드아웃 애니메이션 시간 (ms)
     animationDelay: 100, // 애니메이션 트리거 지연 시간 (ms)
-    selectionPageUrl: "/",
+    selectionPageUrl: '/',
   },
 
   // 메시지 상수
   messages: {
-    copySuccess: "운세 결과가 복사되었습니다! 📋",
-    shareSuccess: "공유 링크가 복사되었습니다! 🔗",
-    saveSuccess: "운세가 저장되었습니다! 나중에 정확도를 확인해보세요 🔮",
-    copyFailed: "복사에 실패했습니다. 😅",
-    shareFailed: "공유에 실패했습니다. 😅",
-    saveFailed: "저장에 실패했습니다. 😅",
-    loginRequired: "로그인 페이지로 이동합니다! 🔐",
+    copySuccess: '운세 결과가 복사되었습니다! 📋',
+    shareSuccess: '공유 링크가 복사되었습니다! 🔗',
+    saveSuccess: '운세가 저장되었습니다! 나중에 정확도를 확인해보세요 🔮',
+    copyFailed: '복사에 실패했습니다. 😅',
+    shareFailed: '공유에 실패했습니다. 😅',
+    saveFailed: '저장에 실패했습니다. 😅',
+    loginRequired: '로그인 페이지로 이동합니다! 🔐',
     loginConfirm:
-      "저장하려면 로그인이 필요합니다.\n로그인 페이지로 이동하시겠습니까?",
+      '저장하려면 로그인이 필요합니다.\n로그인 페이지로 이동하시겠습니까?',
   },
 
   // DOM 요소 캐싱
@@ -51,12 +51,12 @@ const FortuneResultPage = {
    * 필요한 DOM 요소를 찾아 캐싱
    */
   cacheElements() {
-    this.elements.resultsScreen = document.getElementById("results-screen");
-    this.elements.shareText = document.getElementById("shareText");
-    this.elements.saveButton = document.querySelector("[data-login-required]");
+    this.elements.resultsScreen = document.getElementById('results-screen');
+    this.elements.shareText = document.getElementById('shareText');
+    this.elements.saveButton = document.querySelector('[data-login-required]');
     this.elements.fortuneSections =
-      document.querySelectorAll(".fortune-section");
-    this.elements.fortuneContent = document.querySelector(".fortune-content");
+      document.querySelectorAll('.fortune-section');
+    this.elements.fortuneContent = document.querySelector('.fortune-content');
   },
 
   showResults() {
@@ -76,7 +76,7 @@ const FortuneResultPage = {
   triggerAnimations() {
     setTimeout(() => {
       this.elements.fortuneSections.forEach((section) => {
-        section.style.animationPlayState = "running";
+        section.style.animationPlayState = 'running';
       });
     }, this.config.animationDelay);
   },
@@ -108,6 +108,6 @@ window.shareResults = () => FortuneResultPage.shareResults();
 window.saveResults = () => FortuneResultPage.saveResults();
 
 // 페이지의 모든 DOM 콘텐츠가 로드된 후 모듈을 초기화
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   FortuneResultPage.init();
 });
