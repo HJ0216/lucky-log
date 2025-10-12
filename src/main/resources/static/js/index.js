@@ -1,21 +1,13 @@
 'use strict';
 
-/**
- * IndexPage
- * 인덱스 페이지(사주 정보 입력 폼)의 동적인 UI/UX를 관리하는 모듈 객체
- * - 실시간 입력 값 검증
- * - 동적 날짜 계산
- * - 에러 애니메이션
- */
 const IndexPage = {
-  // 설정 및 상태
   config: {
     ANIMATION_DURATION: 300, // 0.3s
     ERROR_DURATION: 5000,
     wiggleClass: 'wiggle',
   },
 
-  // DOM 요소 캐싱 (Element Cache)
+  // DOM 요소 캐싱
   elements: {
     form: null,
     submitBtn: null,
@@ -30,7 +22,6 @@ const IndexPage = {
     errorMessages: [],
   },
 
-  // 초기화
   init() {
     this.cacheElements();
     if (!this.validateRequiredElements()) return;
@@ -86,7 +77,6 @@ const IndexPage = {
     return true;
   },
 
-  // 캐싱된 DOM 요소들에 필요한 이벤트 리스너를 등록
   attachEvents() {
     // 숫자 입력 필터링
     this.elements.dateInputs.forEach((input) => {
@@ -232,7 +222,6 @@ const IndexPage = {
   },
 };
 
-// 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', () => {
   IndexPage.init();
 });

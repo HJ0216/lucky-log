@@ -1,14 +1,6 @@
 'use strict';
 
-/**
- * FortuneOptionPage
- * 운세 옵션 페이지의 UI/UX를 관리하는 모듈 객체
- * - 폼 제출 로직
- * - 에러 메시지 처리
- * - 비활성화 요소 스타일링
- */
 const FortuneOptionPage = {
-  // 설정값
   config: {
     selectionPageUrl: '/fortune/option/back',
     errorHideDelay: 1000, // ms (1초)
@@ -16,7 +8,7 @@ const FortuneOptionPage = {
     disabledOptionTooltip: '준비 중인 기능입니다.',
   },
 
-  // DOM 요소 캐싱: 반복적인 DOM 탐색을 피해 성능을 향상
+  // DOM 요소 캐싱
   elements: {
     loadingScreen: null,
     contentsScreen: null,
@@ -26,10 +18,6 @@ const FortuneOptionPage = {
     disabledOptionContainers: [],
   },
 
-  /**
-   * 모듈 초기화 메서드
-   * 페이지 로드 시 호출되어 모든 기능을 활성화
-   */
   init() {
     this.cacheElements();
     this.applyInitialStyles();
@@ -37,9 +25,6 @@ const FortuneOptionPage = {
     this.startErrorAutoHide();
   },
 
-  /**
-   * 필요한 DOM 요소를 찾아 캐싱
-   */
   cacheElements() {
     this.elements.loadingScreen = document.getElementById('loading-screen');
     this.elements.contentsScreen = document.getElementById('contents-screen');
@@ -62,9 +47,6 @@ const FortuneOptionPage = {
     });
   },
 
-  /**
-   * 이벤트 리스너를 등록
-   */
   attachEvents() {
     if (this.elements.form) {
       // this.handleSubmit 메서드를 이벤트 리스너로 등록
@@ -88,9 +70,6 @@ const FortuneOptionPage = {
     });
   },
 
-  /**
-   * 폼 제출 시 실행될 핸들러
-   */
   handleSubmit() {
     const selectedAI = this.elements.form.querySelectorAll(
       'input[name="ai"]:checked'
@@ -117,9 +96,8 @@ const FortuneOptionPage = {
     }
   },
 
-  /**
-   * 에러 메시지를 일정 시간 후 자동으로 숨기는 로직
-   */
+  // Error
+  // 에러 메시지 숨기기
   startErrorAutoHide() {
     this.elements.errorMessages.forEach((msg) => {
       // 메시지에 내용이 있을 때만 타이머 작동
@@ -137,9 +115,6 @@ const FortuneOptionPage = {
     });
   },
 
-  /**
-   * 생년월일 선택 페이지로 이동
-   */
   goToBirthInfo() {
     window.location.href = this.config.selectionPageUrl;
   },
@@ -170,7 +145,6 @@ window.addEventListener('pageshow', (event) => {
   }
 });
 
-// 페이지의 모든 DOM 콘텐츠가 로드된 후 모듈을 초기화
 document.addEventListener('DOMContentLoaded', () => {
   FortuneOptionPage.init();
 });
