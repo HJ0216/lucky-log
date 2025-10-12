@@ -8,6 +8,7 @@
     <link rel="icon" href="../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
     <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
     <link rel="stylesheet" href="../static/css/fortune-result.css" th:href="@{/css/fortune-result.css}">
+    <script defer src="../static/js/fortune-result.js.js" th:src="@{/js/fortune-result.js}"></script>
 </head>
 
 <body>
@@ -35,7 +36,8 @@
                 <span th:text="*{year}">1995년</span>년
                 <span th:text="*{month}">02월</span>월
                 <span th:text="*{day}">16일</span>일
-                <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">자시(23:30 - 01:29)</span>
+                <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">자시(23:30 -
+                    01:29)</span>
             </p>
         </div>
 
@@ -87,7 +89,6 @@
         </div>
     </div>
 
-    <script defer src="../static/js/fortune-result.js.js"  th:src="@{/js/fortune-result.js}"></script>
 </body>
 
 </html>

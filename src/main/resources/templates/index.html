@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="../static/css/default.css" th:href="@{/css/default.css}">
   <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
   <link rel="stylesheet" href="../static/css/index.css" th:href="@{/css/index.css}">
+  <script defer src="../static/js/index.js" th:src="@{/js/index.js}"></script>
 </head>
 
 <body>
@@ -34,7 +35,8 @@
       <div class="form-option-content option-gender-content">
         <div class="form-option-content-item option-gender-content-item" th:each="type : ${genderTypes}">
           <input type="radio" th:field="*{gender}" th:value="${type.name()}" />
-          <label class="form-option-btn" th:for="${#ids.prev('gender')}" th:text="|${type.icon} ${type.displayName}|">🙋‍♀️
+          <label class="form-option-btn" th:for="${#ids.prev('gender')}"
+            th:text="|${type.icon} ${type.displayName}|">🙋‍♀️
             여성</label>
         </div>
       </div>
@@ -90,8 +92,6 @@
       </div>
     </form>
   </div>
-
-  <script defer src="../static/js/index.js" th:src="@{/js/index.js}"></script>
 </body>
 
 </html>

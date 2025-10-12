@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * FortuneResultPage
  * 운세 결과 페이지의 UI/UX를 관리하는 모듈 객체
@@ -12,7 +14,7 @@ const FortuneResultPage = {
     loadingDuration: 3000, // 로딩 화면 표시 시간 (ms)
     fadeoutDuration: 300, // 페이드아웃 애니메이션 시간 (ms)
     animationDelay: 100, // 애니메이션 트리거 지연 시간 (ms)
-    selectionPageUrl: "/"
+    selectionPageUrl: "/",
   },
 
   // 메시지 상수
@@ -24,7 +26,8 @@ const FortuneResultPage = {
     shareFailed: "공유에 실패했습니다. 😅",
     saveFailed: "저장에 실패했습니다. 😅",
     loginRequired: "로그인 페이지로 이동합니다! 🔐",
-    loginConfirm: "저장하려면 로그인이 필요합니다.\n로그인 페이지로 이동하시겠습니까?"
+    loginConfirm:
+      "저장하려면 로그인이 필요합니다.\n로그인 페이지로 이동하시겠습니까?",
   },
 
   // DOM 요소 캐싱
@@ -32,7 +35,7 @@ const FortuneResultPage = {
     resultsScreen: null,
     shareText: null,
     saveButton: null,
-    fortuneSections: []
+    fortuneSections: [],
   },
 
   /**
@@ -51,8 +54,9 @@ const FortuneResultPage = {
     this.elements.resultsScreen = document.getElementById("results-screen");
     this.elements.shareText = document.getElementById("shareText");
     this.elements.saveButton = document.querySelector("[data-login-required]");
-    this.elements.fortuneSections = document.querySelectorAll(".fortune-section");
-    this.elements.fortuneContent = document.querySelector('.fortune-content');
+    this.elements.fortuneSections =
+      document.querySelectorAll(".fortune-section");
+    this.elements.fortuneContent = document.querySelector(".fortune-content");
   },
 
   showResults() {

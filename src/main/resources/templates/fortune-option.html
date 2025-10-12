@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="../static/css/default.css" th:href="@{/css/default.css}">
   <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
   <link rel="stylesheet" href="../static/css/fortune-option.css" th:href="@{/css/fortune-option.css}">
+  <script defer src="../static/js/fortune-option.js" th:src="@{/js/fortune-option.js}"></script>
 </head>
 
 <body>
@@ -68,7 +69,8 @@
         <!-- 운세 종류 선택 -->
         <label class="form-option-title">🍀 보고 싶은 운세 (복수 선택 가능)</label>
         <div class="fortune-type-container">
-          <div th:each="type: ${fortuneTypes}" th:data-tooltip="${type.tooltip}" class="form-option-content-item option-type-content-item">
+          <div th:each="type: ${fortuneTypes}" th:data-tooltip="${type.tooltip}"
+            class="form-option-content-item option-type-content-item">
             <input type="checkbox" th:field="*{fortunes}" th:value="${type.name()}" th:disabled="${!type.enabled}">
             <label th:for="${#ids.prev('fortunes')}" th:text="${type.icon}" class="form-option-btn">🔮</label>
           </div>
@@ -100,8 +102,6 @@
 
     </div>
   </div>
-
-  <script defer src="../static/js/fortune-option.js" th:src="@{/js/fortune-option.js}"></script>
 </body>
 
 </html>
