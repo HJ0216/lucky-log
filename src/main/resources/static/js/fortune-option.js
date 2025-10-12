@@ -2,10 +2,10 @@
 
 const FortuneOptionPage = {
   config: {
-    selectionPageUrl: '/fortune/option/back',
-    errorHideDelay: 1000, // ms (1초)
-    fadeoutDuration: 300, // ms (0.3초)
-    disabledOptionTooltip: '준비 중인 기능입니다.',
+    ANIMATION_DURATION: 300, // 0.3s
+    ERROR_DURATION: 5000,
+    OPTION_BACK_URL: '/fortune/option/back',
+    OPTION_DISABLED_TOOLTIP: '준비 중인 기능입니다.',
   },
 
   // DOM 요소 캐싱
@@ -20,31 +20,41 @@ const FortuneOptionPage = {
 
   init() {
     this.cacheElements();
+    if (!this.validateRequiredElements()) return;
     this.applyInitialStyles();
     this.attachEvents();
     this.startErrorAutoHide();
   },
 
   cacheElements() {
-    this.elements.loadingScreen = document.getElementById('loading-screen');
-    this.elements.contentsScreen = document.getElementById('contents-screen');
+    this.elements.loadingScreen = document.querySelector('#loading-screen');
+    this.elements.contentsScreen = document.querySelector('#contents-screen');
     this.elements.form = document.querySelector('form');
-    if (this.elements.form) {
-      this.elements.submitBtn = this.elements.form.querySelector('.retro-btn');
-    }
+    this.elements.submitBtn = document.querySelector('[data-submit-btn]');
     this.elements.errorMessages = document.querySelectorAll(
-      '.error-message, .alert'
+      '[data-error-message]'
     );
 
-    // 비활성화된 input을 감싸는 컨테이너를 직접 캐싱
-    document.querySelectorAll('input:disabled').forEach((input) => {
-      const container = input.closest(
-        '.ai-option, .fortune-option, .period-option'
-      );
-      if (container) {
-        this.elements.disabledOptionContainers.push(container);
-      }
-    });
+    // 비활성화된 input을 감싸는 컨테이너 캐싱
+    const containers = document.querySelectorAll(
+      '.form-option-content-item:has(input:disabled)'
+    );
+
+    this.elements.disabledOptionContainers = Array.from(containers);
+  },
+
+  validateRequiredElements() {
+    const required = ['loadingScreen', 'contentsScreen', 'form', 'submitBtn'];
+
+    const missing = required.filter((key) => !this.elements[key]);
+    if (missing.length > 0) {
+      const message = `Missing required elements: ${missing.join(', ')}`;
+
+      console.error(message);
+      return false;
+    }
+
+    return true;
   },
 
   attachEvents() {
@@ -66,7 +76,7 @@ const FortuneOptionPage = {
     this.elements.disabledOptionContainers.forEach((container) => {
       container.style.opacity = '0.5';
       container.style.cursor = 'not-allowed';
-      container.title = this.config.disabledOptionTooltip;
+      container.title = this.config.OPTION_DISABLED_TOOLTIP;
     });
   },
 
@@ -103,20 +113,20 @@ const FortuneOptionPage = {
       // 메시지에 내용이 있을 때만 타이머 작동
       if (msg.textContent.trim()) {
         setTimeout(() => {
-          msg.style.transition = `opacity ${this.config.fadeoutDuration}ms ease-out`;
+          msg.style.transition = `opacity ${this.config.ANIMATION_DURATION}ms ease-out`;
           msg.style.opacity = '0';
 
           // fade-out 애니메이션이 끝난 후 display: none 처리
           setTimeout(() => {
             msg.style.display = 'none';
-          }, this.config.fadeoutDuration);
-        }, this.config.errorHideDelay);
+          }, this.config.ANIMATION_DURATION);
+        }, this.config.ERROR_DURATION);
       }
     });
   },
 
   goToBirthInfo() {
-    window.location.href = this.config.selectionPageUrl;
+    window.location.href = this.config.OPTION_BACK_URL;
   },
 
   initializePageState() {

@@ -90,11 +90,11 @@
 
         <!-- 에러 메시지 -->
         <div th:if="${#fields.hasErrors()}" data-error-container>
-          <div th:each="err : ${#fields.errors('*')}" th:text="${err}" class="error-message"></div>
+          <div th:each="err : ${#fields.errors('*')}" th:text="${err}" class="error-message" data-error-message></div>
         </div>
 
         <div class="next-btn-container">
-          <button type="submit" class="next-btn">✨ 운세 확인 ✨</button>
+          <button type="submit" class="next-btn" data-submit-btn>✨ 운세 확인 ✨</button>
         </div>
       </form>
 
