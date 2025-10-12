@@ -8,7 +8,7 @@ body {
   );
   padding: 20px 0;
   color: #333;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .option-gender-content {
@@ -19,7 +19,7 @@ body {
   border: 2px solid #ff6b6b;
 }
 
-.option-gender-content-item input[type="radio"]:checked + label {
+.option-gender-content-item input[type='radio']:checked + label {
   border-color: #ff7675;
   background: rgba(255, 118, 117, 0.3);
   color: #ff7675;
@@ -40,7 +40,7 @@ body {
   border: 2px solid #f1c40f;
 }
 
-.option-calendar-content-item input[type="radio"]:checked + label {
+.option-calendar-content-item input[type='radio']:checked + label {
   border-color: #f39c12;
   background: rgba(241, 196, 15, 0.3);
   color: #f39c12;

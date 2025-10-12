@@ -1,55 +1,151 @@
 html {
-	font-family: 'Apple SD Gothic Neo', Roboto, 'Noto Sans KR', NanumGothic, 'Malgun Gothic', sans-serif;
-	color: #000;
-	line-height: 1.2;
-	word-wrap: break-word;
+  font-family: 'Apple SD Gothic Neo', Roboto, 'Noto Sans KR', NanumGothic,
+    'Malgun Gothic', sans-serif;
+  color: #000;
+  line-height: 1.2;
+  word-wrap: break-word;
 }
 body {
-	-webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
 }
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
-	display: block;
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
 }
-div, span, article, section, header, footer, aside, p, ul, li, fieldset, legend, label, a, nav, form {
-	box-sizing: border-box;
-	/* box-sizing: content-box */
+div,
+span,
+article,
+section,
+header,
+footer,
+aside,
+p,
+ul,
+li,
+fieldset,
+legend,
+label,
+a,
+nav,
+form {
+  box-sizing: border-box;
+  /* box-sizing: content-box */
 }
-ol, ul, li {
-	list-style: none;
+ol,
+ul,
+li {
+  list-style: none;
 }
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 img {
-	max-width: 100%;
-	height: auto;
-	border: 0;
+  max-width: 100%;
+  height: auto;
+  border: 0;
 }
 a {
-	display: inline-block;
+  display: inline-block;
 }
 button {
-	border: 0;
-	background: transparent;
-	cursor: pointer;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 }
 
 /* fortune-page-container */
@@ -69,7 +165,7 @@ button {
 }
 
 .fortune-page-container::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0px;
   left: 0px;
@@ -89,7 +185,6 @@ button {
     filter: hue-rotate(360deg);
   }
 }
-
 
 /* emoji */
 .float-emoji {
@@ -140,7 +235,6 @@ button {
   }
 }
 
-
 /*logo*/
 .logo {
   margin-bottom: 15px;
@@ -165,7 +259,6 @@ button {
   padding: 6px 0;
   border-radius: 10px;
 }
-
 
 /*form*/
 .form-container {
@@ -192,8 +285,8 @@ button {
   width: 100%;
 }
 
-.form-option-content-item input[type="radio"],
-.form-option-content-item input[type="checkbox"] {
+.form-option-content-item input[type='radio'],
+.form-option-content-item input[type='checkbox'] {
   display: none;
 }
 
@@ -209,7 +302,6 @@ button {
   font-size: 0.75rem;
   color: #666;
 }
-
 
 /* error */
 .wiggle {
@@ -298,7 +390,7 @@ button {
 }
 
 .next-btn::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: -100px;
