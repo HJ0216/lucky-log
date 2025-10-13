@@ -13,11 +13,13 @@ body {
 
 /* 로딩 화면 */
 .loading-screen {
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
   position: relative;
+  text-align: center;
 }
 
 .loading-animation {
@@ -355,4 +357,9 @@ body {
 
 .disabled-option {
   opacity: 0.5;
+}
+
+/* default css에 작성 시, 우선순위가 밀려 적용이 되지 않아 해당 파일에 한 번 더 기재 */
+.hidden {
+  display: none;
 }
