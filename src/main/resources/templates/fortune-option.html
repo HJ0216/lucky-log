@@ -35,6 +35,8 @@
     </div>
 
     <div class="contents-screen" id="contents-screen">
+      <button type="button" class="back-btn" onclick="goToBirthInfo()"><span>←</span></button>
+
       <div th:replace="~{fragments/header :: authButtons}"></div>
 
       <div class="logo">
@@ -53,7 +55,7 @@
       </div>
 
       <form action="/fortune/option" th:action="@{/fortune/option}" method="post" th:object="${fortuneOptionForm}"
-        class="form-container">
+        class="form-container option-ai-container">
         <!-- AI 선택 -->
         <label class="form-option-title">🤖 AI 선택</label>
         <div class="form-option-content">
@@ -97,9 +99,6 @@
           <button type="submit" class="next-btn" data-submit-btn>✨ 운세 확인 ✨</button>
         </div>
       </form>
-
-      <button type="button" class="back-btn" onclick="goToBirthInfo()">←</button>
-
     </div>
   </div>
 </body>

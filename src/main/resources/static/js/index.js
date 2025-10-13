@@ -187,9 +187,8 @@ const IndexPage = {
     const container = this.elements.errorContainer;
     if (!container) return;
 
-    container.style.opacity = '0';
     setTimeout(() => {
-      container.style.display = 'none';
+      container.classList.add('hidden');
     }, this.config.ANIMATION_DURATION);
   },
 
@@ -209,7 +208,7 @@ const IndexPage = {
 
       // fade-out 애니메이션이 끝난 후 display: none 처리
       setTimeout(() => {
-        message.style.classList.add('hidden');
+        message.classList.add('hidden');
       }, this.config.ERROR_DURATION);
     });
   },

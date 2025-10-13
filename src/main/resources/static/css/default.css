@@ -270,7 +270,6 @@ button {
 
 .form-option-title {
   display: block;
-  margin-bottom: 10px;
   font-size: 0.8rem;
   font-weight: 500;
 }
@@ -344,8 +343,8 @@ button {
 
 .error-message {
   color: #fff;
-  font-size: 0.8em;
-  font-weight: 500;
+  font-size: 0.75em;
+  font-weight: 400;
   background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
   padding: 6px 0;
   border-radius: 10px;

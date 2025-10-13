@@ -65,7 +65,7 @@ const FortuneOptionPage = {
   },
 
   attachEvents() {
-    this.elements.form.addEventListener('submit', this.handleSubmit());
+    this.elements.form.addEventListener('submit', () => this.handleSubmit());
   },
 
   // error messages
@@ -76,7 +76,7 @@ const FortuneOptionPage = {
 
       // fade-out 애니메이션이 끝난 후 display: none 처리
       setTimeout(() => {
-        message.style.classList.add('hidden');
+        message.classList.add('hidden');
       }, this.config.ERROR_DURATION);
     });
   },
