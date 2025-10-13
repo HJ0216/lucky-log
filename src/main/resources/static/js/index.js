@@ -26,7 +26,7 @@ const IndexPage = {
     this.cacheElements();
     if (!this.validateRequiredElements()) return;
     this.attachEvents();
-    this.startErrorAutoHide();
+    this.autoHideErrors();
   },
 
   cacheElements() {
@@ -96,9 +96,7 @@ const IndexPage = {
     });
 
     // 폼 제출 시 로딩 상태
-    if (this.elements.form) {
-      this.elements.form.addEventListener('submit', () => this.handleSubmit());
-    }
+    this.elements.form.addEventListener('submit', () => this.handleSubmit());
 
     // 옵션 페이지에서 뒤로가기 버튼 클릭 후, 버튼 상태 복원
     window.addEventListener('pageshow', () => this.resetSubmitButton());
@@ -204,19 +202,14 @@ const IndexPage = {
   },
 
   // error message
-  startErrorAutoHide() {
+  autoHideErrors() {
     this.elements.errorMessages.forEach((message) => {
       // 메시지에 내용이 있을 때만 타이머 작동
       if (!message.textContent.trim()) return;
 
+      // fade-out 애니메이션이 끝난 후 display: none 처리
       setTimeout(() => {
-        message.style.transition = `opacity ${this.config.ANIMATION_DURATION}ms ease-in-out`;
-        message.style.opacity = '0';
-
-        // fade-out 애니메이션이 끝난 후 display: none 처리
-        setTimeout(() => {
-          message.style.display = 'none';
-        }, this.config.ANIMATION_DURATION);
+        message.style.classList.add('hidden');
       }, this.config.ERROR_DURATION);
     });
   },

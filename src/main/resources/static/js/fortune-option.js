@@ -23,7 +23,7 @@ const FortuneOptionPage = {
     if (!this.validateRequiredElements()) return;
     this.applyInitialStyles();
     this.attachEvents();
-    this.startErrorAutoHide();
+    this.autoHideErrors();
   },
 
   cacheElements() {
@@ -57,72 +57,48 @@ const FortuneOptionPage = {
     return true;
   },
 
-  attachEvents() {
-    if (this.elements.form) {
-      // this.handleSubmit 메서드를 이벤트 리스너로 등록
-      // .bind(this)를 통해 handleSubmit 내부에서 this가 FortuneOptionPage 객체를 가리키도록 함
-      this.elements.form.addEventListener(
-        'submit',
-        this.handleSubmit.bind(this)
-      );
-    }
-  },
-
-  /**
-   * 페이지 로드 시 초기 UI 상태를 설정
-   * (예: 비활성화된 옵션 스타일링)
-   */
   applyInitialStyles() {
     this.elements.disabledOptionContainers.forEach((container) => {
-      container.style.opacity = '0.5';
-      container.style.cursor = 'not-allowed';
+      container.classList.add('disabled-option');
       container.title = this.config.OPTION_DISABLED_TOOLTIP;
     });
   },
 
+  attachEvents() {
+    this.elements.form.addEventListener('submit', this.handleSubmit());
+  },
+
+  // error messages
+  autoHideErrors() {
+    this.elements.errorMessages.forEach((message) => {
+      // 메시지에 내용이 있을 때만 타이머 작동
+      if (!message.textContent.trim()) return;
+
+      // fade-out 애니메이션이 끝난 후 display: none 처리
+      setTimeout(() => {
+        message.style.classList.add('hidden');
+      }, this.config.ERROR_DURATION);
+    });
+  },
+
   handleSubmit() {
-    const selectedAI = this.elements.form.querySelectorAll(
+    const selectedAI = this.elements.form.querySelector(
       'input[name="ai"]:checked'
     );
     const selectedFortunes = this.elements.form.querySelectorAll(
       'input[name="fortunes"]:checked'
     );
-    const selectedPeriod = this.elements.form.querySelectorAll(
+    const selectedPeriod = this.elements.form.querySelector(
       'input[name="period"]:checked'
     );
 
-    if (
-      selectedAI.length === 0 ||
-      selectedFortunes.length === 0 ||
-      selectedPeriod.length === 0
-    ) {
+    if (!selectedAI || selectedFortunes.length === 0 || !selectedPeriod) {
       return;
     }
 
-    if (this.elements.submitBtn) {
-      this.elements.submitBtn.disabled = true;
-      this.elements.loadingScreen.style.display = 'flex';
-      this.elements.contentsScreen.style.display = 'none';
-    }
-  },
-
-  // Error
-  // 에러 메시지 숨기기
-  startErrorAutoHide() {
-    this.elements.errorMessages.forEach((msg) => {
-      // 메시지에 내용이 있을 때만 타이머 작동
-      if (msg.textContent.trim()) {
-        setTimeout(() => {
-          msg.style.transition = `opacity ${this.config.ANIMATION_DURATION}ms ease-out`;
-          msg.style.opacity = '0';
-
-          // fade-out 애니메이션이 끝난 후 display: none 처리
-          setTimeout(() => {
-            msg.style.display = 'none';
-          }, this.config.ANIMATION_DURATION);
-        }, this.config.ERROR_DURATION);
-      }
-    });
+    this.elements.submitBtn.disabled = true;
+    this.elements.loadingScreen.classList.remove('hidden');
+    this.elements.contentsScreen.classList.add('hidden');
   },
 
   goToBirthInfo() {
@@ -130,18 +106,10 @@ const FortuneOptionPage = {
   },
 
   initializePageState() {
-    // 로딩 화면 숨기고 컨텐츠 화면 표시
-    if (this.elements.loadingScreen) {
-      this.elements.loadingScreen.style.display = 'none';
-    }
-    if (this.elements.contentsScreen) {
-      this.elements.contentsScreen.style.display = 'contents';
-    }
+    this.elements.loadingScreen.classList.add('hidden');
+    this.elements.contentsScreen.classList.remove('hidden');
 
-    // 제출 버튼 활성화
-    if (this.elements.submitBtn) {
-      this.elements.submitBtn.disabled = false;
-    }
+    this.elements.submitBtn.disabled = true;
   },
 };
 
@@ -149,7 +117,7 @@ const FortuneOptionPage = {
 window.goToBirthInfo = () => FortuneOptionPage.goToBirthInfo();
 
 window.addEventListener('pageshow', (event) => {
-  // event.persisted가 true이면 bfcache에서 온 것
+  // 앞으로 가기로 다시 돌아올 때
   if (event.persisted) {
     FortuneOptionPage.initializePageState();
   }

@@ -365,6 +365,10 @@ button {
   }
 }
 
+.hidden {
+  display: none;
+}
+
 /*다음 단계*/
 .next-btn-container {
   margin-top: auto;
