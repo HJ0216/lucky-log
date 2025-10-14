@@ -2,7 +2,6 @@
 
 const FortuneOptionPage = {
   config: {
-    ANIMATION_DURATION: 300, // 0.3s
     ERROR_DURATION: 5000,
     OPTION_BACK_URL: '/fortune/option/back',
     OPTION_DISABLED_TOOLTIP: '준비 중인 기능입니다.',
@@ -12,6 +11,7 @@ const FortuneOptionPage = {
   elements: {
     loadingScreen: null,
     contentsScreen: null,
+    backBtn: null,
     form: null,
     submitBtn: null,
     errorMessages: [],
@@ -29,6 +29,7 @@ const FortuneOptionPage = {
   cacheElements() {
     this.elements.loadingScreen = document.querySelector('#loading-screen');
     this.elements.contentsScreen = document.querySelector('#contents-screen');
+    this.elements.backBtn = document.querySelector('[data-back-btn]');
     this.elements.form = document.querySelector('form');
     this.elements.submitBtn = document.querySelector('[data-submit-btn]');
     this.elements.errorMessages = document.querySelectorAll(
@@ -66,6 +67,15 @@ const FortuneOptionPage = {
 
   attachEvents() {
     this.elements.form.addEventListener('submit', () => this.handleSubmit());
+    this.elements.backBtn.addEventListener('click', () => {
+      window.location.href = this.config.OPTION_BACK_URL;
+    });
+
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        FortuneOptionPage.initializePageState();
+      }
+    });
   },
 
   // error messages
@@ -101,10 +111,6 @@ const FortuneOptionPage = {
     this.elements.contentsScreen.classList.add('hidden');
   },
 
-  goToBirthInfo() {
-    window.location.href = this.config.OPTION_BACK_URL;
-  },
-
   initializePageState() {
     this.elements.loadingScreen.classList.add('hidden');
     this.elements.contentsScreen.classList.remove('hidden');
@@ -112,16 +118,6 @@ const FortuneOptionPage = {
     this.elements.submitBtn.disabled = true;
   },
 };
-
-// 전역 함수 노출 (HTML onclick 이벤트용)
-window.goToBirthInfo = () => FortuneOptionPage.goToBirthInfo();
-
-window.addEventListener('pageshow', (event) => {
-  // 앞으로 가기로 다시 돌아올 때
-  if (event.persisted) {
-    FortuneOptionPage.initializePageState();
-  }
-});
 
 document.addEventListener('DOMContentLoaded', () => {
   FortuneOptionPage.init();
