@@ -45,7 +45,13 @@ const FortuneOptionPage = {
   },
 
   validateRequiredElements() {
-    const required = ['loadingScreen', 'contentsScreen', 'form', 'submitBtn'];
+    const required = [
+      'loadingScreen',
+      'contentsScreen',
+      'form',
+      'submitBtn',
+      'backBtn',
+    ];
 
     const missing = required.filter((key) => !this.elements[key]);
     if (missing.length > 0) {
@@ -78,7 +84,6 @@ const FortuneOptionPage = {
       // 메시지에 내용이 있을 때만 타이머 작동
       if (!message.textContent.trim()) return;
 
-      // fade-out 애니메이션이 끝난 후 display: none 처리
       setTimeout(() => {
         message.classList.add('hidden');
       }, this.config.ERROR_DURATION);
@@ -109,7 +114,7 @@ const FortuneOptionPage = {
     this.elements.loadingScreen.classList.add('hidden');
     this.elements.contentsScreen.classList.remove('hidden');
 
-    this.elements.submitBtn.disabled = true;
+    this.elements.submitBtn.disabled = false;
   },
 };
 
