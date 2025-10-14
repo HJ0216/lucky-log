@@ -70,12 +70,6 @@ const FortuneOptionPage = {
     this.elements.backBtn.addEventListener('click', () => {
       window.location.href = this.config.OPTION_BACK_URL;
     });
-
-    window.addEventListener('pageshow', (event) => {
-      if (event.persisted) {
-        FortuneOptionPage.initializePageState();
-      }
-    });
   },
 
   // error messages
@@ -121,4 +115,10 @@ const FortuneOptionPage = {
 
 document.addEventListener('DOMContentLoaded', () => {
   FortuneOptionPage.init();
+});
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) {
+    FortuneOptionPage.initializePageState();
+  }
 });
