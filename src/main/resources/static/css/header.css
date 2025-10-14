@@ -8,23 +8,22 @@
 }
 
 .auth-btn {
-    display: inline-block;
-    background: rgba(255, 255, 255, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    border-radius: 5px;
-    padding: 1px 10px;
-    color: #666;
-    font-weight: 300;
-    font-size: 0.75em;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-    z-index:1;
-    position: relative;
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 5px;
+  padding: 1px 10px;
+  color: #666;
+  font-weight: 300;
+  font-size: 0.75em;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  text-align: center;
+  position: relative;
 }
 
 .auth-btn:hover {
-    background: rgba(255, 255, 255, 0.7);
-    color: #333;
-    font-weight: 400;
+  background: rgba(255, 255, 255, 0.7);
+  color: #333;
+  font-weight: 400;
 }

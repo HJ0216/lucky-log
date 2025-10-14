@@ -1,55 +1,151 @@
 html {
-	font-family: 'Apple SD Gothic Neo', Roboto, 'Noto Sans KR', NanumGothic, 'Malgun Gothic', sans-serif;
-	color: #000;
-	line-height: 1.2;
-	word-wrap: break-word;
+  font-family: 'Apple SD Gothic Neo', Roboto, 'Noto Sans KR', NanumGothic,
+    'Malgun Gothic', sans-serif;
+  color: #333;
+  line-height: 1.2;
+  word-wrap: break-word;
 }
 body {
-	-webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
 }
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
-	display: block;
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
 }
-div, span, article, section, header, footer, aside, p, ul, li, fieldset, legend, label, a, nav, form {
-	box-sizing: border-box;
-	/* box-sizing: content-box */
+div,
+span,
+article,
+section,
+header,
+footer,
+aside,
+p,
+ul,
+li,
+fieldset,
+legend,
+label,
+a,
+nav,
+form {
+  box-sizing: border-box;
+  /* box-sizing: content-box */
 }
-ol, ul, li {
-	list-style: none;
+ol,
+ul,
+li {
+  list-style: none;
 }
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 img {
-	max-width: 100%;
-	height: auto;
-	border: 0;
+  max-width: 100%;
+  height: auto;
+  border: 0;
 }
 a {
-	display: inline-block;
+  display: inline-block;
 }
 button {
-	border: 0;
-	background: transparent;
-	cursor: pointer;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 }
 
 /* fortune-page-container */
@@ -61,7 +157,7 @@ button {
   width: 100vw;
   max-width: 350px;
   height: calc(100vh - 40px);
-  min-height: calc(100vh - 40px);
+  min-height: min(600px, calc(100vh - 40px));
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -69,7 +165,7 @@ button {
 }
 
 .fortune-page-container::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0px;
   left: 0px;
@@ -89,7 +185,6 @@ button {
     filter: hue-rotate(360deg);
   }
 }
-
 
 /* emoji */
 .float-emoji {
@@ -140,6 +235,72 @@ button {
   }
 }
 
+/*logo*/
+.logo {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.logo h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  background: rgba(75, 0, 130, 0.4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+.logo p {
+  color: #666;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 6px 0;
+  border-radius: 10px;
+}
+
+/*form*/
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 100%;
+}
+
+.form-option-title {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.form-option-content {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.form-option-content-item {
+  width: 100%;
+}
+
+.form-option-content-item input[type='radio'],
+.form-option-content-item input[type='checkbox'] {
+  display: none;
+}
+
+.form-option-btn {
+  display: block;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  padding: 8px 0;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: #666;
+}
 
 /* error */
 .wiggle {
@@ -182,8 +343,8 @@ button {
 
 .error-message {
   color: #fff;
-  font-size: 0.8em;
-  font-weight: 500;
+  font-size: 0.75em;
+  font-weight: 400;
   background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
   padding: 6px 0;
   border-radius: 10px;
@@ -201,4 +362,52 @@ button {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.hidden {
+  display: none !important;
+}
+
+/*다음 단계*/
+.next-btn-container {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.next-btn {
+  width: 125px;
+  background: linear-gradient(135deg, #e17055, #74b9ff, #a29bfe, #fd79a8);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 0;
+  font-size: 0.8em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 0 #d63031;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.next-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  transition: left 0.6s;
+}
+
+.next-btn:hover::before {
+  left: 100%;
 }

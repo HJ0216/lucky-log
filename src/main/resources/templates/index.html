@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="../static/css/default.css" th:href="@{/css/default.css}">
   <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
   <link rel="stylesheet" href="../static/css/index.css" th:href="@{/css/index.css}">
+  <script defer src="../static/js/index.js" th:src="@{/js/index.js}"></script>
 </head>
 
 <body>
@@ -28,41 +29,42 @@
     </div>
 
     <!-- 폼을 서버로 POST 요청, Thymeleaf 객체 바인딩 -->
-    <form class="birth-form" action="/" th:action="@{/}" method="post" th:object="${birthInfoForm}">
+    <form class="form-container" action="/" th:action="@{/}" method="post" th:object="${birthInfoForm}">
       <!-- 성별 선택 -->
-      <p class="option-title">👶성별</p>
-      <div class="option-content option-gender-content">
-        <div class="option-content-item option-gender-content-item" th:each="type : ${genderTypes}">
+      <p class="form-option-title">👶성별</p>
+      <div class="form-option-content option-gender-content">
+        <div class="form-option-content-item option-gender-content-item" th:each="type : ${genderTypes}">
           <input type="radio" th:field="*{gender}" th:value="${type.name()}" />
-          <label class="option-btn" th:for="${#ids.prev('gender')}" th:text="|${type.icon} ${type.displayName}|">🙋‍♀️
+          <label class="form-option-btn" th:for="${#ids.prev('gender')}"
+            th:text="|${type.icon} ${type.displayName}|">🙋‍♀️
             여성</label>
         </div>
       </div>
 
       <!-- 생년월일 및 시간 -->
-      <p class="option-title">🎂생년월일</p>
+      <p class="form-option-title">🎂생년월일</p>
       <div class="option-content-bg">
         <!-- 양력/음력 선택 -->
-        <div class="option-content">
-          <div class="option-content-item option-calendar-content-item" th:each="type: ${calendarTypes}">
+        <div class="form-option-content">
+          <div class="form-option-content-item option-calendar-content-item" th:each="type: ${calendarTypes}">
             <input type="radio" th:field="*{calendar}" th:value="${type.name()}">
-            <label class="option-btn" th:for="${#ids.prev('calendar')}" th:text="${type.displayName}">양력</label>
+            <label class="form-option-btn" th:for="${#ids.prev('calendar')}" th:text="${type.displayName}">양력</label>
           </div>
         </div>
 
         <!-- 년월일 입력 -->
-        <div class="option-content">
-          <input type="number" placeholder="연도" class="option-btn option-input option-date-input"
+        <div class="form-option-content">
+          <input type="number" placeholder="연도" class="form-option-btn option-input option-date-input"
             th:errorclass="jump" th:field="*{year}" th:min="${minYear}" th:max="${maxYear}">
-          <input type="number" placeholder="월" class="option-btn option-input option-date-input"
+          <input type="number" placeholder="월" class="form-option-btn option-input option-date-input"
             th:errorclass="jump" th:field="*{month}" min="1" max="12">
-          <input type="number" placeholder="일" class="option-btn option-input option-date-input"
+          <input type="number" placeholder="일" class="form-option-btn option-input option-date-input"
             th:errorclass="jump" th:field="*{day}" min="1" max="31">
         </div>
 
         <!-- 시간 및 도시 선택 -->
-        <div class="option-content single">
-          <select class="option-btn option-input option-time-input" th:field="*{time}">
+        <div class="form-option-content single">
+          <select class="form-option-btn option-input option-time-input" th:field="*{time}">
             <option value="" selected hidden>태어난 시간 🕐</option>
             <option class="none-option" th:each="type : ${timeTypes}" th:value="${type.name()}"
               th:text="${type.displayName}">
@@ -70,7 +72,7 @@
             </option>
           </select>
 
-          <select class="option-btn option-input option-city-input" th:field="*{city}">
+          <select class="form-option-btn option-input option-city-input" th:field="*{city}">
             <option value="" selected hidden>태어난 도시 🏙️</option>
             <option th:each="type : ${cityTypes}" th:value="${type.name()}" th:text="${type.displayName}">
               모름
@@ -90,8 +92,6 @@
       </div>
     </form>
   </div>
-
-  <script defer src="../static/js/index.js" th:src="@{/js/index.js}"></script>
 </body>
 
 </html>
