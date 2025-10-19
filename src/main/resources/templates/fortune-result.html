@@ -55,7 +55,7 @@
         <div class="fortune-content-container">
           <div class="fortune-content" th:each="content : ${res.contents}">
             <p th:text="${content.key.displayName}" class="fortune-month">1월</p>
-            <p th:text="${content.value}" class="fortune-period-content">1월 운세 내용</p>
+            <p th:text="${content.value}" class="fortune-month-content">1월 운세 내용</p>
           </div>
         </div>
       </div>
