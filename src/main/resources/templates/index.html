@@ -9,16 +9,13 @@
   <link rel="stylesheet" href="../static/css/default.css" th:href="@{/css/default.css}">
   <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
   <link rel="stylesheet" href="../static/css/index.css" th:href="@{/css/index.css}">
-  <script defer src="../static/js/index.js" th:src="@{/js/index.js}"></script>
+  <script src="../static/js/index.js" th:src="@{/js/index.js}" defer></script>
 </head>
 
 <body>
 
-  <div class="float-emoji">🌈</div>
-  <div class="float-emoji">💎</div>
-  <div class="float-emoji">⭐</div>
-  <div class="float-emoji">💖</div>
-  <div class="float-emoji">✨</div>
+  <div th:each="emoji : ${new String[]{'🌈', '💎', '⭐', '💖', '✨'}}" th:text="${emoji}" class="float-emoji">
+  </div>
 
   <div class="fortune-page-container">
     <div th:replace="~{fragments/header :: authButtons}"></div>

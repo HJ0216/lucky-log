@@ -9,15 +9,12 @@
   <link rel="stylesheet" href="../static/css/default.css" th:href="@{/css/default.css}">
   <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
   <link rel="stylesheet" href="../static/css/fortune-option.css" th:href="@{/css/fortune-option.css}">
-  <script defer src="../static/js/fortune-option.js" th:src="@{/js/fortune-option.js}"></script>
+  <script src="../static/js/fortune-option.js" th:src="@{/js/fortune-option.js}" defer></script>
 </head>
 
 <body>
-  <div class="float-emoji">🔮</div>
-  <div class="float-emoji">✨</div>
-  <div class="float-emoji">🌟</div>
-  <div class="float-emoji">💫</div>
-  <div class="float-emoji">🎯</div>
+  <div th:each="emoji : ${new String[]{'🔮', '✨', '🌟', '💫', '🎯'}}" th:text="${emoji}" class="float-emoji">
+  </div>
 
   <div class="fortune-page-container">
     <div class="loading-screen hidden" id="loading-screen">
@@ -42,15 +39,18 @@
       <div class="logo">
         <h1>운 세</h1>
         <p th:if="${session.birthInfo != null}" th:object="${session.birthInfo}">
-          <span th:if="*{city != null && city.displayName != '모름'}" th:text="*{city.displayName}">서울특별시</span>
+          <span th:if="*{city != null && city.displayName != '모름'}" th:text="*{city.displayName}">
+            서울특별시
+          </span>
           <span th:text="*{gender.displayName}">여성</span>
           <span th:text="*{calendar.displayName}">양력</span>
           <br>
           <span th:text="*{year}">1995년</span>년
           <span th:text="*{month}">02월</span>월
           <span th:text="*{day}">16일</span>일
-          <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">자시(23:30 -
-            01:29)</span>
+          <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">
+            자시(23:30 - 01:29)
+          </span>
         </p>
       </div>
 

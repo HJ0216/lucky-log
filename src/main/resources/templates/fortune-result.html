@@ -6,87 +6,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LUCKY LOG</title>
   <link rel="icon" href="../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
+  <link rel="stylesheet" href="../static/css/default.css" th:href="@{/css/default.css}">
   <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
   <link rel="stylesheet" href="../static/css/fortune-result.css" th:href="@{/css/fortune-result.css}">
-  <script defer src="../static/js/fortune-result.js" th:src="@{/js/fortune-result.js}"></script>
+  <script src="../static/js/fortune-result.js" th:src="@{/js/fortune-result.js}" defer></script>
 </head>
 
 <body>
-  <div class="holographic-bg"></div>
+  <div th:each="emoji : ${new String[]{'🔮', '✨', '🌟', '🎪', '🪂'}}" th:text="${emoji}" class="float-emoji">
+  </div>
 
-  <div class="emoji-decoration">🔮</div>
-  <div class="emoji-decoration">✨</div>
-  <div class="emoji-decoration">🌟</div>
-  <div class="emoji-decoration">🎪</div>
-  <div class="emoji-decoration">🪂</div>
-
-  <div class="container">
+  <div class="fortune-page-container">
     <div th:replace="~{fragments/header :: authButtons}"></div>
 
-    <div class="header">
-      <div class="ai-badge">
-        <span class="ai-icon" th:text="${option.ai.icon}">🪂</span>
+    <section class="logo user-selection-container">
+      <div class="ai-selection-container">
+        <span th:text="${option.ai.icon}">🪂</span>
         <span id="ai-name" th:text="${option.ai.displayName}">Gemini</span>
       </div>
-      <p class="user-info" th:if="${session.birthInfo != null}" th:object="${session.birthInfo}">
-        <span th:if="*{city != null && city.displayName != '모름'}" th:text="*{city.displayName}">서울특별시</span>
+      <p th:if="${session.birthInfo != null}" th:object="${session.birthInfo}">
+        <span th:if="*{city != null && city.displayName != '모름'}" th:text="*{city.displayName}">
+          서울특별시
+        </span>
         <span th:text="*{gender.displayName}">여성</span>
         <span th:text="*{calendar.displayName}">양력</span>
         <br>
         <span th:text="*{year}">1995년</span>년
         <span th:text="*{month}">02월</span>월
         <span th:text="*{day}">16일</span>일
-        <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">자시(23:30 -
-          01:29)</span>
+        <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">
+          자시(23:30 - 01:29)
+        </span>
       </p>
-    </div>
+    </section>
 
     <!-- 결과 화면 -->
-    <div class="results-screen" id="results-screen">
-      <div class="results-container" id="results-container">
-        <div class="fortune-main-title" th:text="${fortuneTitle}">2025년 월별 운세</div>
+    <section class="result-screen" id="result-screen">
+      <div class="fortune-title" th:text="${fortuneTitle}">2025년 월별 운세</div>
 
-        <div th:if="${response != null}" th:each="res : ${response}" class="fortune-section">
-          <div class="fortune-title">
-            <span th:text="${res.type.icon}" class="fortune-icon">🔮</span>
-            <span th:text="|${res.type.tooltip}운|">종합운</span>
-          </div>
-          <div class="fortune-content-wrapper">
-            <div class="fortune-content" th:each="content : ${res.contents}">
-              <p th:text="${content.key.displayName}" class="fortune-month">1월</p>
-              <p th:text="${content.value}" class="fortune-period-content">1월 운세 내용</p>
-            </div>
+      <div th:if="${response != null}" th:each="res : ${response}" class="result-content">
+        <div class="fortune-sub-title">
+          <span th:text="${res.type.icon}">🔮</span>
+          <span th:text="|${res.type.tooltip}운|">종합운</span>
+        </div>
+        <div class="fortune-content-container">
+          <div class="fortune-content" th:each="content : ${res.contents}">
+            <p th:text="${content.key.displayName}" class="fortune-month">1월</p>
+            <p th:text="${content.value}" class="fortune-month-content">1월 운세 내용</p>
           </div>
         </div>
-
-        <!-- 운세 결과가 없는 경우 -->
-        <div th:if="${response == null}" class="no-results">
-          <div class="no-results-icon">🔮</div>
-          <div class="no-results-text">운세 결과를 불러올 수 없습니다</div>
-          <div class="no-results-subtext">다시 시도해주세요</div>
-        </div>
-
       </div>
 
-      <div class="action-buttons">
-        <button class="retro-btn-small" onclick="goToSelection()">
-          <span class="btn-icon">🔄</span>
+      <!-- 운세 결과가 없는 경우 -->
+      <div th:if="${response == null or #lists.isEmpty(response)}" class="no-result-container">
+        <div class="no-result-text">운세 결과를 불러올 수 없습니다</div>
+        <div class="no-result-subtext">다시 시도해주세요</div>
+      </div>
+
+      <div class="action-button-container">
+        <button class="action-btn retry-btn" onclick="goToSelection()">
+          <span>🔄</span>
           <span>다시</span>
         </button>
-        <button class="retro-btn-small" onclick="copyResults()" disabled>
-          <span class="btn-icon">📋</span>
+        <button class="action-btn copy-btn" onclick="copyResults()" disabled>
+          <span>📋</span>
           <span>복사</span>
         </button>
-        <button class="retro-btn-small" onclick="shareResults()" disabled>
-          <span class="btn-icon">📤</span>
+        <button class="action-btn share-btn" onclick="shareResults()" disabled>
+          <span>📤</span>
           <span>공유</span>
         </button>
-        <button class="retro-btn-small" onclick="saveResults()" disabled>
-          <span class="btn-icon">💾</span>
+        <button class="action-btn save-btn" onclick="saveResults()" disabled>
+          <span>💾</span>
           <span>저장</span>
         </button>
       </div>
-    </div>
+    </section>
   </div>
 
 </body>
