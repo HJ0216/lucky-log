@@ -14,11 +14,8 @@
 
 <body>
 
-  <div class="float-emoji">🌈</div>
-  <div class="float-emoji">💎</div>
-  <div class="float-emoji">⭐</div>
-  <div class="float-emoji">💖</div>
-  <div class="float-emoji">✨</div>
+  <div th:each="emoji : ${new String[]{'🌈', '💎', '⭐', '💖', '✨'}}" th:text="${emoji}" class="float-emoji">
+  </div>
 
   <div class="fortune-page-container">
     <div th:replace="~{fragments/header :: authButtons}"></div>

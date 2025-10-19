@@ -13,11 +13,8 @@
 </head>
 
 <body>
-  <div class="float-emoji">🔮</div>
-  <div class="float-emoji">✨</div>
-  <div class="float-emoji">🌟</div>
-  <div class="float-emoji">🎪</div>
-  <div class="float-emoji">🪂</div>
+  <div th:each="emoji : ${new String[]{'🔮', '✨', '🌟', '🎪', '🪂'}}" th:text="${emoji}" class="float-emoji">
+  </div>
 
   <div class="fortune-page-container">
     <div th:replace="~{fragments/header :: authButtons}"></div>
@@ -61,7 +58,7 @@
       </div>
 
       <!-- 운세 결과가 없는 경우 -->
-      <div th:if="${response == null}" class="no-result-container">
+      <div th:if="${response == null or #lists.isEmpty(response)}" class="no-result-container">
         <div class="no-result-text">운세 결과를 불러올 수 없습니다</div>
         <div class="no-result-subtext">다시 시도해주세요</div>
       </div>
