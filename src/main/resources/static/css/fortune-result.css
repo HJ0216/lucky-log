@@ -68,6 +68,25 @@
   font-weight: 500;
 }
 
+.no-result-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-result-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.no-result-subtext {
+  white-space: pre-line;
+  font-size: 0.8rem;
+  color: #666;
+}
 .action-button-container {
   margin-top: auto;
   display: flex;
@@ -76,7 +95,7 @@
 }
 
 .action-btn {
-  width: 100%;
+  flex-grow: 1;
   border: none;
   border-radius: 10px;
   padding: 8px 0;
