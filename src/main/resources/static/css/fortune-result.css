@@ -99,6 +99,11 @@
   justify-content: space-between;
 }
 
+button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .action-btn {
   flex-grow: 1;
   border: none;

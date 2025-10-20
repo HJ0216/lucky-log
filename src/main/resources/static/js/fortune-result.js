@@ -22,7 +22,6 @@ const FortuneResultPage = {
     copyBtn: null,
     shareBtn: null,
     saveBtn: null,
-    fortuneSections: [],
   },
 
   init() {
@@ -37,9 +36,6 @@ const FortuneResultPage = {
     this.elements.copyBtn = document.querySelector('[data-copy-btn]');
     this.elements.shareBtn = document.querySelector('[data-share-btn]');
     this.elements.saveBtn = document.querySelector('[data-save-btn]');
-    this.elements.fortuneSections =
-      document.querySelectorAll('.fortune-section');
-    this.elements.fortuneContent = document.querySelector('.fortune-content');
   },
 
   validateRequiredElements() {
