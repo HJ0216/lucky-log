@@ -123,7 +123,8 @@ const Toast = {
   },
 
   removeToast(toast) {
-    if (!toast || !toast.parentNode) return;
+    // 같은 toast가 2번 count되는 경우 방지
+    if (!toast || !toast.parentNode || toast.style.opacity === '0') return;
 
     const isRightPosition = this.config.position.includes('right');
     const exitTransform = isRightPosition
