@@ -46,19 +46,19 @@
 
 /* Animation States */
 .toast.slide-right-enter {
-  transform: translateX(400px);
+  transform: translateX(110%);
 }
 
 .toast.slide-left-enter {
-  transform: translateX(-400px);
+  transform: translateX(-110%);
 }
 
 .toast.slide-right-exit {
-  transform: translateX(400px);
+  transform: translateX(110%);
 }
 
 .toast.slide-left-exit {
-  transform: translateX(-400px);
+  transform: translateX(-110%);
 }
 
 .toast.show {
