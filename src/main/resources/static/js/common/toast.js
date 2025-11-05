@@ -1,3 +1,5 @@
+'use strict';
+
 const Toast = {
   config: {
     duration: 3000,
