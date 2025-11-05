@@ -92,6 +92,7 @@ const FortuneResultPage = {
             toast.success('복사 완료', this.messages.copySuccess);
           })
           .catch((err) => {
+            console.error('복사 실패:', err);
             toast.error('복사 실패', this.messages.copyFailed);
           });
       } else {
