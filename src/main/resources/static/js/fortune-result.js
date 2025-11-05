@@ -27,6 +27,7 @@ const FortuneResultPage = {
   init() {
     this.cacheElements();
     if (!this.validateRequiredElements()) return;
+    this.loadMessages();
     this.attachEvents();
   },
 
@@ -58,19 +59,98 @@ const FortuneResultPage = {
     return true;
   },
 
+  loadMessages() {
+    const messageElements = {
+      copySuccess: document.getElementById('msg-copy-success'),
+      shareSuccess: document.getElementById('msg-share-success'),
+      saveSuccess: document.getElementById('msg-save-success'),
+      copyFailed: document.getElementById('msg-copy-failed'),
+      shareFailed: document.getElementById('msg-share-failed'),
+      saveFailed: document.getElementById('msg-save-failed'),
+    };
+
+    Object.keys(messageElements).forEach((key) => {
+      const element = messageElements[key];
+      if (element) {
+        this.messages[key] = element.textContent.trim();
+      }
+    });
+  },
+
   attachEvents() {
     this.elements.retryBtn.addEventListener('click', () => {
       window.location.href = this.config.INDEX_URL;
     });
+
     this.elements.copyBtn.addEventListener('click', () => {
-      // TODO: 구현 예정
+      const text = this.formatText();
+
+      if (text) {
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            toast.success('복사 완료', this.messages.copySuccess);
+          })
+          .catch((err) => {
+            console.error('복사 실패:', err);
+            toast.error('복사 실패', this.messages.copyFailed);
+          });
+      } else {
+        toast.error('복사 실패', this.messages.copyFailed);
+      }
     });
+
     this.elements.shareBtn.addEventListener('click', () => {
       // TODO: 구현 예정
+      // 공유할 수 있게 page url을 만드는 방법
     });
+
     this.elements.saveBtn.addEventListener('click', () => {
       // TODO: 구현 예정
     });
+  },
+
+  formatText() {
+    try {
+      const mainTitle = this.elements.resultScreen
+        .querySelector('.fortune-title')
+        .textContent.trim();
+
+      const resultContent =
+        this.elements.resultScreen.querySelector('.result-content');
+
+      const subTitle = resultContent
+        .querySelector('.fortune-sub-title')
+        .textContent.trim()
+        .replace(/\s+/g, '');
+
+      const fortunes = resultContent.querySelectorAll('.fortune-content');
+
+      let formattedText = `${mainTitle}: ${subTitle}\n\n`;
+
+      fortunes.forEach((fortune) => {
+        const month = fortune
+          .querySelector('.fortune-month')
+          .textContent.trim();
+        const content = fortune
+          .querySelector('.fortune-month-content')
+          .textContent.trim();
+
+        const [title, ...rest] = content.split('\n');
+        const description = rest
+          .join(' ')
+          .replace(/\s+/g, ' ')
+          .trim()
+          .replace(/\. /g, '.\n');
+
+        formattedText += `${month} ${title}\n${description}\n\n`;
+      });
+
+      return formattedText;
+    } catch (err) {
+      console.error('formatText 에러:', err);
+      return '';
+    }
   },
 };
 

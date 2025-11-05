@@ -8,11 +8,23 @@
   <link rel="icon" href="../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
   <link rel="stylesheet" href="../static/css/default.css" th:href="@{/css/default.css}">
   <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
+  <link rel="stylesheet" href="../static/css/common/toast.css" th:href="@{/css/common/toast.css}">
   <link rel="stylesheet" href="../static/css/fortune-result.css" th:href="@{/css/fortune-result.css}">
+  <script src="../static/js/common/toast.js" th:src="@{/js/common/toast.js}" defer></script>
   <script src="../static/js/fortune-result.js" th:src="@{/js/fortune-result.js}" defer></script>
 </head>
 
 <body>
+
+  <!-- Thymeleaf 메시지 (숨겨진 상태) -->
+  <div id="messages">
+    <span id="msg-copy-success" th:text="#{fortune.copy.success}">운세 결과가 복사되었습니다! 📋</span>
+    <span id="msg-share-success" th:text="#{fortune.share.success}">운세 결과 공유 페이지가 생성되었습니다! 💌</span>
+    <span id="msg-save-success" th:text="#{fortune.save.success}">운세 결과가 저장되었습니다! 🗂️</span>
+    <span id="msg-copy-failed" th:text="#{fortune.copy.failed}">복사에 실패했습니다. 😅</span>
+    <span id="msg-share-failed" th:text="#{fortune.share.failed}">공유에 실패했습니다. 😅</span>
+    <span id="msg-save-failed" th:text="#{fortune.save.failed}">저장에 실패했습니다. 😅</span>
+  </div>
 
   <div class="float-emoji">🔮</div>
   <div class="float-emoji">✨</div>
@@ -28,7 +40,7 @@
         <span th:text="${option.ai.icon}">🪂</span>
         <span id="ai-name" th:text="${option.ai.displayName}">Gemini</span>
       </div>
-      <p th:if="${session.birthInfo != null}" th:object="${session.birthInfo}">
+      <p class="logo-compact" th:if="${session.birthInfo != null}" th:object="${session.birthInfo}">
         <span th:if="*{city != null && city.displayName != '모름'}" th:text="*{city.displayName}">
           서울특별시
         </span>
