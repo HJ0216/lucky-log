@@ -94,6 +94,8 @@ const FortuneResultPage = {
           .catch((err) => {
             toast.error('복사 실패', this.messages.copyFailed);
           });
+      } else {
+        toast.error('복사 실패', this.messages.copyFailed);
       }
     });
 
@@ -108,39 +110,46 @@ const FortuneResultPage = {
   },
 
   formatText() {
-    const mainTitle = this.elements.resultScreen
-      .querySelector('.fortune-title')
-      .textContent.trim();
-
-    const resultContent =
-      this.elements.resultScreen.querySelector('.result-content');
-
-    const subTitle = resultContent
-      .querySelector('.fortune-sub-title')
-      .textContent.trim()
-      .replace(/\s+/g, '');
-
-    const fortunes = resultContent.querySelectorAll('.fortune-content');
-
-    let formattedText = `${mainTitle}: ${subTitle}\n\n`;
-
-    fortunes.forEach((fortune) => {
-      const month = fortune.querySelector('.fortune-month').textContent.trim();
-      const content = fortune
-        .querySelector('.fortune-month-content')
+    try {
+      const mainTitle = this.elements.resultScreen
+        .querySelector('.fortune-title')
         .textContent.trim();
 
-      const [title, ...rest] = content.split('\n');
-      const description = rest
-        .join(' ')
-        .replace(/\s+/g, ' ')
-        .trim()
-        .replace(/\. /g, '.\n');
+      const resultContent =
+        this.elements.resultScreen.querySelector('.result-content');
 
-      formattedText += `${month} ${title}\n${description}\n\n`;
-    });
+      const subTitle = resultContent
+        .querySelector('.fortune-sub-title')
+        .textContent.trim()
+        .replace(/\s+/g, '');
 
-    return formattedText;
+      const fortunes = resultContent.querySelectorAll('.fortune-content');
+
+      let formattedText = `${mainTitle}: ${subTitle}\n\n`;
+
+      fortunes.forEach((fortune) => {
+        const month = fortune
+          .querySelector('.fortune-month')
+          .textContent.trim();
+        const content = fortune
+          .querySelector('.fortune-month-content')
+          .textContent.trim();
+
+        const [title, ...rest] = content.split('\n');
+        const description = rest
+          .join(' ')
+          .replace(/\s+/g, ' ')
+          .trim()
+          .replace(/\. /g, '.\n');
+
+        formattedText += `${month} ${title}\n${description}\n\n`;
+      });
+
+      return formattedText;
+    } catch (err) {
+      console.error('formatText 에러:', err);
+      return '';
+    }
   },
 };
 
