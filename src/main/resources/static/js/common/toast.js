@@ -96,6 +96,9 @@ const Toast = {
       body.appendChild(messageEl);
     }
 
+    content.appendChild(body);
+    toast.appendChild(content);
+
     toast.addEventListener('click', () => {
       this.removeToast(toast);
     });
