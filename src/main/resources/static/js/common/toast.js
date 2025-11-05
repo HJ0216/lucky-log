@@ -69,14 +69,25 @@ const Toast = {
 
     toast.className = `toast toast-${type} ${slideClass}`;
 
-    toast.innerHTML = `
-      <div class="toast-content">
-        <div class="toast-body">
-          ${title ? `<div class="toast-title">${title}</div>` : ''}
-          ${message ? `<div class="toast-message">${message}</div>` : ''}
-        </div>
-      </div>
-    `;
+    const content = document.createElement('div');
+    content.className = 'toast-content';
+
+    const body = document.createElement('div');
+    body.className = 'toast-body';
+
+    if (title) {
+      const titleEl = document.createElement('div');
+      titleEl.className = 'toast-title';
+      titleEl.textContent = title;
+      body.appendChild(titleEl);
+    }
+
+    if (message) {
+      const messageEl = document.createElement('div');
+      messageEl.className = 'toast-message';
+      messageEl.textContent = message;
+      body.appendChild(messageEl);
+    }
 
     toast.addEventListener('click', () => {
       this.removeToast(toast);
