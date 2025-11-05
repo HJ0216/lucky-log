@@ -32,6 +32,11 @@ const Toast = {
    * @param {number} duration - 표시 시간 (선택, 기본값: config.duration)
    */
   show(type = 'info', title = '', message = '', duration = null) {
+    if (!title?.trim() && !message?.trim()) {
+      console.warn('[Toast] title 또는 message 중 하나는 필수입니다.');
+      return;
+    }
+
     if (!this.container) {
       this.init();
     }
