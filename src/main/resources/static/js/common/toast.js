@@ -56,8 +56,10 @@ const Toast = {
     }
 
     if (this.activeToasts >= this.config.maxToasts) {
-      console.warn('최대 토스트 개수에 도달했습니다.');
-      return;
+      const oldestToast = this.container.querySelector('.toast');
+      if (oldestToast) {
+        this.removeToast(oldestToast);
+      }
     }
 
     const displayDuration = duration || this.config.duration;
