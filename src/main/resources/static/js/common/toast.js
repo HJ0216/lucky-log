@@ -108,24 +108,27 @@ const Toast = {
 
   removeToast(toast) {
     // 같은 toast가 2번 count되는 경우 방지
-    if (!toast || !toast.parentNode || toast.classList.contains('removing'))
-      return;
+    if (!toast || toast.classList.contains('removing')) return;
 
     // 제거 중임을 표시 (중복 실행 방지용 플래그)
     toast.classList.add('removing');
+    this.activeToasts--;
 
-    const isRightPosition = this.config.position.includes('right');
-    const exitClass = isRightPosition ? 'slide-right-exit' : 'slide-left-exit';
+    if (toast.parentNode) {
+      const isRightPosition = this.config.position.includes('right');
+      const exitClass = isRightPosition
+        ? 'slide-right-exit'
+        : 'slide-left-exit';
 
-    toast.classList.remove('show');
-    toast.classList.add(exitClass);
+      toast.classList.remove('show');
+      toast.classList.add(exitClass);
 
-    setTimeout(() => {
-      if (toast.parentNode) {
-        toast.parentNode.removeChild(toast);
-        this.activeToasts--;
-      }
-    }, this.config.animationDuration);
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.parentNode.removeChild(toast);
+        }
+      }, this.config.animationDuration);
+    }
   },
 
   success(title, message, duration) {
