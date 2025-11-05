@@ -7,7 +7,6 @@ const Toast = {
   },
 
   container: null,
-
   activeToasts: 0,
 
   init(customConfig = {}) {
@@ -19,25 +18,7 @@ const Toast = {
     if (this.container) return;
 
     const container = document.createElement('div');
-    container.id = 'toast-container';
-    container.className = 'toast-container';
-
-    const positions = {
-      'top-right': 'top: 20px; right: 20px;',
-      'top-left': 'top: 20px; left: 20px;',
-      'bottom-right': 'bottom: 20px; right: 20px;',
-      'bottom-left': 'bottom: 20px; left: 20px;',
-    };
-
-    container.style.cssText = `
-      position: fixed;
-      ${positions[this.config.position] || positions['top-right']}
-      z-index: 9999;
-      pointer-events: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    `;
+    container.className = 'toast-container ${this.config.position}';
 
     document.body.appendChild(container);
     this.container = container;
@@ -69,8 +50,7 @@ const Toast = {
     this.activeToasts++;
 
     requestAnimationFrame(() => {
-      toast.style.transform = 'translateX(0)';
-      toast.style.opacity = '1';
+      toast.classList.add('show');
     });
 
     setTimeout(() => {
@@ -80,39 +60,20 @@ const Toast = {
 
   createToastElement(type, title, message) {
     const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
 
     // 위치에 따른 초기 transform 설정
     const isRightPosition = this.config.position.includes('right');
-    const initialTransform = isRightPosition
-      ? 'translateX(400px)'
-      : 'translateX(-400px)';
+    const slideClass = isRightPosition
+      ? 'slide-right-enter'
+      : 'slide-left-enter';
 
-    toast.style.cssText = `
-      background: ${this.getBackground(type)};
-      color: ${type === 'warning' ? '#333' : '#fff'};
-      padding: 16px 24px;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      transform: ${initialTransform};
-      opacity: 0;
-      transition: all 0.3s ease;
-      pointer-events: auto;
-      max-width: 350px;
-      min-width: 250px;
-      font-size: 0.8rem;
-      cursor: pointer;
-    `;
+    toast.className = `toast toast-${type} ${slideClass}`;
 
     toast.innerHTML = `
-      <div style="display: flex; align-items: start; gap: 12px;">
-        <div style="flex: 1;">
-          ${
-            title
-              ? `<div style="font-weight: bold; margin-bottom: 4px;">${title}</div>`
-              : ''
-          }
-          ${message ? `<div>${message}</div>` : ''}
+      <div class="toast-content">
+        <div class="toast-body">
+          ${title ? `<div class="toast-title">${title}</div>` : ''}
+          ${message ? `<div class="toast-message">${message}</div>` : ''}
         </div>
       </div>
     `;
@@ -126,15 +87,17 @@ const Toast = {
 
   removeToast(toast) {
     // 같은 toast가 2번 count되는 경우 방지
-    if (!toast || !toast.parentNode || toast.style.opacity === '0') return;
+    if (!toast || !toast.parentNode || toast.classList.contains('removing'))
+      return;
+
+    // 제거 중임을 표시 (중복 실행 방지용 플래그)
+    toast.classList.add('removing');
 
     const isRightPosition = this.config.position.includes('right');
-    const exitTransform = isRightPosition
-      ? 'translateX(400px)'
-      : 'translateX(-400px)';
+    const exitClass = isRightPosition ? 'slide-right-exit' : 'slide-left-exit';
 
-    toast.style.transform = exitTransform;
-    toast.style.opacity = '0';
+    toast.classList.remove('show');
+    toast.classList.add(exitClass);
 
     setTimeout(() => {
       if (toast.parentNode) {
@@ -142,16 +105,6 @@ const Toast = {
         this.activeToasts--;
       }
     }, this.config.animationDuration);
-  },
-
-  getBackground(type) {
-    const backgrounds = {
-      success: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      error: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
-      warning: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-      info: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    };
-    return backgrounds[type] || backgrounds.info;
   },
 
   success(title, message, duration) {
