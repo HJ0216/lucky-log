@@ -131,7 +131,11 @@ const FortuneResultPage = {
         .textContent.trim();
 
       const [title, ...rest] = content.split('\n');
-      const description = rest.join('\n');
+      const description = rest
+        .join(' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .replace(/\. /g, '.\n');
 
       formattedText += `${month} ${title}\n${description}\n\n`;
     });
