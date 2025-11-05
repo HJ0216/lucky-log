@@ -179,3 +179,7 @@ button:disabled {
 .save-btn:hover {
   box-shadow: 0 3px 0 #9575cd;
 }
+
+#messages {
+  display: none;
+}
