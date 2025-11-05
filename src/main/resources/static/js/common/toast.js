@@ -20,7 +20,7 @@ const Toast = {
     if (this.container) return;
 
     const container = document.createElement('div');
-    container.className = 'toast-container ${this.config.position}';
+    container.className = `toast-container ${this.config.position}`;
 
     document.body.appendChild(container);
     this.container = container;
