@@ -44,7 +44,7 @@ const Toast = {
     }
 
     if (this.activeToasts >= this.config.maxToasts) {
-      const oldestToast = this.container.querySelector('.toast');
+      const oldestToast = this.container.querySelector('.toast:not(.removing)');
       if (oldestToast) {
         this.removeToast(oldestToast);
       }
