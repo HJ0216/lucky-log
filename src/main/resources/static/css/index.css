@@ -63,6 +63,7 @@
 
 .option-time-input {
   border: 2px solid #0984e3;
+  height: 34.4px; /*모바일 높이 유지*/
 }
 
 .option-time-input:focus {
@@ -71,6 +72,7 @@
 
 .option-city-input {
   border: 2px solid #a29bfe;
+  height: 34.4px; /*모바일 높이 유지*/
 }
 
 .option-city-input:focus {
