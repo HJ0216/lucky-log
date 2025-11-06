@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: {LOCAL_DB_URL}
-    username: {LOCAL_DB_USER}
-    password: {LOCAL_DB_PASSWORD}
+    url: ${LOCAL_DB_URL}
+    username: ${LOCAL_DB_USER}
+    password: ${LOCAL_DB_PASSWORD}
     driver-class-name: org.h2.Driver
   h2:
     console:
@@ -15,9 +15,8 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-        dialect: org.hibernate.dialect.H2Dialect
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG  # SQL 쿼리 보기
-    org.hibernate.type: TRACE  # 파라미터 값까지 보기
+    org.hibernate.SQL: DEBUG # SQL 쿼리 보기
+    org.hibernate.type: TRACE # 파라미터 값까지 보기
