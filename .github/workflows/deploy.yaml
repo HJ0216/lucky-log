@@ -1,0 +1,52 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # 1. ec2-user로 코드 pull 및 빌드
+            cd /home/ec2-user/lucky-log
+            git pull origin main
+            chmod +x ./gradlew
+            ./gradlew clean build
+
+            # 빌드 성공 확인
+            if [ ! -f build/libs/lucky-log-0.0.1-SNAPSHOT.jar ]; then
+              echo "Build failed - jar file not found"
+              exit 1
+            fi
+
+            # 2. 빌드된 jar 파일을 deploy 폴더로 복사
+            sudo cp build/libs/lucky-log-0.0.1-SNAPSHOT.jar /home/deploy/lucky-log/luckylog.jar
+            sudo chown deploy:deploy /home/deploy/lucky-log/luckylog.jar
+
+            # 3. 서비스 재시작
+            sudo systemctl restart luckylog
+
+            # 4. Health check (30초 대기 후)
+            echo "Waiting for application to start..."
+            sleep 35
+
+            # Health check 확인
+            if curl -f http://localhost:8080/actuator/health; then
+              echo "Deployment successful!"
+            else
+              echo "Health check failed!"
+              exit 1
+            fi
