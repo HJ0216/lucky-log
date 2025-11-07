@@ -21,7 +21,7 @@ jobs:
       - name: Run tests
         run: |
           chmod +x ./gradlew
-          ./gradlew test
+          ./gradlew test -Dspring.profiles.active=test
 
   deploy:
     needs: test
