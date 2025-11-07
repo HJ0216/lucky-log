@@ -62,7 +62,7 @@
 }
 
 select.option-input {
-  height: 34.4px; /*모바일 높이 유지*/
+  height: 34.4px; /*PC에서의 높이와 동일하게 모바일 높이 유지*/
 }
 
 .option-time-input {
