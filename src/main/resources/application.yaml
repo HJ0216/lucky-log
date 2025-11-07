@@ -1,7 +1,7 @@
 server:
   servlet:
     session:
-      timeout: 10m  # 10분 후 자동 만료
+      timeout: 10m # 10분 후 자동 만료
 
 spring:
   config:
@@ -24,4 +24,4 @@ logging:
     root: INFO # 모든 라이브러리(Spring, Hibernate 등) 로그는 INFO 레벨만
     com.fortunehub.luckylog: DEBUG # com.fortunehub.luckylog 패키지의 로그는 DEBUG까지 상세하게
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %logger{36}.%M - %msg%n"
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %logger{36}.%M - %msg%n'
