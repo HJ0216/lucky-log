@@ -25,3 +25,25 @@ logging:
     com.fortunehub.luckylog: DEBUG # com.fortunehub.luckylog 패키지의 로그는 DEBUG까지 상세하게
   pattern:
     console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %logger{36}.%M - %msg%n'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+        # 외부에 공개할 엔드포인트 목록
+        # health: 헬스 체크용
+        # info: 앱 정보 (버전, 설명 등)
+        # 다른 것들: metrics, env, loggers 등 (보안상 안 열림)
+
+      base-path: /actuator
+        # URL 시작 경로
+        # /actuator/health, /actuator/info 이렇게 접근
+
+  endpoint:
+    health:
+      show-details: always
+        # 헬스 정보를 얼마나 자세히 보여줄지
+        # never: {"status":"UP"} 만
+        # always: DB상태, 디스크 등 다 보여줌
+        # when-authorized: 인증된 사용자에게만 자세히

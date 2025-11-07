@@ -25,3 +25,12 @@ logging:
       max-file-size: 10MB
       max-history: 30
       file-name-pattern: /home/deploy/logs/luckylog/luckylog-%d{yyyy-MM-dd}.%i.log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never # 보안상 상세정보 숨김
