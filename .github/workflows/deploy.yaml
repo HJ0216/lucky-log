@@ -38,6 +38,12 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
+      - name: Create application-prompts.yaml
+        run: |
+          cat > src/main/resources/application-prompts.yaml << 'EOF'
+          ${{ secrets.APPLICATION_PROMPTS_YAML }}
+          EOF
+
       - name: Build (without tests)
         run: |
           chmod +x ./gradlew
