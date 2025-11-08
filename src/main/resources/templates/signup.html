@@ -6,85 +6,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LUCKY LOG</title>
   <link rel="icon" href="../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
+  <link rel="stylesheet" href="../static/css/default.css" th:href="@{/css/default.css}">
   <link rel="stylesheet" href="../static/css/header.css" th:href="@{/css/header.css}">
   <link rel="stylesheet" href="../static/css/signup.css" th:href="@{/css/signup.css}">
+  <script src="../static/js/signup.js" th:src="@{/js/signup.js}" defer></script>
 </head>
 
 <body>
 
-  <div class="holographic-bg"></div>
+  <div class="float-emoji">🔓</div>
+  <div class="float-emoji">🔑</div>
+  <div class="float-emoji">🎉</div>
+  <div class="float-emoji">💐</div>
+  <div class="float-emoji">☀️</div>
 
-  <div class="emoji-decoration">🔓</div>
-  <div class="emoji-decoration">🔑</div>
-  <div class="emoji-decoration">🎉</div>
-  <div class="emoji-decoration">💐</div>
-  <div class="emoji-decoration">☀️</div>
-
-  <div class="container">
+  <div class="fortune-page-container">
     <div th:replace="~{fragments/header :: authButtons}"></div>
 
     <div class="logo">
       <h1>회원 가입</h1>
-      <p>회원 가입 페이지에 오신 것을 환영합니다 🎊</p>
+      <p>회원 가입을 환영합니다 🎊</p>
     </div>
 
-    <form class="form-grid" action="/signup" th:action="@{/signup}" method="post" th:object="${signupForm}">
-      <div class="field-group">
-        <label class="field-label" for="email">📧 이메일</label>
-        <input type="email" 
-               id="email"
-               name="email"
-               th:field="*{email}"
-               class="retro-input" 
-               placeholder="lucky-log@email.com"
-               required>
+    <form class="form-container" action="/signup" th:action="@{/signup}" method="post" th:object="${signupForm}">
+      <label class="form-option-title" for="email">📧 이메일</label>
+      <input type="email" id="email" name="email" th:field="*{email}" class="retro-input"
+        placeholder="lucky-log@email.com" required>
+
+      <label class="form-option-title" for="password">🔒 비밀번호</label>
+      <input type="password" id="password" th:field="*{password}" class="retro-input"
+        placeholder="8-20자 사이의 영문 + 숫자 + 특수문자 조합" required>
+
+      <label class="form-option-title" for="confirmPassword">🔐 비밀번호 확인</label>
+      <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="retro-input"
+        placeholder="동일한 비밀번호 입력" required>
+
+      <label class="form-option-title" for="nickname">✒️ 닉네임</label>
+      <input type="text" id="nickname" th:field="*{nickname}" class="retro-input" placeholder="솜사탕 구름" required>
+
+      <div th:if="${#fields.hasErrors()}" data-error-container>
+        <div th:each="err : ${#sets.toSet(#fields.errors('*'))}" th:text="${err}" class="error-message"
+          data-error-message></div>
       </div>
 
-      <div class="field-group">
-        <label class="field-label" for="password">🔒 비밀번호</label>
-        <input type="password" 
-               id="password"
-               th:field="*{password}"
-               class="retro-input" 
-               placeholder="8-20자 사이의 영문 + 숫자 + 특수문자 조합"
-               required>
-      </div>
-
-      <div class="field-group">
-        <label class="field-label" for="confirmPassword">🔐 비밀번호 확인</label>
-        <input type="password" 
-               id="confirmPassword"
-               th:field="*{confirmPassword}"
-               class="retro-input" 
-               placeholder="동일한 비밀번호 입력"
-               required>
-      </div>
-
-      <div class="field-group">
-        <label class="field-label" for="nickname">✒️ 닉네임</label>
-        <input type="text" 
-               id="nickname"
-               th:field="*{nickname}"
-               class="retro-input" 
-               placeholder="솜사탕 구름"
-               required>
-      </div>
-
-      <div th:if="${#fields.hasErrors()}" class="error-container">
-        <div th:each="err : ${#sets.toSet(#fields.errors('*'))}" th:text="${err}" class="error-message"></div>
-      </div>
-
-      <div class="retro-btn-container">
-        <button type="submit" class="retro-btn">🎊 가입하기 🎉</button>
+      <div class="next-btn-container">
+        <button type="submit" class="next-btn">🎊 가입하기 🎉</button>
       </div>
     </form>
-
-    <div class="login-link">
-      <p>이미 계정이 있으신가요? <a href="/login" th:href="@{/login}">로그인하기</a></p>
-    </div>
   </div>
-
-  <script defer src="../static/js/signup.js"  th:src="@{/js/signup.js}"></script>
 </body>
 
 </html>
