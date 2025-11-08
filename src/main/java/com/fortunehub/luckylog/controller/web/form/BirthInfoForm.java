@@ -1,4 +1,4 @@
-package com.fortunehub.luckylog.controller.web.fortune.form;
+package com.fortunehub.luckylog.controller.web.form;
 
 import com.fortunehub.luckylog.domain.fortune.CalendarType;
 import com.fortunehub.luckylog.domain.fortune.CityType;
