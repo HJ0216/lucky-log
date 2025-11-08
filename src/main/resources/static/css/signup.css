@@ -1,26 +1,16 @@
-.retro-input {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.4);
+.signup-input {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.7);
   border-radius: 8px;
-  padding: 7px 8px;
-  color: #2d3436;
-  font-size: 0.8em;
+  padding: 6px;
+  color: #666;
+  font-size: 0.75em;
   font-weight: 400;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
 }
 
-.retro-input:focus {
+.signup-input:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.6);
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
-}
-
-.retro-input::placeholder {
-  color: rgba(45, 52, 54, 0.5);
-  font-weight: 500;
 }
