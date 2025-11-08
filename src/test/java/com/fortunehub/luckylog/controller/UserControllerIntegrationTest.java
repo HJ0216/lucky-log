@@ -35,7 +35,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@ActiveProfiles("test")
 @AutoConfigureMockMvc // Bean을 찾을 수 없음
 @Transactional
 @DisplayName("UserController 클래스")

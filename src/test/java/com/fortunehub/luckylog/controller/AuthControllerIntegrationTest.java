@@ -30,7 +30,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@ActiveProfiles("test")
 @AutoConfigureMockMvc
 @Transactional
 @DisplayName("AuthController 클래스")
