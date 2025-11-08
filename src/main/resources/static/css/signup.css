@@ -14,3 +14,7 @@
   outline: none;
   transform: translateY(-3px);
 }
+
+.required-color {
+  color: #ee6a7b;
+}
