@@ -79,6 +79,15 @@ jobs:
             sudo mv /tmp/*.jar /home/deploy/lucky-log/luckylog.jar
             sudo chown deploy:deploy /home/deploy/lucky-log/luckylog.jar
             sudo systemctl restart luckylog
-            sleep 60
-            curl -f http://localhost:8080/actuator/health || exit 1
-            echo "Deployment successful!"
+
+            echo "Waiting for application to start..."
+            sleep 90  # 60 → 90초로 늘리기
+
+            # Health check
+            if curl -f http://localhost:8080/actuator/health; then
+              echo "Deployment successful!"
+            else
+              echo "Health check failed!"
+              sudo journalctl -u luckylog -n 50  # 에러 로그 출력
+              exit 1
+            fi
