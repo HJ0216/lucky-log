@@ -30,19 +30,20 @@
 
     <form class="form-container" action="/signup" th:action="@{/signup}" method="post" th:object="${signupForm}">
       <label class="form-option-title" for="email">📧 이메일<span class="required-color">*</span></label>
-      <input type="email" id="email" th:field="*{email}" class="signup-input" placeholder="lucky-log@email.com"
-        required>
+      <input type="email" id="email" th:field="*{email}" class="signup-input" th:errorclass="jump"
+        placeholder="lucky-log@email.com" required>
 
       <label class="form-option-title" for="password">🔒 비밀번호<span class="required-color">*</span></label>
-      <input type="password" id="password" th:field="*{password}" class="signup-input"
+      <input type="password" id="password" th:field="*{password}" class="signup-input" th:errorclass="jump"
         placeholder="8-20자 사이의 영문 + 숫자 + 특수문자 조합" minlength="8" maxlength="20" required>
 
       <label class="form-option-title" for="confirmPassword">🔐 비밀번호 확인<span class="required-color">*</span></label>
-      <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="signup-input" placeholder="동일한 비밀번호 입력" minlength="8"
-        maxlength="20" required>
+      <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="signup-input"
+        th:errorclass="jump" placeholder="동일한 비밀번호 입력" minlength="8" maxlength="20" required>
 
       <label class="form-option-title" for="nickname">✨ 닉네임</label>
-      <input type="text" id="nickname" th:field="*{nickname}" class="signup-input" placeholder="솜사탕 구름" maxlength="20">
+      <input type="text" id="nickname" th:field="*{nickname}" class="signup-input" th:errorclass="jump"
+        placeholder="솜사탕 구름" maxlength="20">
 
       <div th:if="${#fields.hasErrors()}" data-error-container>
         <div th:each="err : ${#sets.toSet(#fields.errors('*'))}" th:text="${err}" class="error-message"
