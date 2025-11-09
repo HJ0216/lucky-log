@@ -1,5 +1,6 @@
-package com.fortunehub.luckylog.domain;
+package com.fortunehub.luckylog.domain.member;
 
+import com.fortunehub.luckylog.domain.common.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,8 +14,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "users")
-public class User extends BaseTimeEntity {
+@Table(name = "member")
+public class Member extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +24,7 @@ public class User extends BaseTimeEntity {
   @Column(nullable = false, unique = true, length = 50)
   private String email;
 
-  @Column(nullable = false, unique = true, length = 20)
+  @Column(nullable = true, unique = true, length = 20)
   private String nickname;
 
   @Column(nullable = false)
@@ -35,7 +36,7 @@ public class User extends BaseTimeEntity {
   @Column(nullable = false)
   private boolean isActive;
 
-  public User(String email, String nickname, String password) {
+  public Member(String email, String nickname, String password) {
     this.email = email;
     this.password = password;
     this.nickname = nickname;

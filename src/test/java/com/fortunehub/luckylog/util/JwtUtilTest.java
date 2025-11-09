@@ -198,7 +198,7 @@ class JwtUtilTest {
 
   @Nested
   @DisplayName("getUserIdFromToken()는")
-  class Describe_getUserIdFromToken {
+  class Describe_getMemberIdFromToken {
 
     @Nested
     @DisplayName("유효한 토큰이면")

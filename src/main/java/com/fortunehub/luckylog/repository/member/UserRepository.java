@@ -1,10 +1,10 @@
-package com.fortunehub.luckylog.repository;
+package com.fortunehub.luckylog.repository.member;
 
-import com.fortunehub.luckylog.domain.User;
+import com.fortunehub.luckylog.domain.member.Member;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<Member, Long> {
 
   // select * from users where email=:email
   boolean existsByEmail(String email);
@@ -13,5 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
   boolean existsByNickname(String nickname);
 
   // select * from users where email = :email
-  Optional<User> findByEmail(String mail);
+  Optional<Member> findByEmail(String mail);
 }

@@ -1,4 +1,4 @@
-package com.fortunehub.luckylog.controller.web;
+package com.fortunehub.luckylog.controller.web.fortune;
 
 import com.fortunehub.luckylog.domain.fortune.AIType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
@@ -6,8 +6,8 @@ import com.fortunehub.luckylog.domain.fortune.LoadingMessage;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
-import com.fortunehub.luckylog.controller.web.form.BirthInfoForm;
-import com.fortunehub.luckylog.controller.web.form.FortuneOptionForm;
+import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
+import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
 import com.fortunehub.luckylog.service.fortune.GeminiService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -55,7 +55,7 @@ public class FortuneOptionController {
   public String show(@ModelAttribute FortuneOptionForm fortuneOptionForm) {
     // @ModelAttribute는 넘어오는 데이터가 없어도 자동으로 빈 객체를 생성
 
-    return "fortune-option";
+    return "/fortune/fortune-option";
   }
 
   @PostMapping
@@ -81,7 +81,7 @@ public class FortuneOptionController {
               error.getDefaultMessage())
       );
 
-      return "fortune-option";
+      return "/fortune/fortune-option";
     }
 
     try {
@@ -107,7 +107,7 @@ public class FortuneOptionController {
           new ObjectError("FortuneOptionForm", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요"));
       // @ModelAttribute로 선언된 객체(FortuneOptionForm)에만 사용
 
-      return "fortune-option";
+      return "/fortune/fortune-option";
     }
   }
 

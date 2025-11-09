@@ -1,4 +1,4 @@
-package com.fortunehub.luckylog.controller.web.form;
+package com.fortunehub.luckylog.controller.web.auth.form;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

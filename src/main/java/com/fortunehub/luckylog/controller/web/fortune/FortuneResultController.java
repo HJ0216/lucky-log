@@ -1,6 +1,6 @@
-package com.fortunehub.luckylog.controller.web;
+package com.fortunehub.luckylog.controller.web.fortune;
 
-import com.fortunehub.luckylog.controller.web.form.FortuneOptionForm;
+import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
 import java.time.LocalDate;
 import java.util.List;
@@ -33,6 +33,6 @@ public class FortuneResultController {
 
     model.addAttribute("fortuneTitle", title);
 
-    return "fortune-result";
+    return "/fortune/fortune-result";
   }
 }
