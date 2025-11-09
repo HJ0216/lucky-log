@@ -3,7 +3,6 @@ package com.fortunehub.luckylog.controller.web;
 import com.fortunehub.luckylog.controller.web.form.SignupForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @Controller
 @RequestMapping("/signup")
-public class SignUpController {
+public class SignupController {
 
   @GetMapping
   public String show(@ModelAttribute SignupForm form) {
