@@ -1,5 +1,7 @@
 package com.fortunehub.luckylog.controller.web.auth.form;
 
+import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -31,4 +33,13 @@ public class SignupForm {
   // optional, 입력 시 2-20자 사이
   @Pattern(regexp = "^$|^.{2,20}$", message = "✨ 닉네임은 2-20자 사이여야 합니다!")
   private String nickname;
+
+  @AssertTrue(message = "😮 비밀번호가 일치하지 않습니다!")
+  public boolean isPasswordMatched() {
+    return password != null && password.equals(confirmPassword);
+  }
+
+  public SignupRequest toRequest() {
+    return new SignupRequest(email, password, nickname);
+  }
 }

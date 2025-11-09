@@ -24,39 +24,21 @@ public class Member extends BaseTimeEntity {
   @Column(nullable = false, unique = true, length = 50)
   private String email;
 
-  @Column(nullable = true, unique = true, length = 20)
-  private String nickname;
-
-  @Column(nullable = false)
+  @Column(nullable = false, length = 100)
   private String password;
+
+  @Column(unique = true, length = 20)
+  private String nickname;
 
   @Column(length = 500)
   private String profileImageUrl;
 
-  @Column(nullable = false)
-  private boolean isActive;
+  @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+  private boolean isActive = true;
 
-  public Member(String email, String nickname, String password) {
+  public Member(String email, String password, String nickname) {
     this.email = email;
     this.password = password;
     this.nickname = nickname;
-    this.isActive = true;
-  }
-
-  // 메서드
-  public void updateNickname(String nickname) {
-    this.nickname = nickname;
-  }
-
-  public void updateProfileImage(String url) {
-    this.profileImageUrl = url;
-  }
-
-  public void updateIsActive(boolean isActive) {
-    this.isActive = isActive;
-  }
-
-  public void updatePassword(String updatedPassword) {
-    this.password = updatedPassword;
   }
 }
