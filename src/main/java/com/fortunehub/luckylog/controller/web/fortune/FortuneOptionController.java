@@ -55,7 +55,7 @@ public class FortuneOptionController {
   public String show(@ModelAttribute FortuneOptionForm fortuneOptionForm) {
     // @ModelAttribute는 넘어오는 데이터가 없어도 자동으로 빈 객체를 생성
 
-    return "/fortune/fortune-option";
+    return "fortune/fortune-option";
   }
 
   @PostMapping
@@ -81,7 +81,7 @@ public class FortuneOptionController {
               error.getDefaultMessage())
       );
 
-      return "/fortune/fortune-option";
+      return "fortune/fortune-option";
     }
 
     try {
@@ -107,7 +107,7 @@ public class FortuneOptionController {
           new ObjectError("FortuneOptionForm", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요"));
       // @ModelAttribute로 선언된 객체(FortuneOptionForm)에만 사용
 
-      return "/fortune/fortune-option";
+      return "fortune/fortune-option";
     }
   }
 

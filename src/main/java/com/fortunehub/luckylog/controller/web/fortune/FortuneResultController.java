@@ -33,6 +33,6 @@ public class FortuneResultController {
 
     model.addAttribute("fortuneTitle", title);
 
-    return "/fortune/fortune-result";
+    return "fortune/fortune-result";
   }
 }

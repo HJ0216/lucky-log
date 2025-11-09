@@ -16,6 +16,6 @@ public class SignupController {
   public String show(@ModelAttribute SignupForm form) {
     // @ModelAttribute는 넘어오는 데이터가 없어도 자동으로 빈 객체를 생성
     // 매개변수 이름과 무관하게 form 객체 이름 사용
-    return "/auth/signup";
+    return "auth/signup";
   }
 }
