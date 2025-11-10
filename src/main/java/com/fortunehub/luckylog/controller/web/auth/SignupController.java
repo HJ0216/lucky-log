@@ -54,9 +54,16 @@ public class SignupController {
       return  "redirect:/";
 
     } catch (CustomException e) {
-      result.rejectValue("email", e.getErrorCode().name(), e.getMessage());
-
-      log.warn("중복 이메일 - 이메일: {}", form.getEmail());
+      switch (e.getErrorCode()){
+        case DUPLICATE_EMAIL:
+          result.rejectValue("email", e.getErrorCode().name(), e.getMessage());
+          log.warn("중복 이메일로 가입 시도: {}", form.getEmail());
+          break;
+        case DUPLICATE_NICKNAME:
+          result.rejectValue("nickname", e.getErrorCode().name(), e.getMessage());
+          log.warn("중복 닉네임으로 가입 시도: {}", form.getNickname());
+          break;
+      }
 
       return "auth/signup";
     }
