@@ -1,6 +1,8 @@
 package com.fortunehub.luckylog.service.auth;
 
 import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
+import com.fortunehub.luckylog.exception.CustomException;
+import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +19,7 @@ public class AuthService {
 
   public void signup(SignupRequest request){
     if(memberRepository.existsByEmail(request.getEmail())){
-      throw new IllegalArgumentException("이미 등록된 이메일입니다.");
+      throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
     }
     
     String encodedPassword = passwordEncoder.encode(request.getPassword());

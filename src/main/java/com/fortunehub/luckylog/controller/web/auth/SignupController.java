@@ -1,6 +1,7 @@
 package com.fortunehub.luckylog.controller.web.auth;
 
 import com.fortunehub.luckylog.controller.web.auth.form.SignupForm;
+import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.service.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -52,8 +53,8 @@ public class SignupController {
 //      return "redirect:/login";
       return  "redirect:/";
 
-    } catch (IllegalArgumentException e) {
-      result.rejectValue("email", "duplicateEmail", "📧 이미 사용 중인 이메일입니다!");
+    } catch (CustomException e) {
+      result.rejectValue("email", e.getErrorCode().name(), e.getMessage());
 
       log.warn("중복 이메일 - 이메일: {}", form.getEmail());
 
