@@ -68,7 +68,7 @@ class AuthServiceTest {
   @DisplayName("이미 존재하는 이메일로 회원가입하면 예외가 발생한다")
   void signup_DuplicateEmail() {
     // given
-    SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, "솜사탕");
+    SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
     given(memberRepository.existsByEmail(req.getEmail())).willReturn(true);
 
