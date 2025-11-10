@@ -21,9 +21,12 @@ public class AuthService {
     if(memberRepository.existsByEmail(request.getEmail())){
       throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
     }
-    
-    String encodedPassword = passwordEncoder.encode(request.getPassword());
 
+    if(request.getNickname() != null && memberRepository.existsByNickname(request.getNickname())){
+      throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
+    }
+
+    String encodedPassword = passwordEncoder.encode(request.getPassword());
     memberRepository.save(request.toEntity(encodedPassword));
   }
 }
