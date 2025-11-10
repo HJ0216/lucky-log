@@ -14,12 +14,13 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+    http.authorizeHttpRequests(
+            auth -> auth.anyRequest().permitAll())
         .csrf(csrf -> csrf.disable())
         .formLogin(form -> form.disable())
         .headers(headers -> headers
-            .frameOptions(frameOptions -> frameOptions.disable()) // h2 db 관련 설정
-        );
+            .frameOptions(frameOptions -> frameOptions.disable())) // h2 db 관련 설정
+        .httpBasic(httpBasic -> httpBasic.disable()); // HTTP Basic 인증 대신 JWT 사용
     return http.build();
   }
 
