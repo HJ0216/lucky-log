@@ -77,10 +77,12 @@ const SignupPage = {
     });
 
     // 입력 시 에러 메시지 숨기기
-    this.elements.allInputs.forEach((input) => {
-      input.addEventListener('change', () => this.hideErrors());
-      input.addEventListener('input', () => this.hideErrors());
-    });
+    this.elements.allInputs
+      .filter(Boolean)
+      .forEach((input) => {
+        input.addEventListener('change', () => this.hideErrors());
+        input.addEventListener('input', () => this.hideErrors());
+      });
   },
 
   // Error
