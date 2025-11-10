@@ -20,10 +20,9 @@ public class SignupForm {
   private String email;
 
   @NotBlank(message = "🔒 비밀번호를 입력해주세요!")
-  @Size(min = 8, max = 20, message = "🔒 비밀번호는 8-20자 사이여야 합니다!")
   @Pattern(
       regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,20}$",
-      message = "🔒 영문 + 숫자 + 특수문자 조합이어야 합니다"
+      message = "🔒 8-20자의 영문, 숫자, 특수문자 조합이어야 합니다"
   )
   private String password;
 
