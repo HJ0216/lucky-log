@@ -70,7 +70,7 @@ class MemberRepositoryTest {
 
     // when & then
     assertThatThrownBy(() -> {
-      memberRepository.save(duplicate); // 영속성 컨텍스트에만 저장 (메모리)
+      memberRepository.saveAndFlush(duplicate);
     }).isInstanceOf(DataIntegrityViolationException.class);
   }
 
