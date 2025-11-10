@@ -11,7 +11,7 @@ class MemberTest {
 
   @Test
   @DisplayName("이메일에 대문자가 있을 경우, 소문자로 변환한다")
-  void ToLowerCaseNormalizeEmail(){
+  void normalizeEmail_ToLowerCase(){
     // given
     SignupRequest request = new SignupRequest("EMAIL@EMAIL.COM", "PassWord147@", "솜사탕");
 
@@ -24,7 +24,7 @@ class MemberTest {
 
   @Test
   @DisplayName("이메일 앞 또는 뒤에 공백이 있을 경우 제거한다")
-  void TrimNormalizeEmail(){
+  void normalizeEmail_Trim(){
     // given
     SignupRequest request = new SignupRequest("  email@email.com  ", "PassWord147@", "솜사탕");
 
