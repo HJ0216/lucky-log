@@ -71,7 +71,6 @@ class MemberRepositoryTest {
     // when & then
     assertThatThrownBy(() -> {
       memberRepository.save(duplicate); // 영속성 컨텍스트에만 저장 (메모리)
-      memberRepository.flush();
     }).isInstanceOf(DataIntegrityViolationException.class);
   }
 
@@ -86,7 +85,6 @@ class MemberRepositoryTest {
     // when & then
     assertThatThrownBy(() -> {
       memberRepository.save(duplicate);
-      memberRepository.flush();
     }).isInstanceOf(DataIntegrityViolationException.class);
   }
 
@@ -102,7 +100,6 @@ class MemberRepositoryTest {
     // when & then
     assertThatThrownBy(() -> {
       memberRepository.save(duplicate);
-      memberRepository.flush();
     }).isInstanceOf(DataIntegrityViolationException.class);
   }
 
@@ -134,7 +131,6 @@ class MemberRepositoryTest {
     // when & then
     assertThatThrownBy(() -> {
       memberRepository.save(member2);
-      memberRepository.flush();
     }).isInstanceOf(DataIntegrityViolationException.class);
   }
 }
