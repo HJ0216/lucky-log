@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUCKY LOG</title>
+  <link rel="icon" href="../../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
+  <link rel="stylesheet" href="../../static/css/common/default.css" th:href="@{/css/common/default.css}">
+  <link rel="stylesheet" href="../../static/css/common/header.css" th:href="@{/css/common/header.css}">
+  <link rel="stylesheet" href="../../static/css/fortune/fortune-option.css" th:href="@{/css/fortune/fortune-option.css}">
+  <script src="../../static/js/fortune/fortune-option.js" th:src="@{/js/fortune/fortune-option.js}" defer></script>
+</head>
+
+<body>
+
+  <div class="float-emoji">🔮</div>
+  <div class="float-emoji">✨</div>
+  <div class="float-emoji">🌟</div>
+  <div class="float-emoji">💫</div>
+  <div class="float-emoji">🎯</div>
+
+  <div class="fortune-page-container">
+    <div class="loading-screen hidden" id="loading-screen">
+      <div class="loading-animation">
+        <div class="loading-ring"></div>
+      </div>
+      <div class="loading-text">🕐 약 1분 정도의 시간이 소요됩니다</div>
+      <div class="loading-subtext" th:text="${loadingMessage}">
+        📜 역사 속 사주 이야기 📜
+        조선 왕들의 사주
+        조선시대 왕들은 즉위 전 반드시 사주를 봤는데,
+        특히 세종대왕은 완벽한 제왕의 사주를 가졌다고!
+      </div>
+      <div class="scanline"></div>
+    </div>
+
+    <div class="contents-screen" id="contents-screen">
+      <button type="button" class="back-btn" data-back-btn><span>뒤로</span></button>
+
+      <div th:replace="~{fragments/header :: authButtons}"></div>
+
+      <div class="logo">
+        <h1>운 세</h1>
+        <p th:if="${session.birthInfo != null}" th:object="${session.birthInfo}">
+          <span th:if="*{city != null && city.displayName != '모름'}" th:text="*{city.displayName}">
+            서울특별시
+          </span>
+          <span th:text="*{gender.displayName}">여성</span>
+          <span th:text="*{calendar.displayName}">양력</span>
+          <br>
+          <span th:text="*{year}">1995년</span>년
+          <span th:text="*{month}">02월</span>월
+          <span th:text="*{day}">16일</span>일
+          <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">
+            자시(23:30 - 01:29)
+          </span>
+        </p>
+      </div>
+
+      <form action="/fortune/option" th:action="@{/fortune/option}" method="post" th:object="${fortuneOptionForm}"
+        class="form-container option-ai-container">
+        <!-- AI 선택 -->
+        <label class="form-option-title">🤖 AI 선택</label>
+        <div class="form-option-content">
+          <div th:each="type: ${aiTypes}" class="form-option-content-item option-ai-content-item">
+            <input type="radio" th:field="*{ai}" th:value="${type.name()}" th:disabled="${!type.enabled}">
+            <label class="form-option-btn with-icon-option-btn" th:for="${#ids.prev('ai')}">
+              <div th:text="${type.icon}">🎆</div>
+              <div th:text="${type.displayName}">Claude</div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 운세 종류 선택 -->
+        <label class="form-option-title">🍀 보고 싶은 운세 (복수 선택 가능)</label>
+        <div class="fortune-type-container">
+          <div th:each="type: ${fortuneTypes}" th:data-tooltip="${type.tooltip}"
+            class="form-option-content-item option-type-content-item">
+            <input type="checkbox" th:field="*{fortunes}" th:value="${type.name()}" th:disabled="${!type.enabled}">
+            <label th:for="${#ids.prev('fortunes')}" th:text="${type.icon}" class="form-option-btn">🔮</label>
+          </div>
+        </div>
+
+        <!-- 기간 선택 -->
+        <label class="form-option-title">📊 운세 주기</label>
+        <div class="form-option-content">
+          <div th:each="type : ${periodTypes}" class="form-option-content-item option-period-content-item">
+            <input type="radio" th:field="*{period}" th:value="${type.name()}" th:disabled="${!type.enabled}">
+            <label th:for="${#ids.prev('period')}" class="form-option-btn with-icon-option-btn">
+              <div th:text="${type.icon}">📆</div>
+              <div th:text="${type.displayName}">월별</div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 에러 메시지 -->
+        <div th:if="${#fields.hasErrors()}" data-error-container>
+          <div th:each="err : ${#fields.errors('*')}" th:text="${err}" class="error-message" data-error-message></div>
+        </div>
+
+        <div class="next-btn-container">
+          <button type="submit" class="next-btn" data-submit-btn>✨ 운세 확인 ✨</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

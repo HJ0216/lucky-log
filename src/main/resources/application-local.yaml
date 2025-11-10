@@ -19,7 +19,7 @@ spring:
 logging:
   level:
     org.hibernate.SQL: DEBUG # SQL 쿼리 보기
-    org.hibernate.type: TRACE # 파라미터 값까지 보기
+    org.hibernate.orm: TRACE # 파라미터 값까지 보기
 
 management:
   endpoints:
