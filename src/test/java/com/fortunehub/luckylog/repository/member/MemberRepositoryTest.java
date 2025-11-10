@@ -49,20 +49,23 @@ class MemberRepositoryTest {
   }
 
   @Test
-  @DisplayName("닉네임으로 회원 존재 여부를 확인할 수 있다")
-  void existsByNickname() {
+  @DisplayName("대소문자가 다른 이메일은 같은 이메일로 인식한다")
+  void save_EmailCaseInsensitive() {
     // given
-    Member member = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
-    memberRepository.save(member);
+    Member member1 = new Member("Test@Email.com", TEST_PASSWORD, "닉네임1");
+    memberRepository.save(member1);
+
+    Member member2 = new Member("test@email.com", TEST_PASSWORD, "닉네임2");
 
     // when & then
-    assertThat(memberRepository.existsByNickname(TEST_NICKNAME)).isTrue();
-    assertThat(memberRepository.existsByNickname("other_nickname")).isFalse();
+    assertThatThrownBy(() -> {
+      memberRepository.saveAndFlush(member2);
+    }).isInstanceOf(DataIntegrityViolationException.class);
   }
 
   @Test
   @DisplayName("동일한 이메일로 저장하면 예외가 발생한다")
-  void duplicateEmail_ThrowsException() {
+  void save_DuplicateEmail() {
     // given
     Member member = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
     memberRepository.save(member);
@@ -75,37 +78,20 @@ class MemberRepositoryTest {
   }
 
   @Test
-  @DisplayName("동일한 닉네임으로 저장하면 예외가 발생한다")
-  void duplicateNickname_ThrowsException() {
-    // given
-    Member member = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
-    memberRepository.save(member);
-    Member duplicate = new Member("other@email.com", TEST_PASSWORD, TEST_NICKNAME);
-
-    // when & then
-    assertThatThrownBy(() -> {
-      memberRepository.saveAndFlush(duplicate);
-    }).isInstanceOf(DataIntegrityViolationException.class);
-  }
-
-  @Test
-  @DisplayName("같은 이메일과 닉네임이 모두 중복되면 예외가 발생한다")
-  void duplicateEmailAndNickname_ThrowsException() {
+  @DisplayName("닉네임으로 회원 존재 여부를 확인할 수 있다")
+  void existsByNickname() {
     // given
     Member member = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
     memberRepository.save(member);
 
-    Member duplicate = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
-
     // when & then
-    assertThatThrownBy(() -> {
-      memberRepository.saveAndFlush(duplicate);
-    }).isInstanceOf(DataIntegrityViolationException.class);
+    assertThat(memberRepository.existsByNickname(TEST_NICKNAME)).isTrue();
+    assertThat(memberRepository.existsByNickname("other_nickname")).isFalse();
   }
 
   @Test
   @DisplayName("닉네임이 null인 회원을 저장할 수 있다")
-  void saveWithNullNickname() {
+  void save_NullNickname() {
     // given
     Member member = new Member(TEST_EMAIL, TEST_PASSWORD, null);
 
@@ -120,17 +106,31 @@ class MemberRepositoryTest {
   }
 
   @Test
-  @DisplayName("대소문자가 다른 이메일은 같은 이메일로 인식한다")
-  void emailCaseSensitive() {
+  @DisplayName("동일한 닉네임으로 저장하면 예외가 발생한다")
+  void save_DuplicateNickname() {
     // given
-    Member member1 = new Member("Test@Email.com", TEST_PASSWORD, "닉네임1");
-    memberRepository.save(member1);
-
-    Member member2 = new Member("test@email.com", TEST_PASSWORD, "닉네임2");
+    Member member = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
+    memberRepository.save(member);
+    Member duplicate = new Member("other@email.com", TEST_PASSWORD, TEST_NICKNAME);
 
     // when & then
     assertThatThrownBy(() -> {
-      memberRepository.saveAndFlush(member2);
+      memberRepository.saveAndFlush(duplicate);
+    }).isInstanceOf(DataIntegrityViolationException.class);
+  }
+
+  @Test
+  @DisplayName("같은 이메일과 닉네임이 모두 중복되면 예외가 발생한다")
+  void save_DuplicateEmailAndNickname() {
+    // given
+    Member member = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
+    memberRepository.save(member);
+
+    Member duplicate = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
+
+    // when & then
+    assertThatThrownBy(() -> {
+      memberRepository.saveAndFlush(duplicate);
     }).isInstanceOf(DataIntegrityViolationException.class);
   }
 }
