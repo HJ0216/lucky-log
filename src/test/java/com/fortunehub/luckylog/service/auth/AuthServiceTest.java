@@ -102,22 +102,6 @@ class AuthServiceTest {
     verify(memberRepository).existsByNickname(req.getNickname());
   }
 
-  @DisplayName("동시에 이메일과 닉네임이 중복되면 이메일 중복 예외가 먼저 발생한다")
-  void signup_BothDuplicate_EmailFirst() {
-    // given
-    SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
-    given(memberRepository.existsByEmail(req.getEmail())).willReturn(true);
-    given(memberRepository.existsByNickname(req.getNickname())).willReturn(true);
-
-    // when & then
-    assertThatThrownBy(() -> authService.signup(req))
-        .isInstanceOf(CustomException.class)
-        .extracting("errorCode")
-        .isEqualTo(ErrorCode.DUPLICATE_EMAIL);
-
-    verify(memberRepository).existsByEmail(req.getEmail());
-  }
-
   @Test
   @DisplayName("닉네임이 null이면 닉네임 중복 검사를 하지 않고 회원가입에 성공한다")
   void signup_WithoutNickname() {
