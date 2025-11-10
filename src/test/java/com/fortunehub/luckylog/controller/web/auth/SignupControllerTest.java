@@ -40,8 +40,8 @@ class SignupControllerTest {
   private AuthService authService;
 
   @Test
-  @DisplayName("회원가입 페이지를 요청하면 정상적으로 보여준다")
-  void showSignupPage() throws Exception {
+  @DisplayName("회원가입 페이지 요청 시 정상적으로 렌더링된다")
+  void show_WhenRequested_ThenReturnsSignupView() throws Exception {
     // when & then
     mockMvc.perform(get("/signup"))
            .andExpect(status().isOk())
@@ -50,8 +50,8 @@ class SignupControllerTest {
   }
 
   @Test
-  @DisplayName("올바른 회원 정보로 회원가입하면 메인 페이지로 리다이렉트된다")
-  void signup_Success() throws Exception {
+  @DisplayName("유효한 회원정보로 가입 시 메인 페이지로 리다이렉트된다")
+  void submit__WhenValidData_ThenRedirectsToIndex() throws Exception {
     // given
     doNothing().when(authService).signup(any(SignupRequest.class));
 
@@ -67,7 +67,7 @@ class SignupControllerTest {
 
   @Test
   @DisplayName("필수 필드가 비어있으면 검증 오류를 표시한다")
-  void signup_EmptyRequiredFields() throws Exception {
+  void submit_WhenRequiredFieldsMissing_ThenReturnsValidationErrors() throws Exception {
     // when & then
     mockMvc.perform(post("/signup"))
            // 아무 파라미터도 보내지 않음
@@ -83,8 +83,8 @@ class SignupControllerTest {
   }
 
   @Test
-  @DisplayName("이메일 형식이 잘못되면 회원가입 페이지를 다시 보여준다")
-  void signup_InvalidEmail() throws Exception {
+  @DisplayName("잘못된 이메일 형식으로 가입 시 검증 오류가 발생한다")
+  void submit_WhenEmailInvalid_ThenReturnsValidationError() throws Exception {
     // when & then
     mockMvc.perform(post("/signup")
                .param("email", "invalid-email")
@@ -100,8 +100,8 @@ class SignupControllerTest {
   }
 
   @Test
-  @DisplayName("이미 존재하는 이메일로 가입하면 검증 오류를 표시한다")
-  void signup_DuplicateEmail() throws Exception {
+  @DisplayName("중복된 이메일로 가입 시 검증 오류가 발생한다")
+  void submit_WhenEmailDuplicated_ThenReturnsValidationError() throws Exception {
     // given
     doThrow(new CustomException(ErrorCode.DUPLICATE_EMAIL))
         .when(authService).signup(any(SignupRequest.class));
@@ -119,8 +119,8 @@ class SignupControllerTest {
   }
 
   @Test
-  @DisplayName("조건에 맞지 않는 비밀번호로 가입하면 검증 오류를 표시한다")
-  void signup_WeakPassword() throws Exception {
+  @DisplayName("약한 비밀번호로 가입 시 검증 오류가 발생한다")
+  void submit_WhenPasswordWeak_ThenReturnsValidationError() throws Exception {
     // when & then
     mockMvc.perform(post("/signup")
                .param("email", "test@email.com")
@@ -133,8 +133,8 @@ class SignupControllerTest {
   }
 
   @Test
-  @DisplayName("비밀번호와 비밀번호 확인이 불일치하면 검증 오류를 표시한다")
-  void submitSignup_PasswordMismatch() throws Exception {
+  @DisplayName("비밀번호 불일치 시 검증 오류가 발생한다")
+  void submit_WhenPasswordMismatch_ThenReturnsValidationError() throws Exception {
     // when & then
     mockMvc.perform(post("/signup")
                .param("email", "test@example.com")
@@ -150,8 +150,8 @@ class SignupControllerTest {
   }
 
   @Test
-  @DisplayName("이미 존재하는 닉네임으로 가입하면 검증 오류를 표시한다")
-  void signup_DuplicateNickname() throws Exception {
+  @DisplayName("중복된 닉네임으로 가입 시 검증 오류가 발생한다")
+  void submit_WhenNicknameDuplicated_ThenReturnsValidationError() throws Exception {
     // given
     doThrow(new CustomException(ErrorCode.DUPLICATE_NICKNAME))
         .when(authService).signup(any(SignupRequest.class));
@@ -169,8 +169,8 @@ class SignupControllerTest {
   }
 
   @Test
-  @DisplayName("조건에 맞지 않는 닉네임로 가입하면 검증 오류를 표시한다")
-  void signup_NicknameLengthValidation() throws Exception {
+  @DisplayName("잘못된 닉네임 길이로 가입 시 검증 오류가 발생한다")
+  void submit_WhenNicknameInvalidLength_ThenReturnsValidationError() throws Exception {
     // when & then
     mockMvc.perform(post("/signup")
                .param("email", "test@email.com")
@@ -183,8 +183,8 @@ class SignupControllerTest {
   }
 
   @Test
-  @DisplayName("예상치 못한 오류 발생 시, 에러 페이지로 이동한다")
-  void signup_UnexpectedError() throws Exception {
+  @DisplayName("예상치 못한 오류 발생 시 에러 페이지로 리다이렉트된다")
+  void submit_WhenUnexpectedError_ThenRedirectsToErrorPage() throws Exception {
     // given
     doThrow(new RuntimeException("예상치 못한 오류 발생"))
         .when(authService).signup(any(SignupRequest.class));

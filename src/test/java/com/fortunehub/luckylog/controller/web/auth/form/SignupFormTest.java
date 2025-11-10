@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 class SignupFormTest {
 
   @Test
-  @DisplayName("닉네임 앞 또는 뒤에 공백이 있을 경우 제거한다")
-  void toRequest_TrimNickname() {
+  @DisplayName("닉네임 앞뒤 공백이 제거된다")
+  void toRequest_WhenNicknameHasSpaces_ThenTrimsSpaces() {
     // given
     SignupForm form = new SignupForm();
     form.setEmail("test@email.com");
@@ -28,8 +28,8 @@ class SignupFormTest {
   }
 
   @Test
-  @DisplayName("닉네임에 띄어쓰기만 있을 경우, null로 처리한다")
-  void toRequest_BlankNickname() {
+  @DisplayName("공백만 있는 닉네임은 null로 변환된다")
+  void toRequest_WhenNicknameOnlySpaces_ThenReturnsNull() {
     // given
     SignupForm form = new SignupForm();
     form.setEmail("test@email.com");
@@ -45,8 +45,8 @@ class SignupFormTest {
   }
 
   @Test
-  @DisplayName("닉네임이 빈 문자열일 경우, null로 처리한다")
-  void toRequest_EmptyNickname() {
+  @DisplayName("빈 문자열 닉네임은 null로 변환된다")
+  void toRequest_WhenNicknameEmpty_ThenReturnsNull() {
     // given
     SignupForm form = new SignupForm();
     form.setEmail("test@email.com");
@@ -62,8 +62,8 @@ class SignupFormTest {
   }
 
   @Test
-  @DisplayName("닉네임이 null일 경우, null로 처리한다")
-  void toRequest_NullNickname() {
+  @DisplayName("null 닉네임은 null로 유지된다")
+  void toRequest_WhenNicknameNull_ThenReturnsNull() {
     // given
     SignupForm form = new SignupForm();
     form.setEmail("test@email.com");

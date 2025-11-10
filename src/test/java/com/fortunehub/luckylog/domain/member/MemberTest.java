@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 class MemberTest {
 
   @Test
-  @DisplayName("이메일은 소문자로 변환되고 앞뒤 공백이 제거된다")
-  void normalizeEmail_ToLowerCase(){
+  @DisplayName("이메일이 소문자로 변환되고 공백이 제거된다")
+  void normalizeEmail_WhenUnnormalizedEmail_ThenReturnsTrimmedLowercaseEmail(){
     // given
     SignupRequest request = new SignupRequest("  EMAIL@EMAIL.COM  ", "PassWord147@", "솜사탕");
 

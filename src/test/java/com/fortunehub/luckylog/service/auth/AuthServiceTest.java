@@ -40,8 +40,8 @@ class AuthServiceTest {
   private static final String TEST_NICKNAME = "솜사탕";
 
   @Test
-  @DisplayName("올바른 회원 정보로 회원가입하면 회원이 저장된다")
-  void signup_Success() {
+  @DisplayName("정상적인 회원가입 요청 시 회원이 저장된다")
+  void signup_WhenValidRequest_ThenSavesMember() {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
@@ -65,8 +65,8 @@ class AuthServiceTest {
   }
 
   @Test
-  @DisplayName("이메일이 대소문자 섞여있고 공백이 있어도 정규화되어 저장된다")
-  void signup_EmailNormalization() {
+  @DisplayName("대소문자와 공백이 포함된 이메일이 정규화되어 저장된다")
+  void signup_WhenEmailUnnormalized_ThenSavesNormalizedEmail() {
     // given
     String unnormalizedEmail = "  Lucky@Email.Com  ";
     SignupRequest req = new SignupRequest(unnormalizedEmail, TEST_RAW_PASSWORD, TEST_NICKNAME);
@@ -87,8 +87,8 @@ class AuthServiceTest {
   }
 
   @Test
-  @DisplayName("이미 존재하는 이메일로 회원가입하면 예외가 발생한다")
-  void signup_DuplicateEmail() {
+  @DisplayName("중복된 이메일로 회원가입 시 예외가 발생한다")
+  void signup_WhenEmailDuplicated_ThenThrowsException() {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
@@ -105,8 +105,8 @@ class AuthServiceTest {
   }
 
   @Test
-  @DisplayName("이미 존재하는 닉네임으로 회원가입하면 예외가 발생한다")
-  void signup_DuplicateNickname() {
+  @DisplayName("중복된 닉네임으로 회원가입 시 예외가 발생한다")
+  void signup_WhenNicknameDuplicated_ThenThrowsException() {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
@@ -125,8 +125,8 @@ class AuthServiceTest {
   }
 
   @Test
-  @DisplayName("닉네임이 null이면 닉네임 중복 검사를 하지 않고 회원가입에 성공한다")
-  void signup_WithoutNickname() {
+  @DisplayName("닉네임 없이 회원가입 시 정상 처리된다")
+  void signup_WhenNicknameNull_ThenSavesSuccessfully() {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, null);
 
@@ -152,8 +152,8 @@ class AuthServiceTest {
   }
 
   @Test
-  @DisplayName("저장 시 이메일 DB 제약조건 위반이 발생하면 중복 이메일 예외가 발생한다")
-  void signup_DataIntegrityViolation_Email() {
+  @DisplayName("이메일 중복 제약조건 위반 시 예외가 발생한다")
+  void signup_WhenEmailConstraintViolated_ThenThrowsDuplicateEmailException() {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
@@ -177,8 +177,8 @@ class AuthServiceTest {
   }
 
   @Test
-  @DisplayName("저장 시 닉네임 DB 제약조건 위반이 발생하면 중복 닉네임 예외가 발생한다")
-  void signup_DataIntegrityViolation_Nickname() {
+  @DisplayName("닉네임 중복 제약조건 위반 시 예외가 발생한다")
+  void signup_WhenNicknameConstraintViolated_ThenThrowsDuplicateNicknameException() {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
@@ -202,8 +202,8 @@ class AuthServiceTest {
   }
 
   @Test
-  @DisplayName("저장 시 다른 DB 제약조건 위반이 발생하면 원본 예외가 발생한다")
-  void signup_DataIntegrityViolation_Other() {
+  @DisplayName("기타 제약조건 위반 시 예외가 발생한다")
+  void signup_WhenOtherConstraintViolated_ThenThrowsException() {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
