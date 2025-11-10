@@ -30,7 +30,10 @@ public class SignupForm {
   private String confirmPassword;
 
   // optional, 입력 시 2-20자 사이
-  @Pattern(regexp = "^$|^.{2,20}$", message = "✨ 닉네임은 2-20자 사이여야 합니다!")
+  @Pattern(
+      regexp = "^[가-힣a-zA-Z0-9\\s]{2,20}$",
+      message = "✨ 닉네임은 2-20자의 한글, 영문, 숫자, 띄어쓰기만 가능합니다!"
+  )
   private String nickname;
 
   @AssertTrue(message = "😮 비밀번호가 일치하지 않습니다!")
