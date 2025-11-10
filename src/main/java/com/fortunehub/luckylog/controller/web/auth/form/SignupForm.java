@@ -40,6 +40,7 @@ public class SignupForm {
   }
 
   public SignupRequest toRequest() {
-    return new SignupRequest(email, password, nickname);
+    String cleanedNickname = (nickname != null && nickname.isBlank()) ? null : nickname;
+    return new SignupRequest(email, password, cleanedNickname);
   }
 }
