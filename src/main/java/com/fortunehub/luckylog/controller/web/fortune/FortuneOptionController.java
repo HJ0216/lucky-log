@@ -1,14 +1,13 @@
 package com.fortunehub.luckylog.controller.web.fortune;
 
+import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
+import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
 import com.fortunehub.luckylog.domain.fortune.AIType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.LoadingMessage;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
-import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
-import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
-import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
-import com.fortunehub.luckylog.service.fortune.GeminiService;
+import com.fortunehub.luckylog.service.fortune.FortuneService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -29,7 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/fortune/option")
 public class FortuneOptionController {
 
-  private final GeminiService geminiService;
+  private final FortuneService fortuneService;
 
   @ModelAttribute("aiTypes")
   public List<AIType> aiTypes() {
@@ -47,7 +46,7 @@ public class FortuneOptionController {
   }
 
   @ModelAttribute("loadingMessage")
-  public String loadingMessage(){
+  public String loadingMessage() {
     return LoadingMessage.getRandomMessage();
   }
 
@@ -85,16 +84,7 @@ public class FortuneOptionController {
     }
 
     try {
-      List<FortuneResponseView> responses = null;
-
-      switch (option.getAi()) {
-        case GEMINI:
-          responses = geminiService.analyzeFortune(FortuneRequest.from(savedBirthInfo, option));
-          break;
-        default:
-          throw new IllegalArgumentException("Unsupported AI Type: " + option.getAi());
-      }
-
+      List<FortuneResponseView> responses = fortuneService.analyzeFortune(savedBirthInfo, option);
       redirectAttributes.addFlashAttribute("option", option); //자동으로 Model에 포함
       redirectAttributes.addFlashAttribute("response", responses);
 
