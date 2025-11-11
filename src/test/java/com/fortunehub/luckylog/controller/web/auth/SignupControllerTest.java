@@ -51,7 +51,7 @@ class SignupControllerTest {
 
   @Test
   @DisplayName("유효한 회원정보로 가입 시 메인 페이지로 리다이렉트된다")
-  void submit__WhenValidData_ThenRedirectsToIndex() throws Exception {
+  void submit_WhenValidData_ThenRedirectsToIndex() throws Exception {
     // given
     doNothing().when(authService).signup(any(SignupRequest.class));
 

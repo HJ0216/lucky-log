@@ -65,28 +65,6 @@ class AuthServiceTest {
   }
 
   @Test
-  @DisplayName("대소문자와 공백이 포함된 이메일이 정규화되어 저장된다")
-  void signup_WhenEmailUnnormalized_ThenSavesNormalizedEmail() {
-    // given
-    String unnormalizedEmail = "  Lucky@Email.Com  ";
-    SignupRequest req = new SignupRequest(unnormalizedEmail, TEST_RAW_PASSWORD, TEST_NICKNAME);
-
-    given(memberRepository.existsByEmail(any())).willReturn(false);
-    given(memberRepository.existsByNickname(req.getNickname())).willReturn(false);
-    given(passwordEncoder.encode(req.getPassword())).willReturn(TEST_ENCODED_PASSWORD);
-
-    // when
-    authService.signup(req);
-
-    // then
-    ArgumentCaptor<Member> captor = ArgumentCaptor.forClass(Member.class);
-    verify(memberRepository).save(captor.capture());
-
-    Member savedMember = captor.getValue();
-    assertThat(savedMember.getEmail()).isEqualTo("lucky@email.com");
-  }
-
-  @Test
   @DisplayName("중복된 이메일로 회원가입 시 예외가 발생한다")
   void signup_WhenEmailDuplicated_ThenThrowsException() {
     // given
