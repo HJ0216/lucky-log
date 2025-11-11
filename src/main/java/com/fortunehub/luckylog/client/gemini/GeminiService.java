@@ -7,6 +7,7 @@ import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
 import com.google.genai.Client;
+import com.google.genai.errors.ServerException;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
 import java.time.LocalDateTime;
@@ -72,9 +73,14 @@ public class GeminiService {
       }
 
       return parseFortuneResponse(responseText);
+    } catch (ServerException e) {
+      log.error("Gemini API 호출 실패: 모델: {}, 에러: {}", modelName, e.getMessage(), e);
+      throw new IllegalStateException(
+          String.format("Gemini API 호출 실패: 모델 %s가 과부하 상태입니다. 잠시 후 다시 시도해주세요.", modelName), e);
     } catch (Exception e) {
       log.error("Gemini API 호출 실패: 모델: {}, 에러: {}", modelName, e.getMessage(), e);
-      throw new IllegalStateException("Gemini API 호출에 실패하였습니다.", e);
+      throw new IllegalStateException(
+          String.format("Gemini API 호출 실패: 모델 %s에서 예기치 못한 오류가 발생했습니다.", modelName), e);
     }
   }
 
