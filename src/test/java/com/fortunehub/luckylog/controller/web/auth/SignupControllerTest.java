@@ -34,7 +34,7 @@ class SignupControllerTest {
   @Autowired
   private MockMvc mockMvc;
   // 실제 서버를 띄우지 않고도 Controller를 테스트할 수 있게 해주는 Spring의 테스트 도구
-  // HTTP 요청을 가짜로 만듦 → HTTP 요청을 가짜로 만듦 → Controller의 응답을 받아서 → 결과를 검증
+  // HTTP 요청을 가짜로 만듦 → Controller의 응답을 받아서 → 결과를 검증
 
   @MockitoBean
   private AuthService authService;
@@ -63,6 +63,8 @@ class SignupControllerTest {
                .param("nickname", "테스터"))
            .andExpect(status().is3xxRedirection())
            .andExpect(redirectedUrl("/"));
+
+    verify(authService).signup(any(SignupRequest.class));
   }
 
   @Test
@@ -130,6 +132,8 @@ class SignupControllerTest {
            .andExpect(status().isOk())
            .andExpect(view().name("auth/signup"))
            .andExpect(model().attributeHasFieldErrors("signupForm", "password"));
+
+    verify(authService, never()).signup(any(SignupRequest.class));
   }
 
   @Test
@@ -166,6 +170,8 @@ class SignupControllerTest {
            .andExpect(view().name("auth/signup"))
            .andExpect(model().hasErrors())
            .andExpect(model().attributeHasFieldErrors("signupForm", "nickname"));
+
+    verify(authService).signup(any(SignupRequest.class));
   }
 
   @Test
