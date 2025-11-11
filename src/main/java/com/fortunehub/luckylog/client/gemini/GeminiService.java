@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
+import com.fortunehub.luckylog.exception.CustomException;
+import com.fortunehub.luckylog.exception.ErrorCode;
 import com.google.genai.Client;
 import com.google.genai.errors.ServerException;
 import com.google.genai.types.GenerateContentConfig;
@@ -46,9 +48,7 @@ public class GeminiService {
                                       .replace("[FORTUNE_TYPES]",
                                           request.getFortuneTypesAsString());
 
-    return new StringBuilder(basePrompt)
-        .append(request.toBirthInfo())
-        .toString();
+    return basePrompt + request.toBirthInfo();
   }
 
   private List<FortuneResponse> generateContent(String prompt) {
@@ -69,33 +69,36 @@ public class GeminiService {
       String responseText = response.text();
       if (responseText == null || responseText.trim().isEmpty()) {
         log.warn("Gemini API 빈 응답 수신");
-        throw new IllegalStateException("Gemini 응답이 비어있습니다.");
+        throw new CustomException(ErrorCode.GEMINI_UNKNOWN_ERROR);
       }
 
       return parseFortuneResponse(responseText);
     } catch (ServerException e) {
-      log.error("Gemini API 호출 실패: 모델: {}, 에러: {}", modelName, e.getMessage(), e);
-      throw new IllegalStateException(
-          String.format("Gemini API 호출 실패: 모델 %s가 과부하 상태입니다. 잠시 후 다시 시도해주세요.", modelName), e);
+      log.error("Gemini API 호출 실패: 에러: {}", e.getMessage(), e);
+      throw new CustomException(ErrorCode.GEMINI_OVERLOAD);
     } catch (Exception e) {
-      log.error("Gemini API 호출 실패: 모델: {}, 에러: {}", modelName, e.getMessage(), e);
-      throw new IllegalStateException(
-          String.format("Gemini API 호출 실패: 모델 %s에서 예기치 못한 오류가 발생했습니다.", modelName), e);
+      log.error("Gemini API 호출 실패: , 에러: {}", e.getMessage(), e);
+      throw new CustomException(ErrorCode.GEMINI_UNKNOWN_ERROR, e);
     }
   }
 
   private List<FortuneResponse> parseFortuneResponse(String jsonResponse)
       throws JsonProcessingException {
 
-    List<FortuneResponse> responses = objectMapper.readValue(
-        jsonResponse.replace("```json", "")
-                    .replace("```", "")
-                    .trim(),
-        new TypeReference<List<FortuneResponse>>() {
-        }
-    );
+    try {
+      List<FortuneResponse> responses = objectMapper.readValue(
+          jsonResponse.replace("```json", "")
+                      .replace("```", "")
+                      .trim(),
+          new TypeReference<List<FortuneResponse>>() {
+          }
+      );
 
-    return formatFortuneContent(responses);
+      return formatFortuneContent(responses);
+
+    } catch (Exception e) {
+      throw new CustomException(ErrorCode.GEMINI_RESPONSE_PARSE_ERROR);
+    }
   }
 
   private List<FortuneResponse> formatFortuneContent(List<FortuneResponse> responses) {
@@ -105,6 +108,7 @@ public class GeminiService {
         response.setResult(response.getResult().replace(" | ", "\n"));
       }
     });
+
     return responses;
   }
 }
