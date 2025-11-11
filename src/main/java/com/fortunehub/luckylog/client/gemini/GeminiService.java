@@ -1,4 +1,4 @@
-package com.fortunehub.luckylog.service.fortune;
+package com.fortunehub.luckylog.client.gemini;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
