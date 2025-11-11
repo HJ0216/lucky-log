@@ -37,8 +37,12 @@ public class Member extends BaseTimeEntity {
   private boolean isActive = true;
 
   public Member(String email, String password, String nickname) {
-    this.email = email;
+    this.email = normalizeEmail(email);
     this.password = password;
     this.nickname = nickname;
+  }
+
+  private String normalizeEmail(String email) {
+    return email != null ? email.toLowerCase().trim() : null;
   }
 }
