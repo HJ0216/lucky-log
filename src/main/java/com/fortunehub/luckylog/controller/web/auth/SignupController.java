@@ -67,8 +67,7 @@ public class SignupController {
 
       return "auth/signup";
     } catch (Exception e){
-      log.error("회원가입 실패 - 예상치 못한 오류 | email={} | nickname={}",
-          form.getEmail(), form.getNickname(), e);
+      log.error("회원가입 실패 - 예상치 못한 오류 발생", e);
       return "redirect:/error/5xx";
     }
   }
