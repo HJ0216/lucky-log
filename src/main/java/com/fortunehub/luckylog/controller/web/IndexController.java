@@ -79,8 +79,9 @@ public class IndexController {
 
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
-          log.warn("생년월일 검증 실패 | field={} | message={}",
+          log.warn("생년월일 검증 실패 | field={} | rejectedValue={} | message={}",
               error.getField(),
+              error.getRejectedValue(),
               error.getDefaultMessage())
       );
 

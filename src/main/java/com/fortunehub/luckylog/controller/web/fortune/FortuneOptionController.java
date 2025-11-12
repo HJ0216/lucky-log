@@ -2,9 +2,9 @@ package com.fortunehub.luckylog.controller.web.fortune;
 
 import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
 import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
+import com.fortunehub.luckylog.domain.common.LoadingMessage;
 import com.fortunehub.luckylog.domain.fortune.AIType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
-import com.fortunehub.luckylog.domain.common.LoadingMessage;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
 import com.fortunehub.luckylog.service.fortune.FortuneService;
@@ -74,8 +74,9 @@ public class FortuneOptionController {
 
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
-          log.debug("운세 옵션 검증 실패 | field={}, message={}",
+          log.debug("운세 옵션 검증 실패 | field={} | rejectedValue={} | message={}",
               error.getField(),
+              error.getRejectedValue(),
               error.getDefaultMessage())
       );
 

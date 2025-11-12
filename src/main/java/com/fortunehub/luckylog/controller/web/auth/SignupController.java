@@ -37,8 +37,9 @@ public class SignupController {
 
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
-          log.warn("회원가입 검증 실패 | field={} | message={}",
+          log.warn("회원가입 검증 실패 | field={} | rejectedValue={} | message={}",
               error.getField(),
+              error.getRejectedValue(),
               error.getDefaultMessage())
       );
 
@@ -49,10 +50,10 @@ public class SignupController {
       authService.signup(SignupRequest.from(form));
 
 //      return "redirect:/login";
-      return  "redirect:/";
+      return "redirect:/";
 
     } catch (CustomException e) {
-      switch (e.getErrorCode()){
+      switch (e.getErrorCode()) {
         case DUPLICATE_EMAIL:
           result.rejectValue("email", e.getErrorCode().name(), e.getMessage());
           break;
@@ -66,7 +67,7 @@ public class SignupController {
       }
 
       return "auth/signup";
-    } catch (Exception e){
+    } catch (Exception e) {
       log.error("회원가입 실패 - 예상치 못한 오류 발생", e);
       return "redirect:/error/5xx";
     }
