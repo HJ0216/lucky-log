@@ -16,8 +16,9 @@ public enum ErrorCode {
   GEMINI_RESPONSE_PARSE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "🔮 Gemini 응답 파싱 중 오류가 발생했습니다."),
 
   // AI 타입
-  UNSUPPORTED_AI_TYPE(HttpStatus.BAD_REQUEST, "🤖 지원되지 않는 AI 타입입니다.");  private final HttpStatus status;
+  UNSUPPORTED_AI_TYPE(HttpStatus.BAD_REQUEST, "🤖 지원되지 않는 AI 타입입니다.");
 
+  private final HttpStatus status;
   private final String message;
 
   ErrorCode(HttpStatus status, String message) {
