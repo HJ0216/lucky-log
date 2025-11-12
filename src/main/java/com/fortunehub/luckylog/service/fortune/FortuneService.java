@@ -5,6 +5,8 @@ import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
 import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
+import com.fortunehub.luckylog.exception.CustomException;
+import com.fortunehub.luckylog.exception.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,13 +17,11 @@ public class FortuneService {
 
   private final GeminiService geminiService;
 
-  public List<FortuneResponseView> analyzeFortune(BirthInfoForm savedBirthInfo,
-      FortuneOptionForm option) {
-    switch (option.getAi()) {
-      case GEMINI:
-        return geminiService.analyzeFortune(FortuneRequest.from(savedBirthInfo, option));
-      default:
-        throw new IllegalArgumentException("Unsupported AI Type: " + option.getAi());
-    }
+  public List<FortuneResponseView> analyzeFortune(
+      BirthInfoForm savedBirthInfo, FortuneOptionForm option) {
+    return switch (option.getAi()){
+      case GEMINI -> geminiService.analyzeFortune(FortuneRequest.from(savedBirthInfo, option));
+      default -> throw new CustomException(ErrorCode.UNSUPPORTED_AI_TYPE);
+    };
   }
 }
