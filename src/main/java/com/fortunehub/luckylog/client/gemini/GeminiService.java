@@ -61,11 +61,6 @@ public class GeminiService {
           generateContentConfig
       );
 
-      long durationMillis = System.currentTimeMillis() - startTime;
-      long minutes = durationMillis / 1000 / 60;
-      long seconds = (durationMillis / 1000) % 60;
-      log.info("Gemini API 응답 완료 - {}분 {}초", minutes, seconds);
-
       String responseText = response.text();
       if (responseText == null || responseText.trim().isEmpty()) {
         log.warn("Gemini API 빈 응답 수신");
@@ -81,6 +76,11 @@ public class GeminiService {
     } catch (Exception e) {
       log.error("Gemini API 호출 실패 - 에러: {}", e.getMessage(), e);
       throw new CustomException(ErrorCode.GEMINI_UNKNOWN_ERROR, e);
+    } finally {
+      long durationMillis = System.currentTimeMillis() - startTime;
+      long minutes = durationMillis / 1000 / 60;
+      long seconds = (durationMillis / 1000) % 60;
+      log.info("Gemini API 응답 완료 - {}분 {}초", minutes, seconds);
     }
   }
 
@@ -98,7 +98,7 @@ public class GeminiService {
       return formatFortuneContent(responses);
 
     } catch (Exception e) {
-      throw new CustomException(ErrorCode.GEMINI_RESPONSE_PARSE_ERROR);
+      throw new CustomException(ErrorCode.GEMINI_RESPONSE_PARSE_ERROR, e);
     }
   }
 
