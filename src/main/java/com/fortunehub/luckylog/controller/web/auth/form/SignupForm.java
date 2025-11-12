@@ -36,13 +36,14 @@ public class SignupForm {
   )
   private String nickname;
 
+  public void setNickname(String nickname) {
+    // 1. setter 호출 후 trim
+    // 2. @Pattern 검증
+    this.nickname = (nickname == null) ? null : nickname.trim();
+  }
+
   @AssertTrue(message = "😮 비밀번호가 일치하지 않습니다!")
   public boolean isPasswordMatched() {
     return password != null && password.equals(confirmPassword);
-  }
-
-  public SignupRequest toRequest() {
-    String cleanedNickname = (nickname == null || nickname.isBlank()) ? null : nickname.trim();
-    return new SignupRequest(email, password, cleanedNickname);
   }
 }

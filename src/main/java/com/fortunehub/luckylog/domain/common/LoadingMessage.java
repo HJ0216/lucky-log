@@ -1,4 +1,4 @@
-package com.fortunehub.luckylog.domain.fortune;
+package com.fortunehub.luckylog.domain.common;
 
 public class LoadingMessage {
 

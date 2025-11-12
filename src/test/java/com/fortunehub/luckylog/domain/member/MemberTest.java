@@ -16,7 +16,7 @@ class MemberTest {
     SignupRequest request = new SignupRequest("  EMAIL@EMAIL.COM  ", "PassWord147@", "솜사탕");
 
     // when
-    Member member = request.toEntity("EncodedPassword147@");
+    Member member = Member.from(request, "EncodedPassword147@");
 
     // then
     assertEquals("email@email.com", member.getEmail());
