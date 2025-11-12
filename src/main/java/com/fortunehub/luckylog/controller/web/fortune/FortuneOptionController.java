@@ -2,11 +2,12 @@ package com.fortunehub.luckylog.controller.web.fortune;
 
 import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
 import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
+import com.fortunehub.luckylog.domain.common.LoadingMessage;
 import com.fortunehub.luckylog.domain.fortune.AIType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
-import com.fortunehub.luckylog.domain.common.LoadingMessage;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
+import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.service.fortune.FortuneService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -67,17 +68,11 @@ public class FortuneOptionController {
 
     BirthInfoForm savedBirthInfo = (BirthInfoForm) session.getAttribute("birthInfo");
 
-    log.debug("운세 분석 요청 시작 - 생년: {}, 성별: {}, 운세 선택 정보: {}",
-        savedBirthInfo.getYear(),
-        savedBirthInfo.getGender(),
-        option.toString());
-
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
-          log.debug("운세 옵션 검증 실패 - 필드: {}, 입력값: {}, 메시지: {}",
-              error.getField(),
-              error.getRejectedValue(),
-              error.getDefaultMessage())
+          log.warn(
+              "[FortuneOptionController] [운세 옵션 검증 실패] - [입력값 유효성 오류] | field={} | rejectedValue={} | message={}",
+              error.getField(), error.getRejectedValue(), error.getDefaultMessage())
       );
 
       return "fortune/fortune-option";
@@ -90,12 +85,18 @@ public class FortuneOptionController {
 
       return "redirect:/fortune/result";
 
-    } catch (Exception e) {
-      log.error("사주 분석 API 호출 실패: {}", e.getMessage(), e);
-
+    } catch (CustomException e) {
       result.addError(
           new ObjectError("FortuneOptionForm", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요"));
       // @ModelAttribute로 선언된 객체(FortuneOptionForm)에만 사용
+
+      return "fortune/fortune-option";
+    } catch (Exception e) {
+      log.error("[FortuneOptionController] [운세 분석 실패] - [API 호출 오류] | option={} | message={}",
+          option, e.getMessage(), e);
+
+      result.addError(
+          new ObjectError("FortuneOptionForm", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요"));
 
       return "fortune/fortune-option";
     }

@@ -37,10 +37,9 @@ public class SignupController {
 
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
-          log.warn("회원가입 검증 실패 - 필드: {}, 입력값: {}, 메시지: {}",
-              error.getField(),
-              error.getRejectedValue(),
-              error.getDefaultMessage())
+          log.warn(
+              "[SignupController] [회원가입 검증 실패] - [입력값 유효성 오류] | field={} | message={}",
+              error.getField(), error.getDefaultMessage())
       );
 
       return "auth/signup";
@@ -49,26 +48,21 @@ public class SignupController {
     try {
       authService.signup(SignupRequest.from(form));
 
-      log.info("회원가입 성공 - 이메일: {}", form.getEmail());
-
 //      return "redirect:/login";
-      return  "redirect:/";
+      return "redirect:/";
 
     } catch (CustomException e) {
-      switch (e.getErrorCode()){
-        case DUPLICATE_EMAIL:
-          result.rejectValue("email", e.getErrorCode().name(), e.getMessage());
-          log.warn("중복 이메일로 가입 시도: {}", form.getEmail());
-          break;
-        case DUPLICATE_NICKNAME:
-          result.rejectValue("nickname", e.getErrorCode().name(), e.getMessage());
-          log.warn("중복 닉네임으로 가입 시도: {}", form.getNickname());
-          break;
+      switch (e.getErrorCode()) {
+        case DUPLICATE_EMAIL ->
+            result.rejectValue("email", e.getErrorCode().name(), e.getMessage());
+        case DUPLICATE_NICKNAME ->
+            result.rejectValue("nickname", e.getErrorCode().name(), e.getMessage());
+        // TODO: default 추가, 필드 없이 메시지만
       }
 
       return "auth/signup";
-    } catch (Exception e){
-      log.error("예상치 못한 오류 발생", e);
+    } catch (Exception e) {
+      log.error("[SignupController] [회원가입 실패] - [시스템 예외 발생]", e);
       return "redirect:/error/5xx";
     }
   }
