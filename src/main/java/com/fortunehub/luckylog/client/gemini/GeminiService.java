@@ -1,12 +1,14 @@
-package com.fortunehub.luckylog.service.fortune;
+package com.fortunehub.luckylog.client.gemini;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
+import com.fortunehub.luckylog.exception.CustomException;
+import com.fortunehub.luckylog.exception.ErrorCode;
 import com.google.genai.Client;
+import com.google.genai.errors.ServerException;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
 import java.time.LocalDateTime;
@@ -45,9 +47,7 @@ public class GeminiService {
                                       .replace("[FORTUNE_TYPES]",
                                           request.getFortuneTypesAsString());
 
-    return new StringBuilder(basePrompt)
-        .append(request.toBirthInfo())
-        .toString();
+    return basePrompt + request.toBirthInfo();
   }
 
   private List<FortuneResponse> generateContent(String prompt) {
@@ -60,36 +60,46 @@ public class GeminiService {
           generateContentConfig
       );
 
+      String responseText = response.text();
+      if (responseText == null || responseText.trim().isEmpty()) {
+        log.warn("Gemini API 빈 응답 수신");
+        throw new CustomException(ErrorCode.GEMINI_EMPTY_RESPONSE);
+      }
+
+      return parseFortuneResponse(responseText);
+    } catch (ServerException e) {
+      log.error("Gemini API 호출 실패 - 서버 과부하: {}", e.getMessage(), e);
+      throw new CustomException(ErrorCode.GEMINI_OVERLOAD);
+    } catch (CustomException e) {
+      throw e;
+    } catch (Exception e) {
+      log.error("Gemini API 호출 실패 - 에러: {}", e.getMessage(), e);
+      throw new CustomException(ErrorCode.GEMINI_UNKNOWN_ERROR, e);
+    } finally {
       long durationMillis = System.currentTimeMillis() - startTime;
       long minutes = durationMillis / 1000 / 60;
       long seconds = (durationMillis / 1000) % 60;
       log.info("Gemini API 응답 완료 - {}분 {}초", minutes, seconds);
-
-      String responseText = response.text();
-      if (responseText == null || responseText.trim().isEmpty()) {
-        log.warn("Gemini API 빈 응답 수신");
-        throw new IllegalStateException("Gemini 응답이 비어있습니다.");
-      }
-
-      return parseFortuneResponse(responseText);
-    } catch (Exception e) {
-      log.error("Gemini API 호출 실패: 모델: {}, 에러: {}", modelName, e.getMessage(), e);
-      throw new IllegalStateException("Gemini API 호출에 실패하였습니다.", e);
     }
   }
 
-  private List<FortuneResponse> parseFortuneResponse(String jsonResponse)
-      throws JsonProcessingException {
+  private List<FortuneResponse> parseFortuneResponse(String jsonResponse) {
 
-    List<FortuneResponse> responses = objectMapper.readValue(
-        jsonResponse.replace("```json", "")
-                    .replace("```", "")
-                    .trim(),
-        new TypeReference<List<FortuneResponse>>() {
-        }
-    );
+    try {
+      List<FortuneResponse> responses = objectMapper.readValue(
+          jsonResponse.replace("```json", "")
+                      .replace("```", "")
+                      .trim(),
+          new TypeReference<List<FortuneResponse>>() {
+          }
+      );
 
-    return formatFortuneContent(responses);
+      return formatFortuneContent(responses);
+
+    } catch (Exception e) {
+      log.error("Gemini 응답 파싱 실패: {}", e.getMessage(), e);
+      throw new CustomException(ErrorCode.GEMINI_RESPONSE_PARSE_ERROR, e);
+    }
   }
 
   private List<FortuneResponse> formatFortuneContent(List<FortuneResponse> responses) {
@@ -99,6 +109,7 @@ public class GeminiService {
         response.setResult(response.getResult().replace(" | ", "\n"));
       }
     });
+
     return responses;
   }
 }

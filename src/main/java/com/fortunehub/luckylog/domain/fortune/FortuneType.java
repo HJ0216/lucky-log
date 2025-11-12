@@ -20,7 +20,7 @@ public enum FortuneType {
 
   private final String icon;
   private final String tooltip;
-  @JsonValue
+  @JsonValue // Enum 상수가 JSON에서 어떻게 표현되어야 하는지를 나타내는 문자열 값
   private final String jsonKey;
   private final boolean enabled;
 

@@ -1,4 +1,4 @@
-package com.fortunehub.luckylog.config;
+package com.fortunehub.luckylog.client.gemini;
 
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentConfig;
