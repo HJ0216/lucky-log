@@ -54,7 +54,7 @@ public class GeminiService {
 
     log.info("Gemini API 요청 시작 | model={}, birthInfo={}, fortuneTypes={}",
         modelName,
-        request.toBirthInfo(),
+        request.toBirthInfo().replace("\n", " "), // 로깅 한 줄로 표현하기 위해 추가
         request.getFortuneTypesAsString()
     );
 
