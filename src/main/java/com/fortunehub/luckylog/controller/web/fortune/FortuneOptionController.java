@@ -67,16 +67,15 @@ public class FortuneOptionController {
 
     BirthInfoForm savedBirthInfo = (BirthInfoForm) session.getAttribute("birthInfo");
 
-    log.debug("운세 분석 요청 시작 - 생년: {}, 성별: {}, 운세 선택 정보: {}",
+    log.debug("운세 분석 요청 시작 | year={}, gender={}, option={}",
         savedBirthInfo.getYear(),
         savedBirthInfo.getGender(),
         option.toString());
 
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
-          log.debug("운세 옵션 검증 실패 - 필드: {}, 입력값: {}, 메시지: {}",
+          log.debug("운세 옵션 검증 실패 | field={}, message={}",
               error.getField(),
-              error.getRejectedValue(),
               error.getDefaultMessage())
       );
 
@@ -91,7 +90,9 @@ public class FortuneOptionController {
       return "redirect:/fortune/result";
 
     } catch (Exception e) {
-      log.error("사주 분석 API 호출 실패: {}", e.getMessage(), e);
+      log.error("사주 분석 API 호출 실패 | option={} | message={}",
+          option,
+          e.getMessage(), e);
 
       result.addError(
           new ObjectError("FortuneOptionForm", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요"));

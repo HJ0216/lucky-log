@@ -36,7 +36,7 @@ public class GeminiService {
   public List<FortuneResponseView> analyzeFortune(FortuneRequest request) {
 
     String prompt = buildPrompt(request);
-    List<FortuneResponse> responses = generateContent(prompt);
+    List<FortuneResponse> responses = generateContent(prompt, request);
 
     return FortuneResponseView.from(responses);
   }
@@ -50,7 +50,14 @@ public class GeminiService {
     return basePrompt + request.toBirthInfo();
   }
 
-  private List<FortuneResponse> generateContent(String prompt) {
+  private List<FortuneResponse> generateContent(String prompt, FortuneRequest request) {
+
+    log.info("Gemini API 요청 시작 | model={}, birthInfo={}, fortuneTypes={}",
+        modelName,
+        request.toBirthInfo(),
+        request.getFortuneTypesAsString()
+    );
+
     long startTime = System.currentTimeMillis();
 
     try {
@@ -62,24 +69,33 @@ public class GeminiService {
 
       String responseText = response.text();
       if (responseText == null || responseText.trim().isEmpty()) {
-        log.warn("Gemini API 빈 응답 수신");
+        log.warn("Gemini API 빈 응답 수신 | model={}, fortuneTypes={}",
+            modelName,
+            request.getFortuneTypesAsString()
+        );
         throw new CustomException(ErrorCode.GEMINI_EMPTY_RESPONSE);
       }
 
-      return parseFortuneResponse(responseText);
+      List<FortuneResponse> responses = parseFortuneResponse(responseText);
+      log.info("Gemini API 응답 성공 | resultCount={}", responses.size());
+
+      if (!responses.isEmpty()) {
+        log.debug("첫 번째 결과 미리보기 | result={}", responses.get(0).getResult());
+      }
+
+      return responses;
+
     } catch (ServerException e) {
-      log.error("Gemini API 호출 실패 - 서버 과부하: {}", e.getMessage(), e);
+      log.error("Gemini API 호출 실패 - 서버 과부하 | message={}", e.getMessage(), e);
       throw new CustomException(ErrorCode.GEMINI_OVERLOAD);
     } catch (CustomException e) {
       throw e;
     } catch (Exception e) {
-      log.error("Gemini API 호출 실패 - 에러: {}", e.getMessage(), e);
+      log.error("Gemini API 호출 실패 - 알 수 없는 오류 | message={}", e.getMessage(), e);
       throw new CustomException(ErrorCode.GEMINI_UNKNOWN_ERROR, e);
     } finally {
       long durationMillis = System.currentTimeMillis() - startTime;
-      long minutes = durationMillis / 1000 / 60;
-      long seconds = (durationMillis / 1000) % 60;
-      log.info("Gemini API 응답 완료 - {}분 {}초", minutes, seconds);
+      log.info("Gemini API 응답 완료 - {}ms", durationMillis);
     }
   }
 
@@ -97,7 +113,7 @@ public class GeminiService {
       return formatFortuneContent(responses);
 
     } catch (Exception e) {
-      log.error("Gemini 응답 파싱 실패: {}", e.getMessage(), e);
+      log.error("Gemini 응답 파싱 실패 | message={}", e.getMessage(), e);
       throw new CustomException(ErrorCode.GEMINI_RESPONSE_PARSE_ERROR, e);
     }
   }
