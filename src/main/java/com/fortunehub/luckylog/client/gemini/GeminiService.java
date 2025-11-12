@@ -74,12 +74,12 @@ public class GeminiService {
 
       return parseFortuneResponse(responseText);
     } catch (ServerException e) {
-      log.error("Gemini API 호출 실패: 에러: {}", e.getMessage(), e);
+      log.error("Gemini API 호출 실패 - 서버 과부하: {}", e.getMessage(), e);
       throw new CustomException(ErrorCode.GEMINI_OVERLOAD);
     } catch (CustomException e) {
       throw e;
     } catch (Exception e) {
-      log.error("Gemini API 호출 실패: , 에러: {}", e.getMessage(), e);
+      log.error("Gemini API 호출 실패 - 에러: {}", e.getMessage(), e);
       throw new CustomException(ErrorCode.GEMINI_UNKNOWN_ERROR, e);
     }
   }
