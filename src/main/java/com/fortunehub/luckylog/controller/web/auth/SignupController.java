@@ -61,7 +61,7 @@ public class SignupController {
 
       return "auth/signup";
     } catch (Exception e) {
-      log.error("[SignupController] [회원가입 실패] - [시스템 예외 발생] | message={}", e.getMessage(), e);
+      log.error("[SignupController] [회원가입 실패] - [시스템 예외 발생]", e);
       return "redirect:/error/5xx";
     }
   }
