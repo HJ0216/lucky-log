@@ -38,8 +38,8 @@ public class SignupController {
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
           log.warn(
-              "[SignupController] [회원가입 검증 실패] - [입력값 유효성 오류] | field={} | rejectedValue={} | message={}",
-              error.getField(), error.getRejectedValue(), error.getDefaultMessage())
+              "[SignupController] [회원가입 검증 실패] - [입력값 유효성 오류] | field={}  | message={}",
+              error.getField(), error.getDefaultMessage())
       );
 
       return "auth/signup";
