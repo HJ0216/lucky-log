@@ -69,21 +69,22 @@ public class GeminiService {
       String responseText = response.text();
       if (responseText == null || responseText.trim().isEmpty()) {
         log.warn("Gemini API 빈 응답 수신");
-        throw new CustomException(ErrorCode.GEMINI_UNKNOWN_ERROR);
+        throw new CustomException(ErrorCode.GEMINI_EMPTY_RESPONSE);
       }
 
       return parseFortuneResponse(responseText);
     } catch (ServerException e) {
       log.error("Gemini API 호출 실패: 에러: {}", e.getMessage(), e);
       throw new CustomException(ErrorCode.GEMINI_OVERLOAD);
+    } catch (CustomException e) {
+      throw e;
     } catch (Exception e) {
       log.error("Gemini API 호출 실패: , 에러: {}", e.getMessage(), e);
       throw new CustomException(ErrorCode.GEMINI_UNKNOWN_ERROR, e);
     }
   }
 
-  private List<FortuneResponse> parseFortuneResponse(String jsonResponse)
-      throws JsonProcessingException {
+  private List<FortuneResponse> parseFortuneResponse(String jsonResponse) {
 
     try {
       List<FortuneResponse> responses = objectMapper.readValue(
