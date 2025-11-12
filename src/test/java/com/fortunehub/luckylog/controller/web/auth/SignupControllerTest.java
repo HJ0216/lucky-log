@@ -154,6 +154,24 @@ class SignupControllerTest {
   }
 
   @Test
+  @DisplayName("닉네임 없이 가입 시 메인 페이지로 리다이렉트된다")
+  void submit_WhenNicknameEmpty_ThenReturnsValidationError() throws Exception {
+    // given
+    doNothing().when(authService).signup(any(SignupRequest.class));
+
+    // when & then
+    mockMvc.perform(post("/signup")
+               .param("email", "test@email.com")
+               .param("password", "Password123!")
+               .param("confirmPassword", "Password123!")
+               .param("nickname", ""))
+           .andExpect(status().is3xxRedirection())
+           .andExpect(redirectedUrl("/"));
+
+    verify(authService).signup(any(SignupRequest.class));
+  }
+
+  @Test
   @DisplayName("중복된 닉네임으로 가입 시 검증 오류가 발생한다")
   void submit_WhenNicknameDuplicated_ThenReturnsValidationError() throws Exception {
     // given

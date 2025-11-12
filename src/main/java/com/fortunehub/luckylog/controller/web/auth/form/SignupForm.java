@@ -22,7 +22,7 @@ public class SignupForm {
   @NotBlank(message = "🔒 비밀번호를 입력해주세요!")
   @Pattern(
       regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,20}$",
-      message = "🔒 8-20자의 영문, 숫자, 특수문자 조합이어야 합니다"
+      message = "🔒 8-20자의 영문, 숫자, 특수문자 조합이어야 합니다!"
   )
   private String password;
 
@@ -31,7 +31,7 @@ public class SignupForm {
 
   // optional, 입력 시 2-20자 사이
   @Pattern(
-      regexp = "^[가-힣a-zA-Z0-9\\s]{2,20}$",
+      regexp = "^$|^[가-힣a-zA-Z0-9\\\\s]{2,20}$",
       message = "✨ 닉네임은 2-20자의 한글, 영문, 숫자, 띄어쓰기만 가능합니다!"
   )
   private String nickname;
