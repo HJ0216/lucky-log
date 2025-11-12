@@ -1,6 +1,7 @@
 package com.fortunehub.luckylog.controller.web.auth;
 
 import com.fortunehub.luckylog.controller.web.auth.form.SignupForm;
+import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.service.auth.AuthService;
 import jakarta.validation.Valid;
@@ -46,7 +47,7 @@ public class SignupController {
     }
 
     try {
-      authService.signup(form.toRequest());
+      authService.signup(SignupRequest.from(form));
 
       log.info("회원가입 성공 - 이메일: {}", form.getEmail());
 

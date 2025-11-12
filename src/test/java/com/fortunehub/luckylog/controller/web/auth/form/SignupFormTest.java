@@ -21,7 +21,7 @@ class SignupFormTest {
     form.setNickname("  테스터  ");
 
     // when
-    SignupRequest request = form.toRequest();
+    SignupRequest request = SignupRequest.from(form);
 
     // then
     assertEquals("테스터", request.getNickname());
@@ -38,7 +38,7 @@ class SignupFormTest {
     form.setNickname(" ");
 
     // when
-    SignupRequest request = form.toRequest();
+    SignupRequest request = SignupRequest.from(form);
 
     // then
     assertNull(request.getNickname());
@@ -55,7 +55,7 @@ class SignupFormTest {
     form.setNickname("");
 
     // when
-    SignupRequest request = form.toRequest();
+    SignupRequest request = SignupRequest.from(form);
 
     //then
     assertNull(request.getNickname());
@@ -72,7 +72,7 @@ class SignupFormTest {
     // nickname 설정 X
 
     // when
-    SignupRequest request = form.toRequest();
+    SignupRequest request = SignupRequest.from(form);
 
     // then
     assertNull(request.getNickname());

@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.service.auth;
 
+import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
@@ -29,7 +30,7 @@ public class AuthService {
 
     try {
       String encodedPassword = passwordEncoder.encode(request.getPassword());
-      memberRepository.save(request.toEntity(encodedPassword));
+      memberRepository.save(Member.from(request, encodedPassword));
     } catch (DataIntegrityViolationException e) {
       // DB의 unique 제약조건 위반 시
       if (e.getMessage().contains("email")) {

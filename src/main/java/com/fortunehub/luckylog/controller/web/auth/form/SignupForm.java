@@ -40,9 +40,4 @@ public class SignupForm {
   public boolean isPasswordMatched() {
     return password != null && password.equals(confirmPassword);
   }
-
-  public SignupRequest toRequest() {
-    String cleanedNickname = (nickname == null || nickname.isBlank()) ? null : nickname.trim();
-    return new SignupRequest(email, password, cleanedNickname);
-  }
 }

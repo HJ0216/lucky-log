@@ -1,6 +1,7 @@
 package com.fortunehub.luckylog.domain.member;
 
 import com.fortunehub.luckylog.domain.common.BaseTimeEntity;
+import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,5 +45,9 @@ public class Member extends BaseTimeEntity {
 
   private String normalizeEmail(String email) {
     return email != null ? email.toLowerCase().trim() : null;
+  }
+
+  public static Member from(SignupRequest request, String encodedPassword) {
+    return new Member(request.getEmail(), encodedPassword, request.getNickname());
   }
 }
