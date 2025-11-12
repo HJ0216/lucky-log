@@ -98,6 +98,7 @@ public class GeminiService {
       return formatFortuneContent(responses);
 
     } catch (Exception e) {
+      log.error("Gemini 응답 파싱 실패: {}", e.getMessage(), e);
       throw new CustomException(ErrorCode.GEMINI_RESPONSE_PARSE_ERROR, e);
     }
   }
