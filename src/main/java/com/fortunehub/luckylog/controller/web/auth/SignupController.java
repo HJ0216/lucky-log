@@ -37,9 +37,8 @@ public class SignupController {
 
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
-          log.warn("회원가입 검증 실패 - 필드: {}, 입력값: {}, 메시지: {}",
+          log.warn("회원가입 검증 실패 | field={} | message={}",
               error.getField(),
-              error.getRejectedValue(),
               error.getDefaultMessage())
       );
 
@@ -49,8 +48,6 @@ public class SignupController {
     try {
       authService.signup(SignupRequest.from(form));
 
-      log.info("회원가입 성공 - 이메일: {}", form.getEmail());
-
 //      return "redirect:/login";
       return  "redirect:/";
 
@@ -58,17 +55,20 @@ public class SignupController {
       switch (e.getErrorCode()){
         case DUPLICATE_EMAIL:
           result.rejectValue("email", e.getErrorCode().name(), e.getMessage());
-          log.warn("중복 이메일로 가입 시도: {}", form.getEmail());
           break;
         case DUPLICATE_NICKNAME:
           result.rejectValue("nickname", e.getErrorCode().name(), e.getMessage());
-          log.warn("중복 닉네임으로 가입 시도: {}", form.getNickname());
+          break;
+        default:
+          log.error("회원가입 실패 - CustomException | errorCode={} | message={}",
+              e.getErrorCode(), e.getMessage());
           break;
       }
 
       return "auth/signup";
     } catch (Exception e){
-      log.error("예상치 못한 오류 발생", e);
+      log.error("회원가입 실패 - 예상치 못한 오류 | email={} | nickname={}",
+          form.getEmail(), form.getNickname(), e);
       return "redirect:/error/5xx";
     }
   }
