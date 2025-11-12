@@ -38,7 +38,7 @@ public class SignupController {
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
           log.warn(
-              "[SignupController] [회원가입 검증 실패] - [입력값 유효성 오류] | field={}  | message={}",
+              "[SignupController] [회원가입 검증 실패] - [입력값 유효성 오류] | field={} | message={}",
               error.getField(), error.getDefaultMessage())
       );
 
@@ -57,6 +57,7 @@ public class SignupController {
             result.rejectValue("email", e.getErrorCode().name(), e.getMessage());
         case DUPLICATE_NICKNAME ->
             result.rejectValue("nickname", e.getErrorCode().name(), e.getMessage());
+        // TODO: default 추가, 필드 없이 메시지만
       }
 
       return "auth/signup";
