@@ -37,10 +37,9 @@ public class SignupController {
 
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
-          log.warn("회원가입 검증 실패 | field={} | rejectedValue={} | message={}",
-              error.getField(),
-              error.getRejectedValue(),
-              error.getDefaultMessage())
+          log.warn(
+              "[SignupController] [회원가입 검증 실패] - [입력값 유효성 오류] | field={} | rejectedValue={} | message={}",
+              error.getField(), error.getRejectedValue(), error.getDefaultMessage())
       );
 
       return "auth/signup";
@@ -54,21 +53,15 @@ public class SignupController {
 
     } catch (CustomException e) {
       switch (e.getErrorCode()) {
-        case DUPLICATE_EMAIL:
-          result.rejectValue("email", e.getErrorCode().name(), e.getMessage());
-          break;
-        case DUPLICATE_NICKNAME:
-          result.rejectValue("nickname", e.getErrorCode().name(), e.getMessage());
-          break;
-        default:
-          log.error("회원가입 실패 - CustomException | errorCode={} | message={}",
-              e.getErrorCode(), e.getMessage());
-          break;
+        case DUPLICATE_EMAIL ->
+            result.rejectValue("email", e.getErrorCode().name(), e.getMessage());
+        case DUPLICATE_NICKNAME ->
+            result.rejectValue("nickname", e.getErrorCode().name(), e.getMessage());
       }
 
       return "auth/signup";
     } catch (Exception e) {
-      log.error("회원가입 실패 - 예상치 못한 오류 발생", e);
+      log.error("[SignupController] [회원가입 실패] - [시스템 예외 발생] | message={}", e.getMessage(), e);
       return "redirect:/error/5xx";
     }
   }

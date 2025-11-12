@@ -22,15 +22,13 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
 
   public void signup(SignupRequest request) {
-    log.debug("회원가입 처리 시작 | email={}", request.getEmail());
-
     if (memberRepository.existsByEmail(request.getEmail())) {
-      log.warn("회원가입 실패 - 중복 이메일 | email={}", request.getEmail());
+      log.warn("[AuthService] [회원가입 실패] - [중복 이메일] | email={}", request.getEmail());
       throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
     }
 
     if (request.getNickname() != null && memberRepository.existsByNickname(request.getNickname())) {
-      log.warn("회원가입 실패 - 중복 닉네임 | nickname={}", request.getNickname());
+      log.warn("[AuthService] [회원가입 실패] - [중복 닉네임] | nickname={}", request.getNickname());
       throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
     }
 
@@ -38,11 +36,13 @@ public class AuthService {
       String encodedPassword = passwordEncoder.encode(request.getPassword());
       memberRepository.save(Member.from(request, encodedPassword));
 
-      log.info("회원 저장 성공 | email={} | nickname={}", request.getEmail(), request.getNickname());
+      log.info("[AuthService] [회원 저장 성공] | email={} | nickname={}", request.getEmail(),
+          request.getNickname());
 
     } catch (DataIntegrityViolationException e) {
       // DB의 unique 제약조건 위반 시
-      log.error("회원가입 실패 - DB 제약조건 위반 | email={} | nickname={}", request.getEmail(), request.getNickname(), e);
+      log.error("[AuthService] [회원가입 실패] - [DB 제약조건 위반] | email={} | nickname={}",
+          request.getEmail(), request.getNickname(), e);
       if (e.getMessage().contains("email")) {
         throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
       } else if (e.getMessage().contains("nickname")) {

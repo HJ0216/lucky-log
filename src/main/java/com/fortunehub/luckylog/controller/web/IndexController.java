@@ -71,7 +71,8 @@ public class IndexController {
     // @ModelAttribute: 자동으로 Model에 추가 (birthInfoForm 이름으로)
     // 사용자 입력값이 그대로 유지됨
 
-    log.debug("운세 선택 요청 | year={} | gender={} | timeSelected={} | citySelected={}",
+    log.info(
+        "[IndexController] [운세 선택 요청 시작] | year={} | gender={} | timeSelected={} | citySelected={}",
         birthInfoForm.getYear(),
         birthInfoForm.getGender(),
         birthInfoForm.getTime() != null && birthInfoForm.getTime() != TimeType.UNKNOWN,
@@ -79,11 +80,9 @@ public class IndexController {
 
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
-          log.warn("생년월일 검증 실패 | field={} | rejectedValue={} | message={}",
-              error.getField(),
-              error.getRejectedValue(),
-              error.getDefaultMessage())
-      );
+          log.warn(
+              "[IndexController] [생년월일 검증 실패] - [입력값 유효성 오류] | field={} | rejectedValue={} | message={}",
+              error.getField(), error.getRejectedValue(), error.getDefaultMessage()));
 
       return "index";
     }
