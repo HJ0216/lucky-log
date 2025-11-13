@@ -1,6 +1,13 @@
 # 🍀 Lucky Log 🍀
 
-운세 예측 내용을 기록해두고 실제 결과와 비교하는 플랫폼입니다.
+> AI 기반 운세 예측을 기록하고 실제 결과와 비교할 수 있는 웹 플랫폼
+
+## 📖 프로젝트 소개
+
+Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입니다.  
+실제 일어난 일과 비교하며 운세의 정확도를 확인할 수 있습니다.
+
+**🔗 서비스 주소 [🔮LUCKY LOG](https://lucky-log.duckdns.org/)**
 
 ## 🛠️ 기술 스택
 
@@ -10,7 +17,7 @@
 - **Framework**: Spring Boot 3.5.3
 - **ORM**: Spring Data JPA
 - **Security**: Spring Security, JWT
-- **Database**: H2 (개발), MySQL (운영: AWS RDS)
+- **Database**: H2 (개발) / MySQL (운영)
 
 ### Frontend
 
@@ -18,30 +25,130 @@
 - **JavaScript**: Vanilla JS (ES6+)
 - **Styling**: CSS3
 
+### Infra
+
+- **Cloud**: AWS EC2, AWS RDS
+- **CI/CD**: GitHub Actions
+- **Monitoring**: Spring Boot Actuator
+
 ### External Services
 
 - **AI API**: Google Gemini API 1.12.0
 
-### DevOps & Tools
+### DevOps
 
 - **Build Tool**: Gradle
-- **CI/CD**: GitHub Actions
-- **Monitoring**: Spring Boot Actuator (Health Check)
-- **API Documentatio**n: Swagger
 - **Testing**: JUnit 5
+- **Version Control**: Git
 
-## 🗒️커밋 메시지 규칙
+## 🏗️배포 아키텍쳐
 
 ```txt
-🎉Init: #이슈번호 프로젝트 시작
-✨Feat: #이슈번호 기능 추가
-🐛Fix: #이슈번호 버그 수정
-📝Docs: #이슈번호 README.md 등 문서 수정 및 추가
-🎨Style: #이슈번호 코드 포매팅, 함수명 수정 등
-💄design: #이슈번호 UI 디자인 변경
-✅Test: #이슈번호 테스트 코드
-♻️Refactor: #이슈번호 코드 리팩토링
-🧹Chore: #이슈번호 기타 자잘한 수정 등
-🚚rename: #이슈번호 파일 혹은 폴더명 수정
-🔥remove: #이슈번호 파일 삭제
+GitHub Repository
+       ↓ (Push)
+GitHub Actions (CI/CD)
+       ↓ (Build & Test)
+AWS EC2 (Application Server)
+       ↓ (Data)
+AWS RDS (MySQL Database)
 ```
+
+## 📂 디렉터리 구조
+
+```txt
+src
+├─java
+│  └─com
+│      └─fortunehub
+│          └─luckylog
+│              ├─client # 외부 API
+│              │  └─gemini
+│              ├─config # 설정 파일
+│              ├─controller # 웹 컨트롤러
+│              │  └─web
+│              │      ├─auth
+│              │      │  └─form
+│              │      └─fortune
+│              │          └─form
+│              ├─domain # 도메인 엔티티
+│              │  ├─common
+│              │  ├─fortune
+│              │  └─member
+│              ├─dto # 데이터 전송 객체
+│              │  ├─request
+│              │  │  ├─auth
+│              │  │  └─fortune
+│              │  └─response
+│              │      └─fortune
+│              ├─exception # 예외 처리
+│              ├─repository # 데이터 처리
+│              │  └─member
+│              └─service # 비즈니스 로직 처리
+│                  ├─auth
+│                  └─fortune
+└─resources
+    ├─static
+    │  ├─css
+    │  │  ├─auth
+    │  │  ├─common
+    │  │  └─fortune
+    │  ├─images
+    │  └─js
+    │      ├─auth
+    │      ├─common
+    │      └─fortune
+    └─templates # thymeleaf 템플릿
+        ├─auth
+        ├─error
+        ├─fortune
+        └─fragments
+```
+
+## 🎫 Local 환경에서의 실행
+
+1. 프로젝트 클론
+
+```bash
+https://github.com/HJ0216/lucky-log.git
+```
+
+2. 환경변수 설정
+
+- `SPRING_PROFILES_ACTIVE=local` profile 설정
+- `application.yaml` 관련 환경 변수 설정
+- `application-local.yaml` 관련 환경 변수 설정
+- `application-prompt.yaml` 파일 추가
+
+3. 프로젝트 실행
+
+## 📜 Git 전략
+
+- `main`: 프로덕션 배포
+- `develop`: 개발 통합
+- `feature`: 신규 기능 개발
+  - `feature/signup`, `feature/login`
+- `refactor`: 코드 리팩토링
+  - `refactor/ui`
+- `fix`: 버그 수정
+  - `fix/signup-error`
+
+## 🗒️ 커밋 컨벤션
+
+| Emoji | Type     | Description      |
+| ----- | -------- | ---------------- |
+| 🎉    | Init     | 프로젝트 시작    |
+| ✨    | Feat     | 새로운 기능 추가 |
+| 🐛    | Fix      | 버그 수정        |
+| 📝    | Docs     | 문서 수정        |
+| 🎨    | Style    | 코드 포매팅      |
+| 💄    | Design   | UI 디자인 변경   |
+| ✅    | Test     | 테스트 코드      |
+| ♻️    | Refactor | 코드 리팩토링    |
+| 🧹    | Chore    | 기타 수정        |
+| 🚚    | Rename   | 파일/폴더명 수정 |
+| 🔥    | Remove   | 파일 삭제        |
+
+**커밋 메시지 형식**
+
+- `<emoji><Type>: #<이슈번호> <설명>`
+- ✨Feat: #12 회원가입 기능 추가
