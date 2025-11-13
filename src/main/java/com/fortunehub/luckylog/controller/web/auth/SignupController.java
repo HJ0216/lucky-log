@@ -38,7 +38,7 @@ public class SignupController {
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
           log.warn(
-              "[SignupController] [회원가입 검증 실패] - [입력값 유효성 오류] | field={} | message={}",
+              "[회원가입 검증 실패] - [입력값 유효성 오류] | field={} | message={}",
               error.getField(), error.getDefaultMessage())
       );
 
@@ -62,7 +62,7 @@ public class SignupController {
 
       return "auth/signup";
     } catch (Exception e) {
-      log.error("[SignupController] [회원가입 실패] - [시스템 예외 발생]", e);
+      log.error("[회원가입 실패] - [시스템 예외 발생]", e);
       return "redirect:/error/5xx";
     }
   }

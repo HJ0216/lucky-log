@@ -71,7 +71,7 @@ public class FortuneOptionController {
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
           log.warn(
-              "[FortuneOptionController] [운세 옵션 검증 실패] - [입력값 유효성 오류] | field={} | rejectedValue={} | message={}",
+              "[운세 옵션 검증 실패] - [입력값 유효성 오류] | field={} | rejectedValue={} | message={}",
               error.getField(), error.getRejectedValue(), error.getDefaultMessage())
       );
 
@@ -92,7 +92,7 @@ public class FortuneOptionController {
 
       return "fortune/fortune-option";
     } catch (Exception e) {
-      log.error("[FortuneOptionController] [운세 분석 실패] - [API 호출 오류] | option={} | message={}",
+      log.error("[운세 분석 실패] - [API 호출 오류] | option={} | message={}",
           option, e.getMessage(), e);
 
       result.addError(
