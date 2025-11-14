@@ -20,8 +20,8 @@ logging:
     org.springframework.web: WARN
     org.springframework.security: WARN
   pattern:
-    file: '[%X{requestId:-}] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n'
-    console: '[%X{requestId:-}] %d{HH:mm:ss.SSS} %-5level %logger{35} - %msg%n'
+    file: '[%X{requestId:-NO-REQUEST-ID}] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n'
+    console: '[%X{requestId:-NO-REQUEST-ID}] %d{HH:mm:ss.SSS} %-5level %logger{35} - %msg%n'
   file:
     name: /home/deploy/logs/luckylog/luckylog.log
   logback:
