@@ -23,7 +23,7 @@ public class FortuneResultController {
     List<FortuneResponseView> response = (List<FortuneResponseView>) model.getAttribute("response");
 
     if (form == null || response == null) {
-      log.warn("[FortuneResultController] [운세 결과 표시 실패] - [필수 데이터 누락] | option={} | response={}",
+      log.warn("[운세 결과 표시 실패] - [필수 데이터 누락] | option={} | response={}",
           form, response);
       return "redirect:/";
     }

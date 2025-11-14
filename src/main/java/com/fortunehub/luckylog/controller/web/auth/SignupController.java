@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +39,7 @@ public class SignupController {
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
           log.warn(
-              "[SignupController] [회원가입 검증 실패] - [입력값 유효성 오류] | field={} | message={}",
+              "[회원가입 검증 실패] - [입력값 유효성 오류] | field={} | message={}",
               error.getField(), error.getDefaultMessage())
       );
 
@@ -62,8 +63,12 @@ public class SignupController {
 
       return "auth/signup";
     } catch (Exception e) {
-      log.error("[SignupController] [회원가입 실패] - [시스템 예외 발생]", e);
-      return "redirect:/error/5xx";
+      log.error("[회원가입 실패] - [시스템 예외 발생]", e);
+
+      result.addError(
+          new ObjectError(result.getObjectName(), "😲 회원 가입에 실패하였습니다.\n잠시 후 다시 시도해주세요."));
+
+      return "auth/signup";
     }
   }
 }

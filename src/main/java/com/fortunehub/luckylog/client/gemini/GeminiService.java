@@ -51,7 +51,7 @@ public class GeminiService {
   }
 
   private List<FortuneResponse> generateContent(String prompt, FortuneRequest request) {
-    log.info("[GeminiService] [운세 분석 요청] | model={} | fortuneTypes={} | birthInfo={}",
+    log.info("[운세 분석 요청] | model={} | fortuneTypes={} | birthInfo={}",
         modelName, request.getFortuneTypesAsString(), request.toBirthInfo().replace("\n", " "));
 
     long startTime = System.currentTimeMillis();
@@ -65,7 +65,7 @@ public class GeminiService {
 
       String responseText = response.text();
       if (responseText == null || responseText.trim().isEmpty()) {
-        log.warn("[GeminiService] [API 응답 실패] - [빈 응답 수신] | model={} | fortuneTypes={}",
+        log.warn("[API 응답 실패] - [빈 응답 수신] | model={} | fortuneTypes={}",
             modelName, request.getFortuneTypesAsString());
 
         throw new CustomException(ErrorCode.GEMINI_EMPTY_RESPONSE);
@@ -73,20 +73,20 @@ public class GeminiService {
 
       List<FortuneResponse> responses = parseFortuneResponse(responseText);
 
-      log.info("[GeminiService] [API 응답 성공] | resultCount={}", responses.size());
+      log.info("[API 응답 성공] | resultCount={}", responses.size());
 
       return responses;
 
     } catch (ServerException e) {
-      log.error("[GeminiService] [API 호출 실패] - [서버 과부하] | message={}", e.getMessage(), e);
+      log.error("[API 호출 실패] - [서버 과부하] | message={}", e.getMessage(), e);
       throw new CustomException(ErrorCode.GEMINI_OVERLOAD);
     } catch (CustomException e) {
       throw e;
     } catch (Exception e) {
-      log.error("[GeminiService] [API 호출 실패] - [알 수 없는 오류] | message={}", e.getMessage(), e);
+      log.error("[API 호출 실패] - [알 수 없는 오류] | message={}", e.getMessage(), e);
       throw new CustomException(ErrorCode.GEMINI_UNKNOWN_ERROR, e);
     } finally {
-      log.info("[GeminiService] [API 응답 완료] | durationMs={}",
+      log.info("[API 응답 완료] | durationMs={}",
           System.currentTimeMillis() - startTime);
     }
   }
@@ -105,7 +105,7 @@ public class GeminiService {
       return formatFortuneContent(responses);
 
     } catch (Exception e) {
-      log.error("[GeminiService] [응답 파싱 실패] - [JSON 변환 오류] | message={}", e.getMessage(), e);
+      log.error("[응답 파싱 실패] - [JSON 변환 오류] | message={}", e.getMessage(), e);
       throw new CustomException(ErrorCode.GEMINI_RESPONSE_PARSE_ERROR, e);
     }
   }

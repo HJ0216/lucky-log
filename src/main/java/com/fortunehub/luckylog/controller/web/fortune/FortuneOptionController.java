@@ -71,7 +71,7 @@ public class FortuneOptionController {
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
           log.warn(
-              "[FortuneOptionController] [운세 옵션 검증 실패] - [입력값 유효성 오류] | field={} | rejectedValue={} | message={}",
+              "[운세 옵션 검증 실패] - [입력값 유효성 오류] | field={} | rejectedValue={} | message={}",
               error.getField(), error.getRejectedValue(), error.getDefaultMessage())
       );
 
@@ -87,16 +87,18 @@ public class FortuneOptionController {
 
     } catch (CustomException e) {
       result.addError(
-          new ObjectError("FortuneOptionForm", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요"));
-      // @ModelAttribute로 선언된 객체(FortuneOptionForm)에만 사용
+          new ObjectError(result.getObjectName(), "😲 사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요."));
+      // result.getObjectName(): 동적으로 폼 이름을 가져와 어떤 객체의 에러인지 지정
+      // 어떤 객체의 에러인지 지정(페이지에 폼이 2개 이상일 수 있음)
+      // 생략하면 @ModelAttribute의 클래스명의 camelCase가 자동으로 이름이 됨
 
       return "fortune/fortune-option";
     } catch (Exception e) {
-      log.error("[FortuneOptionController] [운세 분석 실패] - [API 호출 오류] | option={} | message={}",
+      log.error("[운세 분석 실패] - [API 호출 오류] | option={} | message={}",
           option, e.getMessage(), e);
 
       result.addError(
-          new ObjectError("FortuneOptionForm", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요"));
+          new ObjectError(result.getObjectName(), "😲 사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요."));
 
       return "fortune/fortune-option";
     }

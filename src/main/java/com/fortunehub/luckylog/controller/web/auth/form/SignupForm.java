@@ -1,10 +1,8 @@
 package com.fortunehub.luckylog.controller.web.auth.form;
 
-import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -31,7 +29,7 @@ public class SignupForm {
 
   // optional, 입력 시 2-20자 사이
   @Pattern(
-      regexp = "^$|^[가-힣a-zA-Z0-9\\s]{2,20}$",
+      regexp = "^$|^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s]{2,20}$",
       message = "✨ 닉네임은 2-20자의 한글, 영문, 숫자, 띄어쓰기만 가능합니다!"
   )
   private String nickname;
