@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import com.fortunehub.luckylog.domain.member.Member;
@@ -13,7 +12,7 @@ import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.repository.member.MemberRepository;
-import java.util.Optional;
+import com.fortunehub.luckylog.security.CustomUserDetails;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +21,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class) // Mockito 관련 애노테이션(@Mock, @InjectMocks 등)을 자동으로 초기화
@@ -33,6 +36,9 @@ class AuthServiceTest {
 
   @Mock
   private PasswordEncoder passwordEncoder;
+
+  @Mock
+  private AuthenticationManager authenticationManager;
 
   @InjectMocks // Mockito가 AuthService 객체 생성 + mock 의존성 주입
   private AuthService authService;
@@ -216,34 +222,40 @@ class AuthServiceTest {
     LoginRequest req = new LoginRequest(TEST_EMAIL, TEST_RAW_PASSWORD);
     Member member = new Member(TEST_EMAIL, TEST_ENCODED_PASSWORD, TEST_NICKNAME);
 
-    given(memberRepository.findByEmail(req.getEmail())).willReturn(Optional.of(member));
-    given(passwordEncoder.matches(req.getPassword(), member.getPassword())).willReturn(true);
+    CustomUserDetails userDetails = new CustomUserDetails(member);
+    Authentication authentication = new UsernamePasswordAuthenticationToken(
+        userDetails, null, userDetails.getAuthorities()
+    );
+
+    given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+        .willReturn(authentication);
 
     // when
-    Member loginMember = authService.login(req);
+    Member result = authService.login(req);
 
     // then
-    assertThat(loginMember).isNotNull();
-    assertThat(loginMember.getEmail()).isEqualTo(TEST_EMAIL);
-    assertThat(loginMember.getNickname()).isEqualTo(TEST_NICKNAME);
+    assertThat(result).isNotNull();
+    assertThat(result.getEmail()).isEqualTo(req.getEmail());
+    assertThat(result.getNickname()).isEqualTo(TEST_NICKNAME);
 
-    verify(memberRepository).findByEmail(req.getEmail());
-    verify(passwordEncoder).matches(req.getPassword(), member.getPassword());
+    verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
   }
 
   @Test
   @DisplayName("존재하지 않는 이메일로 로그인 시 예외가 발생한다")
   void login_WhenEmailNotFound_ThenThrowsException() {
     // given
-    LoginRequest req = new LoginRequest(TEST_NOT_FOUND_EMAIL, TEST_RAW_PASSWORD);
-    given(memberRepository.findByEmail(TEST_NOT_FOUND_EMAIL)).willReturn(Optional.empty());
+    LoginRequest req = new LoginRequest(TEST_EMAIL, TEST_RAW_PASSWORD);
+
+    given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+        .willThrow(new BadCredentialsException("User not found"));
 
     // when & then
     assertThatThrownBy(() -> authService.login(req))
         .isInstanceOf(CustomException.class)
         .hasMessage(ErrorCode.LOGIN_FAILED.getMessage());
 
-    verify(passwordEncoder, never()).matches(any(), any());
+    verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
   }
 
   @Test
@@ -251,14 +263,15 @@ class AuthServiceTest {
   void login_WhenInvalidPassword_ThenThrowsException() {
     // given
     LoginRequest req = new LoginRequest(TEST_EMAIL, "Wrong147@");
-    Member member = new Member(TEST_EMAIL, TEST_ENCODED_PASSWORD, TEST_NICKNAME);
 
-    given(memberRepository.findByEmail(TEST_EMAIL)).willReturn(Optional.of(member));
-    given(passwordEncoder.matches(req.getPassword(), TEST_ENCODED_PASSWORD)).willReturn(false);
+    given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+        .willThrow(new BadCredentialsException("Bad credentials"));
 
     // when & then
     assertThatThrownBy(() -> authService.login(req))
         .isInstanceOf(CustomException.class)
         .hasMessage(ErrorCode.LOGIN_FAILED.getMessage());
+
+    verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
   }
 }

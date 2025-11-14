@@ -6,9 +6,15 @@ import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.repository.member.MemberRepository;
+import com.fortunehub.luckylog.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +27,7 @@ public class AuthService {
 
   private final MemberRepository memberRepository;
   private final PasswordEncoder passwordEncoder;
+  private final AuthenticationManager authenticationManager;
 
   public void signup(SignupRequest request) {
     if (memberRepository.existsByEmail(request.getEmail())) {
@@ -52,22 +59,27 @@ public class AuthService {
   }
 
   public Member login(LoginRequest request) {
-    String email = request.getEmail();
-    log.info("[로그인 시도] email={}", email);
+    log.info("[로그인 시도] email={}", request.getEmail());
 
-    Member member = memberRepository.findByEmail(email)
-                                    .orElseThrow(() -> {
-                                      log.warn("[로그인 실패] - [계정 없음] email={}", email);
-                                      return new CustomException(ErrorCode.LOGIN_FAILED);
-                                    });
+    try {
+      Authentication authentication = authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(
+              request.getEmail(),
+              request.getPassword()
+          )
+      );
 
-    if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
-      log.warn("[로그인 실패] - [비밀번호 불일치] email={}", email);
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+
+      CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+      Member member = userDetails.getMember();
+
+      log.info("[로그인 성공] email={}", member.getEmail());
+
+      return member;
+    } catch (BadCredentialsException e) {
+      log.warn("[로그인 실패] - [인증 실패] email={}", request.getEmail());
       throw new CustomException(ErrorCode.LOGIN_FAILED);
     }
-
-    log.info("[로그인 성공] memberId={}", member.getId());
-
-    return member;
   }
 }
