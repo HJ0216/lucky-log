@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fortunehub.luckylog.domain.member.Member;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ class MemberRepositoryTest {
 
   @Test
   @DisplayName("이메일로 회원 존재 여부를 확인할 수 있다")
-  void existsByEmail_WhenMemberSaved_ThenReturnsTrue(){
+  void existsByEmail_WhenMemberSaved_ThenReturnsTrue() {
     // given
     Member member = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
     memberRepository.save(member);
@@ -132,5 +133,31 @@ class MemberRepositoryTest {
     assertThatThrownBy(() -> {
       memberRepository.saveAndFlush(duplicate);
     }).isInstanceOf(DataIntegrityViolationException.class);
+  }
+
+  @Test
+  @DisplayName("이메일로 회원 조회 시 회원을 반환한다")
+  void findByEmail_WhenMemberExists_ThenReturnsMember() {
+    // given
+    Member member = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
+    memberRepository.save(member);
+
+    // when
+    Optional<Member> result = memberRepository.findByEmail(TEST_EMAIL);
+
+    // then
+    assertThat(result).isPresent();
+    assertThat(result.get().getEmail()).isEqualTo(TEST_EMAIL);
+    assertThat(result.get().getNickname()).isEqualTo(TEST_NICKNAME);
+  }
+
+  @Test
+  @DisplayName("존재하지 않는 이메일로 조회 시 빈 Optional을 반환한다")
+  void findByEmail_WhenMemberNotExists_ThenReturnsEmpty() {
+    // when
+    Optional<Member> result = memberRepository.findByEmail(TEST_EMAIL);
+
+    // then
+    assertThat(result).isEmpty();
   }
 }
