@@ -57,7 +57,8 @@ public class SignupController {
             result.rejectValue("email", e.getErrorCode().name(), e.getMessage());
         case DUPLICATE_NICKNAME ->
             result.rejectValue("nickname", e.getErrorCode().name(), e.getMessage());
-        // TODO: default 추가, 필드 없이 메시지만
+        default -> result.addError(
+            new ObjectError(result.getObjectName(), "😲 회원 가입에 실패하였습니다.\n잠시 후 다시 시도해주세요."));
       }
 
       return "auth/signup";
