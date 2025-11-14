@@ -1,0 +1,21 @@
+<th:block th:fragment="common-meta">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:title" content="Lucky Log">
+  <meta property="og:description" content="사주가 맞았는지 틀렸는지 확인해보자">
+  <meta property="og:url" content="https://www.lucky-log.duckdns.org">
+  <meta property="og:image" content="https://www.lucky-log.duckdns.org/images/lucky-log-thumbnail.jpg">
+  <meta property="og:type" content="website">
+</th:block>
+
+<th:block th:fragment="common-resources">
+  <link rel="icon" href="../../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
+  <link rel="stylesheet" href="../../static/css/common/default.css" th:href="@{/css/common/default.css}">
+  <link rel="stylesheet" href="../../static/css/common/header.css" th:href="@{/css/common/header.css}">
+</th:block>
+
+<th:block th:fragment="common-error-resources">
+  <link rel="icon" href="../../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
+  <link rel="stylesheet" href="../../static/css/common/error.css" th:href="@{/css/common/error.css}">
+</th:block>
