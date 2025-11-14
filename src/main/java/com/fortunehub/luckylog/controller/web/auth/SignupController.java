@@ -21,13 +21,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class SignupController {
 
+  public static final String SIGNUP_VIEW = "auth/signup";
+  public static final String LOGIN_VIEW = "auth/login";
+
   private final AuthService authService;
 
   @GetMapping
   public String show(@ModelAttribute SignupForm form) {
     // @ModelAttribute는 넘어오는 데이터가 없어도 자동으로 빈 객체를 생성
     // 매개변수 이름과 무관하게 form 객체 이름 사용
-    return "auth/signup";
+    return SIGNUP_VIEW;
   }
 
   @PostMapping
@@ -43,13 +46,13 @@ public class SignupController {
               error.getField(), error.getDefaultMessage())
       );
 
-      return "auth/signup";
+      return SIGNUP_VIEW;
     }
 
     try {
       authService.signup(SignupRequest.from(form));
 
-      return "redirect:/login";
+      return LOGIN_VIEW;
 
     } catch (CustomException e) {
       switch (e.getErrorCode()) {
@@ -61,14 +64,14 @@ public class SignupController {
             new ObjectError(result.getObjectName(), "😲 회원 가입에 실패하였습니다.\n잠시 후 다시 시도해주세요."));
       }
 
-      return "auth/signup";
+      return SIGNUP_VIEW;
     } catch (Exception e) {
       log.error("[회원가입 실패] - [시스템 예외 발생]", e);
 
       result.addError(
           new ObjectError(result.getObjectName(), "😲 회원 가입에 실패하였습니다.\n잠시 후 다시 시도해주세요."));
 
-      return "auth/signup";
+      return SIGNUP_VIEW;
     }
   }
 }
