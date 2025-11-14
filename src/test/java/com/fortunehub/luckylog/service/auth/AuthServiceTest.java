@@ -250,7 +250,7 @@ class AuthServiceTest {
   @DisplayName("잘못된 비밀번호로 로그인 시 예외가 발생한다")
   void login_WhenInvalidPassword_ThenThrowsException() {
     // given
-    LoginRequest req = new LoginRequest(TEST_NOT_FOUND_EMAIL, "Wrong147@");
+    LoginRequest req = new LoginRequest(TEST_EMAIL, "Wrong147@");
     Member member = new Member(TEST_EMAIL, TEST_ENCODED_PASSWORD, TEST_NICKNAME);
 
     given(memberRepository.findByEmail(TEST_EMAIL)).willReturn(Optional.of(member));
