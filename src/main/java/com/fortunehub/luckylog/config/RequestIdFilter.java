@@ -28,7 +28,7 @@ public class RequestIdFilter implements
 
       chain.doFilter(request, response);
     } finally {
-      MDC.clear();
+      MDC.remove(REQUEST_ID_KEY);
     }
   }
 }
