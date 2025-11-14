@@ -83,6 +83,7 @@ src
 │              ├─exception # 예외 처리
 │              ├─repository # 데이터 처리
 │              │  └─member
+│              ├─security # 인증, 인가
 │              └─service # 비즈니스 로직 처리
 │                  ├─auth
 │                  └─fortune
