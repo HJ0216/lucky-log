@@ -172,6 +172,24 @@ class SignupControllerTest {
   }
 
   @Test
+  @DisplayName("닉네임에 자음만 있어도 가입 후 메인 페이지로 리다이렉트된다")
+  void submit_WhenNicknameHasOnlyConsonants_ThenRedirectsToIndex() throws Exception {
+    // given
+    doNothing().when(authService).signup(any(SignupRequest.class));
+
+    // when & then
+    mockMvc.perform(post("/signup")
+               .param("email", "test@email.com")
+               .param("password", "Password123!")
+               .param("confirmPassword", "Password123!")
+               .param("nickname", "ㄱㄴㄷ"))
+           .andExpect(status().is3xxRedirection())
+           .andExpect(redirectedUrl("/"));
+
+    verify(authService).signup(any(SignupRequest.class));
+  }
+
+  @Test
   @DisplayName("닉네임 없이 가입 시 메인 페이지로 리다이렉트된다")
   void submit_WhenNicknameEmpty_ThenRedirectsToIndex() throws Exception {
     // given
@@ -225,7 +243,7 @@ class SignupControllerTest {
   }
 
   @Test
-  @DisplayName("예상치 못한 오류 발생 시 에러 페이지로 리다이렉트된다")
+  @DisplayName("예상치 못한 오류 발생 시 검증 오류가 발생한다")
   void submit_WhenUnexpectedError_ThenRedirectsToErrorPage() throws Exception {
     // given
     doThrow(new RuntimeException("예상치 못한 오류 발생"))
@@ -237,7 +255,7 @@ class SignupControllerTest {
                .param("password", "Password123!")
                .param("confirmPassword", "Password123!")
                .param("nickname", "테스터"))
-           .andExpect(status().is3xxRedirection())
-           .andExpect(redirectedUrl("/error/5xx"));
+           .andExpect(view().name("auth/signup"))
+           .andExpect(model().attributeHasErrors("signupForm"));
   }
 }
