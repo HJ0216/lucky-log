@@ -87,7 +87,7 @@ public class FortuneOptionController {
 
     } catch (CustomException e) {
       result.addError(
-          new ObjectError("FortuneOptionForm", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요"));
+          new ObjectError("FortuneOptionForm", "😲 사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요."));
       // @ModelAttribute로 선언된 객체(FortuneOptionForm)에만 사용
 
       return "fortune/fortune-option";
@@ -96,7 +96,7 @@ public class FortuneOptionController {
           option, e.getMessage(), e);
 
       result.addError(
-          new ObjectError("FortuneOptionForm", "사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요"));
+          new ObjectError("FortuneOptionForm", "😲 사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요."));
 
       return "fortune/fortune-option";
     }

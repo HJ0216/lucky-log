@@ -1,10 +1,8 @@
 package com.fortunehub.luckylog.controller.web.auth.form;
 
-import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

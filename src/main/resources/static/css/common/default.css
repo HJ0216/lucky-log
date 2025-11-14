@@ -367,6 +367,7 @@ body {
   text-align: center;
   margin-bottom: 10px;
   animation: slideDown 0.3s ease-out;
+  white-space: pre-line;
 }
 
 @keyframes slideDown {
