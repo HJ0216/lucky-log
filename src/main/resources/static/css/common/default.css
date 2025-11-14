@@ -141,6 +141,10 @@ img {
 }
 a {
   display: inline-block;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
 }
 button {
   border: 0;
@@ -434,6 +438,7 @@ body {
   background: rgba(255, 255, 255, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 5px;
+  padding: 1px 10px;
   cursor: pointer;
   font-size: 0.75rem;
   font-weight: 300;

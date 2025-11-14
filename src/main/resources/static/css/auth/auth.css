@@ -1,4 +1,4 @@
-.signup-input {
+.auth-input {
   backdrop-filter: blur(20px);
   background: rgba(255, 255, 255, 0.3);
   border: 2px solid rgba(255, 255, 255, 0.7);
@@ -10,7 +10,7 @@
   transition: all 0.3s ease;
 }
 
-.signup-input:focus {
+.auth-input:focus {
   outline: none;
   transform: translateY(-3px);
 }

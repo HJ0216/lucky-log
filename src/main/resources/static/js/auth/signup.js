@@ -2,13 +2,11 @@
 
 const SignupPage = {
   config: {
-    NAVIGATE_HOME_URL: '/',
     ANIMATION_DURATION: 300, // 0.3s
     ERROR_DURATION: 5000,
   },
 
   elements: {
-    backBtn: null,
     form: null,
     submitBtn: null,
     emailInput: null,
@@ -28,7 +26,6 @@ const SignupPage = {
   },
 
   cacheElements() {
-    this.elements.backBtn = document.querySelector('[data-back-btn]');
     this.elements.form = document.querySelector('form');
     this.elements.submitBtn = document.querySelector('[data-submit-btn]');
     this.elements.emailInput = document.querySelector('#email');
@@ -52,7 +49,6 @@ const SignupPage = {
 
   validateRequiredElements() {
     const required = [
-      'backBtn',
       'form',
       'submitBtn',
       'emailInput',
@@ -72,10 +68,6 @@ const SignupPage = {
   },
 
   attachEvents() {
-    this.elements.backBtn.addEventListener('click', () => {
-      window.location.href = this.config.NAVIGATE_HOME_URL;
-    });
-
     // 입력 시 에러 메시지 숨기기
     this.elements.allInputs
       .filter(Boolean)
