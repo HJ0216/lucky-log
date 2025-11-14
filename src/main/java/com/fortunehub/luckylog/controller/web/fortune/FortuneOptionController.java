@@ -88,7 +88,8 @@ public class FortuneOptionController {
     } catch (CustomException e) {
       result.addError(
           new ObjectError(result.getObjectName(), "😲 사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요."));
-      // FortuneOptionForm: 어떤 객체의 에러인지 지정(페이지에 폼이 2개 이상일 수 있음)
+      // result.getObjectName(): 동적으로 폼 이름을 가져와 어떤 객체의 에러인지 지정
+      // 어떤 객체의 에러인지 지정(페이지에 폼이 2개 이상일 수 있음)
       // 생략하면 @ModelAttribute의 클래스명의 camelCase가 자동으로 이름이 됨
 
       return "fortune/fortune-option";
