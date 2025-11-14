@@ -49,8 +49,7 @@ public class SignupController {
     try {
       authService.signup(SignupRequest.from(form));
 
-//      return "redirect:/login";
-      return "redirect:/";
+      return "redirect:/login";
 
     } catch (CustomException e) {
       switch (e.getErrorCode()) {
