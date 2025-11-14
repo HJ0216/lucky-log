@@ -66,7 +66,7 @@ public class SignupController {
       log.error("[회원가입 실패] - [시스템 예외 발생]", e);
 
       result.addError(
-          new ObjectError("SignupForm", "😲 회원 가입에 실패하였습니다.\n잠시 후 다시 시도해주세요."));
+          new ObjectError(result.getObjectName(), "😲 회원 가입에 실패하였습니다.\n잠시 후 다시 시도해주세요."));
 
       return "auth/signup";
     }

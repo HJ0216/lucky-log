@@ -87,8 +87,9 @@ public class FortuneOptionController {
 
     } catch (CustomException e) {
       result.addError(
-          new ObjectError("FortuneOptionForm", "😲 사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요."));
-      // @ModelAttribute로 선언된 객체(FortuneOptionForm)에만 사용
+          new ObjectError(result.getObjectName(), "😲 사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요."));
+      // FortuneOptionForm: 어떤 객체의 에러인지 지정(페이지에 폼이 2개 이상일 수 있음)
+      // 생략하면 @ModelAttribute의 클래스명의 camelCase가 자동으로 이름이 됨
 
       return "fortune/fortune-option";
     } catch (Exception e) {
@@ -96,7 +97,7 @@ public class FortuneOptionController {
           option, e.getMessage(), e);
 
       result.addError(
-          new ObjectError("FortuneOptionForm", "😲 사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요."));
+          new ObjectError(result.getObjectName(), "😲 사주 정보를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요."));
 
       return "fortune/fortune-option";
     }
