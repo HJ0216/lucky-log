@@ -1,4 +1,15 @@
 <header th:fragment="authButtons" class="auth-btn-container">
-    <a th:href="@{/signup}" href="/signup" class="auth-btn">회원가입</a>
-    <a th:href="@{/login}" href="/login" class="auth-btn">로그인</a>
+  <th:blcok th:if="${session.loginMember == null}">
+    <a th:href="@{/signup}" href="/signup" class="auth-btn">가입하기</a>
+    <a th:href="@{/login}" href="/login" class="auth-btn">입장하기</a>
+  </th:blcok>
+
+  <th:block th:if="${session.loginMember != null}">
+    <a th:href="@{/mypage}" href="/mypage" class="auth-btn disabled-btn">
+      <span th:text="${session.loginMember.displayName}">솜사탕 구름</span>
+    </a>
+    <form action="/logout" th:action="@{/logout}" method="post">
+      <button type="submit" class="auth-btn disabled-btn logout-btn">나가기</button>
+    </form>
+  </th:block>
 </header>

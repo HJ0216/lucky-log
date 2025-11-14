@@ -51,7 +51,7 @@ public class AuthService {
     }
   }
 
-  public void login(LoginRequest request) {
+  public Member login(LoginRequest request) {
     String email = request.getEmail();
     log.info("[로그인 시도] email={}", email);
 
@@ -67,5 +67,7 @@ public class AuthService {
     }
 
     log.info("[로그인 성공] memberId={}", member.getId());
+
+    return member;
   }
 }
