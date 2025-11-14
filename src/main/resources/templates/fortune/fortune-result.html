@@ -2,14 +2,14 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <th:block th:replace="~{fragments/head :: common-meta}" />
+
   <title>LUCKY LOG</title>
-  <link rel="icon" href="../../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
-  <link rel="stylesheet" href="../../static/css/common/default.css" th:href="@{/css/common/default.css}">
-  <link rel="stylesheet" href="../../static/css/common/header.css" th:href="@{/css/common/header.css}">
+
+  <th:block th:replace="~{fragments/head :: common-resources}" />
   <link rel="stylesheet" href="../../static/css/common/toast.css" th:href="@{/css/common/toast.css}">
-  <link rel="stylesheet" href="../../static/css/fortune/fortune-result.css" th:href="@{/css/fortune/fortune-result.css}">
+  <link rel="stylesheet" href="../../static/css/fortune/fortune-result.css"
+    th:href="@{/css/fortune/fortune-result.css}">
   <script src="../../static/js/common/toast.js" th:src="@{/js/common/toast.js}" defer></script>
   <script src="../../static/js/fortune/fortune-result.js" th:src="@{/js/fortune/fortune-result.js}" defer></script>
 </head>

@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <meta charset="UTF-8">
+  <th:block th:replace="~{fragments/head :: common-meta}" />
+
   <title>LUCKY LOG</title>
-  <link rel="icon" href="../static/images/lucky-log-logo.png" th:href="@{/images/lucky-log-logo.png}">
-  <link rel="stylesheet" href="../../static/css/common/error.css" th:href="@{/css/common/error.css}">
+
+  <th:block th:replace="~{fragments/head :: common-error-resources}" />
 </head>
+
 <body>
   <div class="holographic-bg"></div>
 
@@ -14,7 +17,7 @@
   <div class="emoji-decoration">🧚‍♀️</div>
   <div class="emoji-decoration">😱</div>
   <div class="emoji-decoration">🔧</div>
-  
+
   <div class="container">
     <div class="error-title">500</div>
 
@@ -26,4 +29,5 @@
 
   </div>
 </body>
+
 </html>
