@@ -16,11 +16,12 @@ logging:
   level:
     root: WARN
     com.fortunehub.luckylog: INFO
-    org.springframework.web: WARN
     org.hibernate.SQL: WARN
+    org.springframework.web: WARN
+    org.springframework.security: WARN
   pattern:
-    file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n'
-    console: '%d{HH:mm:ss} %-5level %logger{35} - %msg%n'
+    file: '[%X{requestId:-}] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n'
+    console: '[%X{requestId:-}] %d{HH:mm:ss.SSS} %-5level %logger{35} - %msg%n'
   file:
     name: /home/deploy/logs/luckylog/luckylog.log
   logback:
