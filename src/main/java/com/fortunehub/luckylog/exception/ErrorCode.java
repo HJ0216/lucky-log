@@ -9,6 +9,9 @@ public enum ErrorCode {
   DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "📧 이미 사용 중인 이메일입니다!"),
   DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "✨ 이미 사용 중인 닉네임입니다!"),
 
+  // 로그인
+  LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "🔒 이메일 또는 비밀번호가 일치하지 않습니다"),
+
   // Gemini
   GEMINI_EMPTY_RESPONSE(HttpStatus.INTERNAL_SERVER_ERROR, "❓ Gemini 응답이 비어있습니다."),
   GEMINI_OVERLOAD(HttpStatus.SERVICE_UNAVAILABLE, "😵 Gemini API 과부하 상태입니다. 잠시 후 다시 시도해주세요."),

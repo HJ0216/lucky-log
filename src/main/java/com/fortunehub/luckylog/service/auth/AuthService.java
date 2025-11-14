@@ -1,6 +1,7 @@
 package com.fortunehub.luckylog.service.auth;
 
 import com.fortunehub.luckylog.domain.member.Member;
+import com.fortunehub.luckylog.dto.request.auth.LoginRequest;
 import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
@@ -48,5 +49,23 @@ public class AuthService {
       }
       throw e; // 다른 무결성 제약 위반
     }
+  }
+
+  public void login(LoginRequest request) {
+    String email = request.getEmail();
+    log.info("[로그인 시도] email={}", email);
+
+    Member member = memberRepository.findByEmail(email)
+                                    .orElseThrow(() -> {
+                                      log.warn("[로그인 실패] - [계정 없음] email={}", email);
+                                      return new CustomException(ErrorCode.LOGIN_FAILED);
+                                    });
+
+    if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
+      log.warn("[로그인 실패] - [비밀번호 불일치] email={}", email);
+      throw new CustomException(ErrorCode.LOGIN_FAILED);
+    }
+
+    log.info("[로그인 성공] memberId={}", member.getId());
   }
 }
