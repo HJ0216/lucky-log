@@ -51,7 +51,6 @@ class AuthServiceTest {
   }
 
   private static final String TEST_EMAIL = "lucky@email.com";
-  private static final String TEST_NOT_FOUND_EMAIL = "unlucky@email.com";
   private static final String TEST_RAW_PASSWORD = "password147@";
   private static final String TEST_ENCODED_PASSWORD = "encodedPassword123";
   private static final String TEST_NICKNAME = "솜사탕";
