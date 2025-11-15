@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
+
+  private static String DEFAULT_DISPLAY_NAME = "내 정보 보기";
+
   private final Member member;
 
   @Override
@@ -54,9 +57,13 @@ public class CustomUserDetails implements UserDetails {
       return member.getNickname();
     }
 
-    // 이메일에서 @ 앞부분 추출
     String email = member.getEmail();
+    if (email == null) {
+      return DEFAULT_DISPLAY_NAME;
+    }
+
+    // 이메일에서 @ 앞부분 추출
     int atIndex = email.indexOf('@');
-    return atIndex > 0 ? email.substring(0, atIndex) : "내 정보 보기";
+    return atIndex > 0 ? email.substring(0, atIndex) : DEFAULT_DISPLAY_NAME;
   }
 }
