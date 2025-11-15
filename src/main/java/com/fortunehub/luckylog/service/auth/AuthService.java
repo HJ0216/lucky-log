@@ -64,8 +64,11 @@ public class AuthService {
 
       log.info("[로그인 성공]");
     } catch (AuthenticationException e) {
-      log.warn("[로그인 실패] - [인증 실패]");
+      log.warn("[로그인 실패] - [인증 실패]", e);
       throw new CustomException(ErrorCode.LOGIN_FAILED);
+    } catch (Exception e) {
+      log.error("[로그인 실패] - [시스템 오류]", e);
+      throw new CustomException(ErrorCode.LOGIN_SYSTEM_ERROR);
     }
   }
 }
