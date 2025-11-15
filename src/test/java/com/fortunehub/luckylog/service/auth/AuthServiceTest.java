@@ -220,7 +220,6 @@ class AuthServiceTest {
     verify(memberRepository).save(any(Member.class));
   }
 
-
   @Test
   @DisplayName("정상적인 로그인 요청 시 로그인에 성공한다")
   void login_WhenValidCredentials_ThenSuccess() {
@@ -262,9 +261,14 @@ class AuthServiceTest {
     // when & then
     assertThatThrownBy(() -> authService.login(req))
         .isInstanceOf(CustomException.class)
-        .hasMessage(ErrorCode.LOGIN_FAILED.getMessage());
+        .hasMessage(ErrorCode.LOGIN_FAILED.getMessage())
+        .extracting("errorCode")
+        .isEqualTo(ErrorCode.LOGIN_FAILED);
 
     verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+
+    Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+    assertThat(currentAuth).isNull();
   }
 
   @Test
@@ -279,8 +283,13 @@ class AuthServiceTest {
     // when & then
     assertThatThrownBy(() -> authService.login(req))
         .isInstanceOf(CustomException.class)
-        .hasMessage(ErrorCode.LOGIN_FAILED.getMessage());
+        .hasMessage(ErrorCode.LOGIN_FAILED.getMessage())
+        .extracting("errorCode")
+        .isEqualTo(ErrorCode.LOGIN_FAILED);
 
     verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+
+    Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+    assertThat(currentAuth).isNull();
   }
 }
