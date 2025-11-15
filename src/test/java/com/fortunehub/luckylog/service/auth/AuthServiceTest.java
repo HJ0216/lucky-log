@@ -13,6 +13,7 @@ import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.repository.member.MemberRepository;
 import com.fortunehub.luckylog.security.CustomUserDetails;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +26,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class) // Mockito 관련 애노테이션(@Mock, @InjectMocks 등)을 자동으로 초기화
@@ -42,6 +44,11 @@ class AuthServiceTest {
 
   @InjectMocks // Mockito가 AuthService 객체 생성 + mock 의존성 주입
   private AuthService authService;
+
+  @AfterEach
+  void tearDown() {
+    SecurityContextHolder.clearContext(); // 테스트 간 격리를 위해 초기화
+  }
 
   private static final String TEST_EMAIL = "lucky@email.com";
   private static final String TEST_NOT_FOUND_EMAIL = "unlucky@email.com";
@@ -231,14 +238,17 @@ class AuthServiceTest {
         .willReturn(authentication);
 
     // when
-    Member result = authService.login(req);
+    authService.login(req);
 
     // then
-    assertThat(result).isNotNull();
-    assertThat(result.getEmail()).isEqualTo(req.getEmail());
-    assertThat(result.getNickname()).isEqualTo(TEST_NICKNAME);
-
     verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+
+    Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+    assertThat(currentAuth).isNotNull();
+    assertThat(currentAuth.getPrincipal()).isInstanceOf(CustomUserDetails.class);
+
+    CustomUserDetails principal = (CustomUserDetails) currentAuth.getPrincipal();
+    assertThat(principal.getUsername()).isEqualTo(req.getEmail());
   }
 
   @Test

@@ -2,6 +2,8 @@ package com.fortunehub.luckylog.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,7 +22,10 @@ public class SecurityConfig {
         .formLogin(form -> form.disable())
         .headers(headers -> headers
             .frameOptions(frameOptions -> frameOptions.disable())) // h2 db 관련 설정
-        .httpBasic(httpBasic -> httpBasic.disable()); // HTTP Basic 인증 대신 JWT 사용
+        .httpBasic(httpBasic -> httpBasic.disable()) // HTTP Basic 인증 대신 JWT 사용
+        .securityContext(context -> context
+            .requireExplicitSave(false) // 자동으로 세션에 저장
+        );
     return http.build();
   }
 
@@ -29,4 +34,8 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+    return authConfig.getAuthenticationManager();
+  }
 }

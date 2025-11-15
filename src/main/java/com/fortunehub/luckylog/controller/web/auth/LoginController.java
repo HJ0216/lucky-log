@@ -1,12 +1,9 @@
 package com.fortunehub.luckylog.controller.web.auth;
 
 import com.fortunehub.luckylog.controller.web.auth.form.LoginForm;
-import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.auth.LoginRequest;
-import com.fortunehub.luckylog.dto.session.SessionMember;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.service.auth.AuthService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +34,7 @@ public class LoginController {
   @PostMapping
   public String submit(
       @Valid @ModelAttribute LoginForm form,
-      BindingResult result,
-      HttpSession session
+      BindingResult result
   ) {
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
@@ -51,8 +47,7 @@ public class LoginController {
     }
 
     try {
-      Member member = authService.login(LoginRequest.from(form));
-      session.setAttribute("loginMember", SessionMember.from(member));
+      authService.login(LoginRequest.from(form));
 
       return REDIRECT_HOME;
     } catch (CustomException e) {

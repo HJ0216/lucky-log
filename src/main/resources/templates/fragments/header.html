@@ -1,12 +1,12 @@
 <header th:fragment="authButtons" class="auth-btn-container">
-  <th:blcok th:if="${session.loginMember == null}">
+  <th:block sec:authorize="isAnonymous()">
     <a th:href="@{/signup}" href="/signup" class="auth-btn">가입하기</a>
     <a th:href="@{/login}" href="/login" class="auth-btn">입장하기</a>
-  </th:blcok>
+  </th:block>
 
-  <th:block th:if="${session.loginMember != null}">
+  <th:block sec:authorize="isAuthenticated()">
     <a th:href="@{/mypage}" href="/mypage" class="auth-btn disabled-btn">
-      <span th:text="${session.loginMember.displayName}">솜사탕 구름</span>
+      <span sec:authentication="principal.displayName">내 정보 보기</span>
     </a>
     <form action="/logout" th:action="@{/logout}" method="post">
       <button type="submit" class="auth-btn disabled-btn logout-btn">나가기</button>

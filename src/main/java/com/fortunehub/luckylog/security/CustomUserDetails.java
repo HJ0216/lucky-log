@@ -48,4 +48,15 @@ public class CustomUserDetails implements UserDetails {
   public boolean isEnabled() {
     return true;
   }
+
+  public String getDisplayName() {
+    if (member.getNickname() != null && !member.getNickname().isBlank()) {
+      return member.getNickname();
+    }
+
+    // 이메일에서 @ 앞부분 추출
+    String email = member.getEmail();
+    int atIndex = email.indexOf('@');
+    return atIndex > 0 ? email.substring(0, atIndex) : "내 정보 보기";
+  }
 }
