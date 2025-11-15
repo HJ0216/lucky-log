@@ -61,8 +61,6 @@ class AuthServiceTest {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
-    given(memberRepository.existsByEmail(req.getEmail())).willReturn(false);
-    given(memberRepository.existsByNickname(req.getNickname())).willReturn(false);
     given(passwordEncoder.encode(req.getPassword())).willReturn(TEST_ENCODED_PASSWORD);
 
     // when
@@ -81,57 +79,17 @@ class AuthServiceTest {
   }
 
   @Test
-  @DisplayName("중복된 이메일로 회원가입 시 예외가 발생한다")
-  void signup_WhenEmailDuplicated_ThenThrowsException() {
-    // given
-    SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
-
-    given(memberRepository.existsByEmail(req.getEmail())).willReturn(true);
-
-    // when & then
-    assertThatThrownBy(() -> authService.signup(req))
-        .isInstanceOf(CustomException.class)
-        .hasMessageContaining(ErrorCode.DUPLICATE_EMAIL.getMessage())
-        .extracting("errorCode")
-        .isEqualTo(ErrorCode.DUPLICATE_EMAIL);
-
-    verify(memberRepository).existsByEmail(req.getEmail());
-  }
-
-  @Test
-  @DisplayName("중복된 닉네임으로 회원가입 시 예외가 발생한다")
-  void signup_WhenNicknameDuplicated_ThenThrowsException() {
-    // given
-    SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
-
-    given(memberRepository.existsByEmail(req.getEmail())).willReturn(false);
-    given(memberRepository.existsByNickname(req.getNickname())).willReturn(true);
-
-    // when & then
-    assertThatThrownBy(() -> authService.signup(req))
-        .isInstanceOf(CustomException.class)
-        .hasMessageContaining(ErrorCode.DUPLICATE_NICKNAME.getMessage())
-        .extracting("errorCode")
-        .isEqualTo(ErrorCode.DUPLICATE_NICKNAME);
-
-    verify(memberRepository).existsByEmail(req.getEmail());
-    verify(memberRepository).existsByNickname(req.getNickname());
-  }
-
-  @Test
   @DisplayName("닉네임 없이 회원가입 시 정상 처리된다")
   void signup_WhenNicknameNull_ThenSavesSuccessfully() {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, null);
 
-    given(memberRepository.existsByEmail(req.getEmail())).willReturn(false);
     given(passwordEncoder.encode(req.getPassword())).willReturn(TEST_ENCODED_PASSWORD);
 
     // when
     authService.signup(req);
 
     // then
-    verify(memberRepository).existsByEmail(req.getEmail());
     verify(passwordEncoder).encode(TEST_RAW_PASSWORD);
 
     ArgumentCaptor<Member> captor = ArgumentCaptor.forClass(Member.class);
@@ -151,11 +109,13 @@ class AuthServiceTest {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
-    given(memberRepository.existsByEmail(req.getEmail())).willReturn(false);
-    given(memberRepository.existsByNickname(req.getNickname())).willReturn(false);
     given(passwordEncoder.encode(req.getPassword())).willReturn(TEST_ENCODED_PASSWORD);
-    given(memberRepository.save(any(Member.class)))
-        .willThrow(new DataIntegrityViolationException("Duplicate entry for email"));
+
+    DataIntegrityViolationException dbException = new DataIntegrityViolationException(
+        "Duplicate entry 'lucky@email.com' for key 'uk_member_email'"
+    );
+
+    given(memberRepository.save(any(Member.class))).willThrow(dbException);
 
     // when & then
     assertThatThrownBy(() -> authService.signup(req))
@@ -164,8 +124,6 @@ class AuthServiceTest {
         .extracting("errorCode")
         .isEqualTo(ErrorCode.DUPLICATE_EMAIL);
 
-    verify(memberRepository).existsByEmail(req.getEmail());
-    verify(memberRepository).existsByNickname(req.getNickname());
     verify(passwordEncoder).encode(TEST_RAW_PASSWORD);
     verify(memberRepository).save(any(Member.class));
   }
@@ -176,11 +134,13 @@ class AuthServiceTest {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
-    given(memberRepository.existsByEmail(req.getEmail())).willReturn(false);
-    given(memberRepository.existsByNickname(req.getNickname())).willReturn(false);
     given(passwordEncoder.encode(req.getPassword())).willReturn(TEST_ENCODED_PASSWORD);
-    given(memberRepository.save(any(Member.class)))
-        .willThrow(new DataIntegrityViolationException("Duplicate entry for nickname"));
+
+    DataIntegrityViolationException dbException = new DataIntegrityViolationException(
+        "Duplicate entry '솜사탕' for key 'uk_member_nickname'"
+    );
+
+    given(memberRepository.save(any(Member.class))).willThrow(dbException);
 
     // when & then
     assertThatThrownBy(() -> authService.signup(req))
@@ -189,8 +149,6 @@ class AuthServiceTest {
         .extracting("errorCode")
         .isEqualTo(ErrorCode.DUPLICATE_NICKNAME);
 
-    verify(memberRepository).existsByEmail(req.getEmail());
-    verify(memberRepository).existsByNickname(req.getNickname());
     verify(passwordEncoder).encode(TEST_RAW_PASSWORD);
     verify(memberRepository).save(any(Member.class));
   }
@@ -201,8 +159,6 @@ class AuthServiceTest {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
-    given(memberRepository.existsByEmail(req.getEmail())).willReturn(false);
-    given(memberRepository.existsByNickname(req.getNickname())).willReturn(false);
     given(passwordEncoder.encode(req.getPassword())).willReturn(TEST_ENCODED_PASSWORD);
 
     DataIntegrityViolationException exception =
@@ -211,11 +167,11 @@ class AuthServiceTest {
 
     // when & then
     assertThatThrownBy(() -> authService.signup(req))
-        .isInstanceOf(DataIntegrityViolationException.class)
-        .hasMessage("Other constraint violation");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.INVALID_SIGNUP_DATA.getMessage())
+        .extracting("errorCode")
+        .isEqualTo(ErrorCode.INVALID_SIGNUP_DATA);
 
-    verify(memberRepository).existsByEmail(req.getEmail());
-    verify(memberRepository).existsByNickname(req.getNickname());
     verify(passwordEncoder).encode(TEST_RAW_PASSWORD);
     verify(memberRepository).save(any(Member.class));
   }
