@@ -24,7 +24,7 @@ public class SecurityConfig {
             .frameOptions(frameOptions -> frameOptions.disable())) // h2 db 관련 설정
         .httpBasic(httpBasic -> httpBasic.disable()) // HTTP Basic 인증 대신 JWT 사용
         .securityContext(context -> context
-            .requireExplicitSave(false) // 자동으로 세션에 저장
+            .requireExplicitSave(false) // 명시적으로 작성하지 않아도 자동으로 SecurityContext에 저장
         );
     return http.build();
   }
@@ -35,7 +35,8 @@ public class SecurityConfig {
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig)
+      throws Exception {
     return authConfig.getAuthenticationManager();
   }
 }
