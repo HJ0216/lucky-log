@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-  private static String DEFAULT_DISPLAY_NAME = "내 정보 보기";
+  private static final String DEFAULT_DISPLAY_NAME = "내 정보 보기";
 
   private final Member member;
 
