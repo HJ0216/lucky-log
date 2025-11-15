@@ -63,6 +63,7 @@ src
 │          └─luckylog
 │              ├─client # 외부 API
 │              │  └─gemini
+│              ├─common
 │              ├─config # 설정 파일
 │              ├─controller # 웹 컨트롤러
 │              │  └─web

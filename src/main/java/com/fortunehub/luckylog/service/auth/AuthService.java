@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.service.auth;
 
+import com.fortunehub.luckylog.common.DbConstraints;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.auth.LoginRequest;
 import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
@@ -40,13 +41,21 @@ public class AuthService {
     } catch (DataIntegrityViolationException e) {
       // DB의 unique 제약조건 위반 시
       log.error("[회원가입 실패] - [DB 제약조건 위반]", e);
-      if (e.getMessage().contains("email")) {
-        throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
-      } else if (e.getMessage().contains("nickname")) {
-        throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
-      }
-      throw new CustomException(ErrorCode.INVALID_SIGNUP_DATA); // 다른 무결성 제약 위반
+      throw parseConstraintViolation(e);
     }
+  }
+
+  private CustomException parseConstraintViolation(DataIntegrityViolationException e) {
+    String message = e.getMessage().toLowerCase();
+
+    if (message.contains(DbConstraints.UK_MEMBER_EMAIL.toLowerCase())) {
+      return new CustomException(ErrorCode.DUPLICATE_EMAIL);
+    }
+    if (message.contains(DbConstraints.UK_MEMBER_NICKNAME.toLowerCase())) {
+      return new CustomException(ErrorCode.DUPLICATE_NICKNAME);
+    }
+
+    throw new CustomException(ErrorCode.INVALID_SIGNUP_DATA); // 다른 무결성 제약 위반
   }
 
   public void login(LoginRequest request) {
