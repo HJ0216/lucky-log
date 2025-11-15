@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -72,7 +72,7 @@ public class AuthService {
       SecurityContextHolder.getContext().setAuthentication(authentication);
 
       log.info("[로그인 성공] email={}", request.getEmail());
-    } catch (BadCredentialsException e) {
+    } catch (AuthenticationException e) {
       log.warn("[로그인 실패] - [인증 실패] email={}", request.getEmail());
       throw new CustomException(ErrorCode.LOGIN_FAILED);
     }
