@@ -73,12 +73,7 @@ public class AuthService {
 
       log.info("[로그인 성공] email={}", request.getEmail());
     } catch (BadCredentialsException e) {
-      // 비밀번호 틀림
-      log.warn("[로그인 실패] - [비밀번호 틀림] email={}", request.getEmail());
-      throw new CustomException(ErrorCode.LOGIN_FAILED);
-    } catch (UsernameNotFoundException e) {
-      // 사용자 없음
-      log.warn("[로그인 실패] - [사용자 없음] email={}", request.getEmail());
+      log.warn("[로그인 실패] - [인증 실패] email={}", request.getEmail());
       throw new CustomException(ErrorCode.LOGIN_FAILED);
     }
   }
