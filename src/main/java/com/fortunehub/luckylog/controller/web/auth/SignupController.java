@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SignupController {
 
   public static final String SIGNUP_VIEW = "auth/signup";
-  public static final String LOGIN_VIEW = "redirect:/login";
+  public static final String REDIRECT_LOGIN = "redirect:/login";
 
   private final AuthService authService;
 
@@ -53,7 +53,7 @@ public class SignupController {
     try {
       authService.signup(SignupRequest.from(form));
 
-      return LOGIN_VIEW;
+      return REDIRECT_LOGIN;
 
     } catch (CustomException e) {
       switch (e.getErrorCode()) {
