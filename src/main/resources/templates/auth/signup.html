@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
   <th:block th:replace="~{fragments/head :: common-meta}" />
@@ -7,7 +9,7 @@
   <title>LUCKY LOG</title>
 
   <th:block th:replace="~{fragments/head :: common-resources}" />
-  <link rel="stylesheet" href="../../static/css/auth/signup.css" th:href="@{/css/auth/signup.css}">
+  <link rel="stylesheet" href="../../static/css/auth/auth.css" th:href="@{/css/auth/auth.css}">
   <script src="../../static/js/auth/signup.js" th:src="@{/js/auth/signup.js}" defer></script>
 </head>
 
@@ -20,7 +22,7 @@
   <div class="float-emoji">☀️</div>
 
   <div class="fortune-page-container">
-    <button type="button" class="back-btn" data-back-btn><span>홈으로</span></button>
+    <a class="back-btn" href="/"><span>홈으로</span></a>
 
     <div th:replace="~{fragments/header :: authButtons}"></div>
 
@@ -31,19 +33,19 @@
 
     <form class="form-container" action="/signup" th:action="@{/signup}" method="post" th:object="${signupForm}">
       <label class="form-option-title" for="email">📧 이메일<span class="required-color">*</span></label>
-      <input type="email" id="email" th:field="*{email}" class="signup-input" th:errorclass="jump"
+      <input type="email" id="email" th:field="*{email}" class="auth-input" th:errorclass="jump"
         placeholder="lucky-log@email.com" required>
 
       <label class="form-option-title" for="password">🔒 비밀번호<span class="required-color">*</span></label>
-      <input type="password" id="password" th:field="*{password}" class="signup-input" th:errorclass="jump"
+      <input type="password" id="password" th:field="*{password}" class="auth-input" th:errorclass="jump"
         placeholder="8-20자 사이의 영문 + 숫자 + 특수문자 조합" minlength="8" maxlength="20" required>
 
       <label class="form-option-title" for="confirmPassword">🔐 비밀번호 확인<span class="required-color">*</span></label>
-      <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="signup-input"
+      <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="auth-input"
         th:errorclass="jump" placeholder="동일한 비밀번호 입력" minlength="8" maxlength="20" required>
 
       <label class="form-option-title" for="nickname">✨ 닉네임</label>
-      <input type="text" id="nickname" th:field="*{nickname}" class="signup-input" th:errorclass="jump"
+      <input type="text" id="nickname" th:field="*{nickname}" class="auth-input" th:errorclass="jump"
         placeholder="솜사탕 구름" maxlength="20">
 
       <div th:if="${#fields.hasErrors()}" data-error-container>

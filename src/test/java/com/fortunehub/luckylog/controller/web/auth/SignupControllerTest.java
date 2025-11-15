@@ -50,8 +50,8 @@ class SignupControllerTest {
   }
 
   @Test
-  @DisplayName("유효한 회원정보로 가입 시 메인 페이지로 리다이렉트된다")
-  void submit_WhenValidData_ThenRedirectsToIndex() throws Exception {
+  @DisplayName("유효한 회원정보로 가입 시 로그인 페이지로 리다이렉트된다")
+  void submit_WhenValidData_ThenRedirectsToLogin() throws Exception {
     // given
     doNothing().when(authService).signup(any(SignupRequest.class));
 
@@ -62,7 +62,7 @@ class SignupControllerTest {
                .param("confirmPassword", "Password123!")
                .param("nickname", "테스터"))
            .andExpect(status().is3xxRedirection())
-           .andExpect(redirectedUrl("/"));
+           .andExpect(redirectedUrl("/login"));
 
     verify(authService).signup(any(SignupRequest.class));
   }
@@ -154,8 +154,8 @@ class SignupControllerTest {
   }
 
   @Test
-  @DisplayName("닉네임에 띄어 쓰기가 있더라도 가입 후 메인 페이지로 리다이렉트된다")
-  void submit_WhenNicknameHasSpace_ThenRedirectsToIndex() throws Exception {
+  @DisplayName("닉네임에 띄어 쓰기가 있더라도 가입 후 로그인 페이지로 리다이렉트된다")
+  void submit_WhenNicknameHasSpace_ThenRedirectsToLogin() throws Exception {
     // given
     doNothing().when(authService).signup(any(SignupRequest.class));
 
@@ -166,14 +166,14 @@ class SignupControllerTest {
                .param("confirmPassword", "Password123!")
                .param("nickname", " 닉 네 임 "))
            .andExpect(status().is3xxRedirection())
-           .andExpect(redirectedUrl("/"));
+           .andExpect(redirectedUrl("/login"));
 
     verify(authService).signup(any(SignupRequest.class));
   }
 
   @Test
-  @DisplayName("닉네임에 자음만 있어도 가입 후 메인 페이지로 리다이렉트된다")
-  void submit_WhenNicknameHasOnlyConsonants_ThenRedirectsToIndex() throws Exception {
+  @DisplayName("닉네임에 자음만 있어도 가입 후 로그인 페이지로 리다이렉트된다")
+  void submit_WhenNicknameHasOnlyConsonants_ThenRedirectsToLogin() throws Exception {
     // given
     doNothing().when(authService).signup(any(SignupRequest.class));
 
@@ -184,14 +184,14 @@ class SignupControllerTest {
                .param("confirmPassword", "Password123!")
                .param("nickname", "ㄱㄴㄷ"))
            .andExpect(status().is3xxRedirection())
-           .andExpect(redirectedUrl("/"));
+           .andExpect(redirectedUrl("/login"));
 
     verify(authService).signup(any(SignupRequest.class));
   }
 
   @Test
-  @DisplayName("닉네임 없이 가입 시 메인 페이지로 리다이렉트된다")
-  void submit_WhenNicknameEmpty_ThenRedirectsToIndex() throws Exception {
+  @DisplayName("닉네임 없이 가입 시 로그인 페이지로 리다이렉트된다")
+  void submit_WhenNicknameEmpty_ThenRedirectsToLogin() throws Exception {
     // given
     doNothing().when(authService).signup(any(SignupRequest.class));
 
@@ -202,7 +202,7 @@ class SignupControllerTest {
                .param("confirmPassword", "Password123!")
                .param("nickname", ""))
            .andExpect(status().is3xxRedirection())
-           .andExpect(redirectedUrl("/"));
+           .andExpect(redirectedUrl("/login"));
 
     verify(authService).signup(any(SignupRequest.class));
   }

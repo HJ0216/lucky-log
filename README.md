@@ -63,6 +63,7 @@ src
 │          └─luckylog
 │              ├─client # 외부 API
 │              │  └─gemini
+│              ├─common
 │              ├─config # 설정 파일
 │              ├─controller # 웹 컨트롤러
 │              │  └─web
@@ -83,6 +84,7 @@ src
 │              ├─exception # 예외 처리
 │              ├─repository # 데이터 처리
 │              │  └─member
+│              ├─security # 인증, 인가
 │              └─service # 비즈니스 로직 처리
 │                  ├─auth
 │                  └─fortune

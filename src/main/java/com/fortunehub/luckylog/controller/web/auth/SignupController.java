@@ -3,6 +3,7 @@ package com.fortunehub.luckylog.controller.web.auth;
 import com.fortunehub.luckylog.controller.web.auth.form.SignupForm;
 import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import com.fortunehub.luckylog.exception.CustomException;
+import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.service.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +22,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class SignupController {
 
+  public static final String SIGNUP_VIEW = "auth/signup";
+  public static final String REDIRECT_LOGIN = "redirect:/login";
+
   private final AuthService authService;
 
   @GetMapping
   public String show(@ModelAttribute SignupForm form) {
     // @ModelAttribute는 넘어오는 데이터가 없어도 자동으로 빈 객체를 생성
     // 매개변수 이름과 무관하게 form 객체 이름 사용
-    return "auth/signup";
+    return SIGNUP_VIEW;
   }
 
   @PostMapping
@@ -43,14 +47,13 @@ public class SignupController {
               error.getField(), error.getDefaultMessage())
       );
 
-      return "auth/signup";
+      return SIGNUP_VIEW;
     }
 
     try {
       authService.signup(SignupRequest.from(form));
 
-//      return "redirect:/login";
-      return "redirect:/";
+      return REDIRECT_LOGIN;
 
     } catch (CustomException e) {
       switch (e.getErrorCode()) {
@@ -58,17 +61,18 @@ public class SignupController {
             result.rejectValue("email", e.getErrorCode().name(), e.getMessage());
         case DUPLICATE_NICKNAME ->
             result.rejectValue("nickname", e.getErrorCode().name(), e.getMessage());
-        // TODO: default 추가, 필드 없이 메시지만
+        default -> result.addError(
+            new ObjectError(result.getObjectName(), e.getMessage()));
       }
 
-      return "auth/signup";
+      return SIGNUP_VIEW;
     } catch (Exception e) {
       log.error("[회원가입 실패] - [시스템 예외 발생]", e);
 
       result.addError(
-          new ObjectError(result.getObjectName(), "😲 회원 가입에 실패하였습니다.\n잠시 후 다시 시도해주세요."));
+          new ObjectError(result.getObjectName(), ErrorCode.SIGNUP_SYSTEM_ERROR.getMessage()));
 
-      return "auth/signup";
+      return SIGNUP_VIEW;
     }
   }
 }
