@@ -62,7 +62,7 @@ public class SignupController {
         case DUPLICATE_NICKNAME ->
             result.rejectValue("nickname", e.getErrorCode().name(), e.getMessage());
         default -> result.addError(
-            new ObjectError(result.getObjectName(), ErrorCode.SIGNUP_SYSTEM_ERROR.getMessage()));
+            new ObjectError(result.getObjectName(), e.getMessage()));
       }
 
       return SIGNUP_VIEW;

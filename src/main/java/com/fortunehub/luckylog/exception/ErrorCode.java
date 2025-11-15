@@ -8,6 +8,7 @@ public enum ErrorCode {
   // 회원가입
   DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "📧 이미 사용 중인 이메일입니다!"),
   DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "✨ 이미 사용 중인 닉네임입니다!"),
+  INVALID_SIGNUP_DATA(HttpStatus.BAD_REQUEST, "❌ 유효하지 않은 회원가입 정보입니다!"),
   SIGNUP_SYSTEM_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "😲 회원가입에 실패하였습니다.\n잠시 후 다시 시도해주세요."),
 
   // 로그인

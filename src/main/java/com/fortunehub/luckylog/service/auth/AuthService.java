@@ -21,23 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AuthService {
 
   private final MemberRepository memberRepository;
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
 
+  @Transactional
   public void signup(SignupRequest request) {
-    if (memberRepository.existsByEmail(request.getEmail())) {
-      log.warn("[회원가입 실패] - [중복 이메일]");
-      throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
-    }
-
-    if (request.getNickname() != null && memberRepository.existsByNickname(request.getNickname())) {
-      log.warn("[회원가입 실패] - [중복 닉네임]");
-      throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
-    }
+    log.info("[회원가입 시도]");
 
     try {
       String encodedPassword = passwordEncoder.encode(request.getPassword());
@@ -53,13 +45,12 @@ public class AuthService {
       } else if (e.getMessage().contains("nickname")) {
         throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
       }
-      throw e; // 다른 무결성 제약 위반
+      throw new CustomException(ErrorCode.INVALID_SIGNUP_DATA); // 다른 무결성 제약 위반
     }
   }
 
-  @Transactional(readOnly = true)
   public void login(LoginRequest request) {
-    log.info("[로그인 시도] email={}", request.getEmail());
+    log.info("[로그인 시도]");
 
     try {
       Authentication authentication = authenticationManager.authenticate(
@@ -71,9 +62,9 @@ public class AuthService {
 
       SecurityContextHolder.getContext().setAuthentication(authentication);
 
-      log.info("[로그인 성공] email={}", request.getEmail());
+      log.info("[로그인 성공]");
     } catch (AuthenticationException e) {
-      log.warn("[로그인 실패] - [인증 실패] email={}", request.getEmail());
+      log.warn("[로그인 실패] - [인증 실패]");
       throw new CustomException(ErrorCode.LOGIN_FAILED);
     }
   }
