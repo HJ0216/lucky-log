@@ -3,6 +3,7 @@ package com.fortunehub.luckylog.controller.web.auth;
 import com.fortunehub.luckylog.controller.web.auth.form.LoginForm;
 import com.fortunehub.luckylog.dto.request.auth.LoginRequest;
 import com.fortunehub.luckylog.exception.CustomException;
+import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.service.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +60,7 @@ public class LoginController {
       log.error("[로그인 실패] - [시스템 예외 발생]", e);
 
       result.addError(
-          new ObjectError(result.getObjectName(), "😲 로그인에 실패하였습니다.\n잠시 후 다시 시도해주세요."));
+          new ObjectError(result.getObjectName(), ErrorCode.LOGIN_SYSTEM_ERROR.getMessage()));
 
       return LOGIN_VIEW;
     }

@@ -3,6 +3,7 @@ package com.fortunehub.luckylog.controller.web.auth;
 import com.fortunehub.luckylog.controller.web.auth.form.SignupForm;
 import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import com.fortunehub.luckylog.exception.CustomException;
+import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.service.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +62,7 @@ public class SignupController {
         case DUPLICATE_NICKNAME ->
             result.rejectValue("nickname", e.getErrorCode().name(), e.getMessage());
         default -> result.addError(
-            new ObjectError(result.getObjectName(), "😲 회원 가입에 실패하였습니다.\n잠시 후 다시 시도해주세요."));
+            new ObjectError(result.getObjectName(), ErrorCode.SIGNUP_SYSTEM_ERROR.getMessage()));
       }
 
       return SIGNUP_VIEW;
@@ -69,7 +70,7 @@ public class SignupController {
       log.error("[회원가입 실패] - [시스템 예외 발생]", e);
 
       result.addError(
-          new ObjectError(result.getObjectName(), "😲 회원 가입에 실패하였습니다.\n잠시 후 다시 시도해주세요."));
+          new ObjectError(result.getObjectName(), ErrorCode.SIGNUP_SYSTEM_ERROR.getMessage()));
 
       return SIGNUP_VIEW;
     }
