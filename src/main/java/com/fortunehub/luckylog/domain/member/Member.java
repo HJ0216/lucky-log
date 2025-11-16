@@ -4,6 +4,8 @@ import com.fortunehub.luckylog.domain.common.BaseTimeEntity;
 import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,19 +30,23 @@ import lombok.NoArgsConstructor;
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false, unique = true, length = 255)
+  @Column(nullable = false, length = 255)
   private String email;
 
   @Column(nullable = false, length = 255)
   private String password;
 
-  @Column(unique = true, length = 20)
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private Role role = Role.USER;
+
+  @Column(length = 20)
   private String nickname;
 
   @Column(length = 500)
   private String profileImageUrl;
 
-  @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+  @Column(nullable = false)
   private boolean isActive = true;
 
   public Member(String email, String password, String nickname) {
