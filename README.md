@@ -16,7 +16,7 @@ Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입
 - **Language**: Java 17
 - **Framework**: Spring Boot 3.5.3
 - **ORM**: Spring Data JPA
-- **Security**: Spring Security, JWT
+- **Security**: Spring Security
 - **Database**: H2 (개발) / MySQL (운영)
 
 ### Frontend

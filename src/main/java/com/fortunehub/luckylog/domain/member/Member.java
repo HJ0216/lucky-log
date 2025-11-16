@@ -4,6 +4,8 @@ import com.fortunehub.luckylog.domain.common.BaseTimeEntity;
 import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,6 +14,7 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,19 +31,27 @@ import lombok.NoArgsConstructor;
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false, unique = true, length = 255)
+  @Column(nullable = false, length = 255)
   private String email;
 
   @Column(nullable = false, length = 255)
   private String password;
 
-  @Column(unique = true, length = 20)
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, length = 20)
+  @ColumnDefault("'USER'")
+  // DDL 생성 시에만 사용
+  // @Column(nullable = false)이면 무조건 값을 포함시켜서 default value값이 jpa insert시 동작 x
+  private Role role = Role.USER;
+
+  @Column(length = 20)
   private String nickname;
 
   @Column(length = 500)
   private String profileImageUrl;
 
-  @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+  @Column(nullable = false)
+  @ColumnDefault("true")
   private boolean isActive = true;
 
   public Member(String email, String password, String nickname) {

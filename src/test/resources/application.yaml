@@ -11,9 +11,6 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
-jwt:
-  secret: dGVzdC1zZWNyZXQta2V5LWZvci1qd3QtdG9rZW4tZ2VuZXJhdGlvbi1hbmQtdmFsaWRhdGlvbg==
-  token-validity: 60_000
 
 gemini:
   api:
