@@ -70,6 +70,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: app-jar
+          path: ./artifacts
 
       - name: Deploy to EC2
         uses: appleboy/scp-action@v0.1.7
@@ -79,6 +80,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: '*.jar'
           target: '/tmp/'
+          strip_components: 1 # artifacts/ 경로 제거
 
       - name: Restart Service
         uses: appleboy/ssh-action@v1.0.3
@@ -86,6 +88,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          source: './artifacts/*.jar'
           script: |
             echo "📦 Deploying JAR file..."
             sudo mv /tmp/*.jar /home/deploy/lucky-log/luckylog.jar
