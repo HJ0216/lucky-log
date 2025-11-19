@@ -109,16 +109,23 @@ const FortuneOptionPage = {
     if (e.target.name !== 'fortunes') return;
     if (!e.target.checked) return; // 체크 해제 시 무시
 
-    const isOverall = e.target.dataset.isOverall === 'true';
+    const isOverallSelected = e.target.dataset.isOverall === 'true';
 
-    this.elements.fortuneOptions.forEach(option => {
-      if (option === e.target) return; // 현재 클릭한 체크박스는 건너뛰기
-
-      // overall 선택 시 모든 것 해제, 또는 일반 선택 시 overall 해제
-      if (isOverall || option.dataset.isOverall === 'true') {
-        option.checked = false;
-      }
-    });
+    if (isOverallSelected) {
+      // Overall 선택 시: 다른 모든 것 해제
+      this.elements.fortuneOptions.forEach(option => {
+        if (option !== e.target) {
+          option.checked = false;
+        }
+      });
+    } else {
+      // 일반 운세 선택 시: Overall만 해제
+      this.elements.fortuneOptions.forEach(option => {
+        if (option.dataset.isOverall === 'true') {
+          option.checked = false;
+        }
+      });
+    }
   },
 
   // error messages
