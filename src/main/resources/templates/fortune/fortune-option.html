@@ -79,7 +79,8 @@
         <div class="fortune-type-container">
           <div th:each="type: ${fortuneTypes}" th:data-tooltip="${type.tooltip}"
             class="form-option-content-item option-type-content-item">
-            <input type="checkbox" th:field="*{fortunes}" th:value="${type.name()}" th:disabled="${!type.enabled}">
+            <input type="checkbox" th:field="*{fortunes}" th:value="${type.name()}"
+                   th:disabled="${!type.enabled}" th:data-is-overall="${type.isOverall()}">
             <label th:for="${#ids.prev('fortunes')}" th:text="${type.icon}" class="form-option-btn">🔮</label>
           </div>
         </div>

@@ -2,6 +2,7 @@ package com.fortunehub.luckylog.client.gemini;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -20,7 +21,7 @@ import com.fortunehub.luckylog.domain.fortune.MonthType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
-import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
+import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
 import com.google.genai.Client;
@@ -70,7 +71,7 @@ class GeminiServiceTest {
         },
         {
           "fortune": "health",
-          "month": "february",
+          "month": "march",
           "result": "건강운 변화"
         }
       ]
@@ -102,20 +103,18 @@ class GeminiServiceTest {
 
     // when
     FortuneRequest request = createFortuneRequest();
-    List<FortuneResponseView> views = geminiService.analyzeFortune(request);
+    List<FortuneResponse> responses = geminiService.analyzeFortune(request);
 
     // then
-    int expectedFortuneTypes = 2;
-    assertThat(views).isNotNull().hasSize(expectedFortuneTypes);
-
-    assertThat(views.get(0).getType()).isEqualTo(FortuneType.LOVE);
-    assertThat(views.get(0).getContents())
-        .containsEntry(MonthType.JANUARY, "연애운 좋음")
-        .containsEntry(MonthType.FEBRUARY, "연애운 신경");
-
-    assertThat(views.get(1).getType()).isEqualTo(FortuneType.HEALTH);
-    assertThat(views.get(1).getContents())
-        .containsEntry(MonthType.FEBRUARY, "건강운 변화");
+    assertThat(responses)
+        .isNotNull()
+        .hasSize(3)
+        .extracting(FortuneResponse::getFortune, FortuneResponse::getMonth, FortuneResponse::getResult)
+        .containsExactly(
+            tuple(FortuneType.LOVE, MonthType.JANUARY, "연애운 좋음"),
+            tuple(FortuneType.LOVE, MonthType.FEBRUARY, "연애운 신경"),
+            tuple(FortuneType.HEALTH, MonthType.MARCH, "건강운 변화")
+        );
 
     ArgumentCaptor<String> promptCaptor = ArgumentCaptor.forClass(String.class);
     verify(client.models).generateContent(

@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-@Setter @Getter
+@Setter
+@Getter
 public class FortuneResponse {
 
   private FortuneType fortune;

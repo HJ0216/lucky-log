@@ -61,24 +61,18 @@
     <!-- 결과 화면 -->
     <section class="result-screen" id="result-screen">
       <div class="fortune-title" th:text="${fortuneTitle}">2025년 월별 운세</div>
+      <div class="fortune-sub-title" th:text="${selectedOptions}">🔮종합운</div>
 
-      <div th:if="${response != null}" th:each="res : ${response}" class="result-content">
-        <div class="fortune-sub-title">
-          <span th:text="${res.type.icon}">🔮</span>
-          <span th:text="|${res.type.tooltip}운|">종합운</span>
-        </div>
-        <div class="fortune-content-container">
-          <div class="fortune-content" th:each="content : ${res.contents}">
-            <p th:text="${content.key.displayName}" class="fortune-month">1월</p>
-            <p th:text="${content.value}" class="fortune-month-content">1월 운세 내용</p>
-          </div>
+      <div th:if="${responses != null and !#lists.isEmpty(responses)}" class="fortune-content-container">
+        <div th:each="res : ${responses}">
+          <p th:text="${res.month.displayName}" class="fortune-month">1월</p>
+          <p th:text="${res.result}" class="fortune-month-content">1월 운세 내용</p>
         </div>
       </div>
 
       <!-- 운세 결과가 없는 경우 -->
-      <div th:if="${response == null or #lists.isEmpty(response)}" class="no-result-container">
-        <div class="no-result-text">운세 결과를 불러올 수 없습니다</div>
-        <div class="no-result-subtext">다시 시도해주세요</div>
+      <div th:if="${responses == null or #lists.isEmpty(responses)}" data-error-container>
+        <div class="error-message" data-error-message>운세 결과를 불러올 수 없습니다, 다시 시도해주세요.</div>
       </div>
 
       <div class="action-button-container">

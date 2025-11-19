@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
-import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
 import com.google.genai.Client;
@@ -30,15 +29,15 @@ public class GeminiService {
   @Value("${gemini.model}")
   private String modelName;
 
-  @Value("${fortune.prompts.overall}")
+  @Value("${fortune.prompt}")
   private String promptTemplate;
 
-  public List<FortuneResponseView> analyzeFortune(FortuneRequest request) {
+  public List<FortuneResponse> analyzeFortune(FortuneRequest request) {
 
     String prompt = buildPrompt(request);
     List<FortuneResponse> responses = generateContent(prompt, request);
 
-    return FortuneResponseView.from(responses);
+    return responses;
   }
 
   private String buildPrompt(FortuneRequest request) {

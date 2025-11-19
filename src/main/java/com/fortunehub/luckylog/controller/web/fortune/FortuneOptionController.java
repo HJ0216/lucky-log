@@ -6,7 +6,7 @@ import com.fortunehub.luckylog.domain.common.LoadingMessage;
 import com.fortunehub.luckylog.domain.fortune.AIType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
-import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
+import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.service.fortune.FortuneService;
 import jakarta.servlet.http.HttpSession;
@@ -68,6 +68,12 @@ public class FortuneOptionController {
 
     BirthInfoForm savedBirthInfo = (BirthInfoForm) session.getAttribute("birthInfo");
 
+    if (savedBirthInfo == null) {
+      log.warn("[운세 옵션 검증 실패] - [세션 데이터 누락] | 생년월일 정보가 세션에 저장되지 않음");
+      redirectAttributes.addFlashAttribute("errorMessage", "생년월일이 입력되지 않았습니다. 처음부터 다시 진행해주세요.");
+      return "redirect:/";
+    }
+
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
           log.warn(
@@ -79,9 +85,9 @@ public class FortuneOptionController {
     }
 
     try {
-      List<FortuneResponseView> responses = fortuneService.analyzeFortune(savedBirthInfo, option);
+      List<FortuneResponse> responses = fortuneService.analyzeFortune(savedBirthInfo, option);
       redirectAttributes.addFlashAttribute("option", option); //자동으로 Model에 포함
-      redirectAttributes.addFlashAttribute("response", responses);
+      redirectAttributes.addFlashAttribute("responses", responses);
 
       return "redirect:/fortune/result";
 
