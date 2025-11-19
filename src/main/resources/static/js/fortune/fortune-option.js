@@ -13,6 +13,8 @@ const FortuneOptionPage = {
     contentsScreen: null,
     backBtn: null,
     form: null,
+    fortuneOptionContainer: null,
+    fortuneOptions: [],
     submitBtn: null,
     errorMessages: [],
     disabledOptionContainers: [],
@@ -31,6 +33,8 @@ const FortuneOptionPage = {
     this.elements.contentsScreen = document.querySelector('#contents-screen');
     this.elements.backBtn = document.querySelector('[data-back-btn]');
     this.elements.form = document.querySelector('form');
+    this.elements.fortuneOptionContainer = document.querySelector('.fortune-type-container');
+    this.elements.fortuneOptions = document.querySelectorAll('input[name="fortunes"]');
     this.elements.submitBtn = document.querySelector('[data-submit-btn]');
     this.elements.errorMessages = document.querySelectorAll(
       '[data-error-message]'
@@ -49,6 +53,8 @@ const FortuneOptionPage = {
       'loadingScreen',
       'contentsScreen',
       'form',
+      'fortuneOptionContainer',
+      'fortuneOptions',
       'submitBtn',
       'backBtn',
     ];
@@ -76,18 +82,7 @@ const FortuneOptionPage = {
     this.elements.backBtn.addEventListener('click', () => {
       window.location.href = this.config.OPTION_BACK_URL;
     });
-  },
-
-  // error messages
-  autoHideErrors() {
-    this.elements.errorMessages.forEach((message) => {
-      // 메시지에 내용이 있을 때만 타이머 작동
-      if (!message.textContent.trim()) return;
-
-      setTimeout(() => {
-        message.classList.add('hidden');
-      }, this.config.ERROR_DURATION);
-    });
+    this.elements.fortuneOptionContainer.addEventListener('change', (e) => this.handleFortuneSelection(e));
   },
 
   handleSubmit() {
@@ -108,6 +103,34 @@ const FortuneOptionPage = {
     this.elements.submitBtn.disabled = true;
     this.elements.loadingScreen.classList.remove('hidden');
     this.elements.contentsScreen.classList.add('hidden');
+  },
+
+  handleFortuneSelection(e) {
+    if (e.target.name !== 'fortunes') return;
+    if (!e.target.checked) return; // 체크 해제 시 무시
+
+    const isOverall = e.target.dataset.isOverall === 'true';
+
+    this.elements.fortuneOptions.forEach(option => {
+      if (option === e.target) return; // 현재 클릭한 체크박스는 건너뛰기
+
+      // overall 선택 시 모든 것 해제, 또는 일반 선택 시 overall 해제
+      if (isOverall || option.dataset.isOverall === 'true') {
+        option.checked = false;
+      }
+    });
+  },
+
+  // error messages
+  autoHideErrors() {
+    this.elements.errorMessages.forEach((message) => {
+      // 메시지에 내용이 있을 때만 타이머 작동
+      if (!message.textContent.trim()) return;
+
+      setTimeout(() => {
+        message.classList.add('hidden');
+      }, this.config.ERROR_DURATION);
+    });
   },
 
   initializePageState() {
