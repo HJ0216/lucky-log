@@ -28,8 +28,8 @@ Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입
 ### Infra
 
 - **Cloud**: AWS EC2, AWS RDS
-- **CI/CD**: GitHub Actions
-- **Monitoring**: Spring Boot Actuator
+- **DevOps**: GitHub Actions
+- **Monitoring**: Spring Boot Actuator, Grafana Loki
 
 ### External Services
 
