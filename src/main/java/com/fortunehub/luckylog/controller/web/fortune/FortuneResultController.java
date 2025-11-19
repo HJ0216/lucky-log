@@ -22,8 +22,8 @@ public class FortuneResultController {
     FortuneOptionForm form = (FortuneOptionForm) model.getAttribute("option");
     List<FortuneResponse> responses = (List<FortuneResponse>) model.getAttribute("responses");
 
-    if (form == null || responses == null) {
-      log.warn("[운세 결과 표시 실패] - [필수 데이터 누락] | option={} | response={}",
+    if (form == null || responses == null || responses.isEmpty()) {
+      log.warn("[운세 결과 표시 실패] - [필수 데이터 누락] | option={} | responses={}",
           form, responses);
       return "redirect:/";
     }

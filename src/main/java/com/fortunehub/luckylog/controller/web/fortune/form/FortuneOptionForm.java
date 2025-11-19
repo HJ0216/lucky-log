@@ -25,6 +25,10 @@ public class FortuneOptionForm {
   private PeriodType period = PeriodType.MONTHLY;
 
   public String getFortunesAsString() {
+    if (fortunes == null || fortunes.isEmpty()) {
+      return "";
+    }
+
     return fortunes.stream()
                    .map(type -> type.getIcon() + type.getTooltip() + "운")
                    .collect(Collectors.joining(", "));

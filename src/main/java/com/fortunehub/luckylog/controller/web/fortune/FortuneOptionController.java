@@ -68,6 +68,12 @@ public class FortuneOptionController {
 
     BirthInfoForm savedBirthInfo = (BirthInfoForm) session.getAttribute("birthInfo");
 
+    if (savedBirthInfo == null) {
+      log.warn("[운세 옵션 검증 실패] - [세션 데이터 누락] | 생년월일 정보가 세션에 저장되지 않음");
+      redirectAttributes.addFlashAttribute("errorMessage", "생년월일이 입력되지 않았습니다. 처음부터 다시 진행해주세요.");
+      return "redirect:/";
+    }
+
     if (result.hasErrors()) {
       result.getFieldErrors().forEach(error ->
           log.warn(
