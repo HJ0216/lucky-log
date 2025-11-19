@@ -72,38 +72,39 @@ jobs:
           name: app-jar
 
       - name: Deploy and Restart
-            env:
-              SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-              HOST: ${{ secrets.EC2_HOST }}
-              USER: ${{ secrets.EC2_USERNAME }}
-            run: |
-              # SSH 설정
-              mkdir -p ~/.ssh
-              echo "$SSH_KEY" > ~/.ssh/id_rsa
-              chmod 600 ~/.ssh/id_rsa
-              ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
-              
-              # 배포
-              echo "📦 Uploading JAR..."
-              scp -i ~/.ssh/id_rsa *.jar $USER@$HOST:/tmp/luckylog.jar
-              
-              # 재시작
-              echo "🔄 Deploying and restarting..."
-              ssh -i ~/.ssh/id_rsa $USER@$HOST << 'ENDSSH'
-                sudo mv /tmp/luckylog.jar /home/deploy/lucky-log/luckylog.jar
-                sudo chown deploy:deploy /home/deploy/lucky-log/luckylog.jar
-                sudo systemctl restart luckylog
-                
-                # Health check
-                for i in {1..20}; do
-                  if curl -s -f http://localhost:8080/actuator/health; then
-                    echo "✅ Deployment successful!"
-                    exit 0
-                  fi
-                  echo "Attempt $i/20 failed, retrying..."
-                  sleep 5
-                done
-                
-                echo "❌ Health check failed!"
-                sudo journalctl -u luckylog -n 50
-                exit 1
+        env:
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOST: ${{ secrets.EC2_HOST }}
+          USER: ${{ secrets.EC2_USERNAME }}
+        run: |
+          # SSH 설정
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+
+          # 배포
+          echo "📦 Uploading JAR..."
+          scp -i ~/.ssh/id_rsa *.jar $USER@$HOST:/tmp/luckylog.jar
+
+          # 재시작
+          echo "🔄 Deploying and restarting..."
+          ssh -i ~/.ssh/id_rsa $USER@$HOST << 'ENDSSH'
+            sudo mv /tmp/luckylog.jar /home/deploy/lucky-log/luckylog.jar
+            sudo chown deploy:deploy /home/deploy/lucky-log/luckylog.jar
+            sudo systemctl restart luckylog
+            
+            # Health check
+            for i in {1..20}; do
+              if curl -s -f http://localhost:8080/actuator/health; then
+                echo "✅ Deployment successful!"
+                exit 0
+              fi
+              echo "Attempt $i/20 failed, retrying..."
+              sleep 5
+            done
+            
+            echo "❌ Health check failed!"
+            sudo journalctl -u luckylog -n 50
+            exit 1
+          ENDSSH
