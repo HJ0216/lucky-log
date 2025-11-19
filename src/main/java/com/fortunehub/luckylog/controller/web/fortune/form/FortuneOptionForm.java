@@ -30,7 +30,7 @@ public class FortuneOptionForm {
     }
 
     return fortunes.stream()
-                   .map(type -> type.getIcon() + type.getTooltip() + "운")
+                   .map(FortuneType::getDisplayString)
                    .collect(Collectors.joining(", "));
   }
 }

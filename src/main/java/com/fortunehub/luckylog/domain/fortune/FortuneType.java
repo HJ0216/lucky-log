@@ -29,4 +29,8 @@ public enum FortuneType {
   public boolean isOverall() {
     return this == OVERALL;
   }
+
+  public String getDisplayString() {
+    return getIcon() + getTooltip() + "운";
+  }
 }
