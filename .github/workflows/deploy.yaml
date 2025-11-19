@@ -71,40 +71,40 @@ jobs:
         with:
           name: app-jar
 
-      - name: Deploy and Restart
-        env:
-          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-          HOST: ${{ secrets.EC2_HOST }}
-          USER: ${{ secrets.EC2_USERNAME }}
-        run: |
-          # SSH 설정
-          mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+      - name: Deploy to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: '*.jar'
+          target: '/tmp/'
 
-          # 배포
-          echo "📦 Uploading JAR..."
-          scp -i ~/.ssh/id_rsa *.jar $USER@$HOST:/tmp/luckylog.jar
-
-          # 재시작
-          echo "🔄 Deploying and restarting..."
-          ssh -i ~/.ssh/id_rsa $USER@$HOST << 'ENDSSH'
-            sudo mv /tmp/luckylog.jar /home/deploy/lucky-log/luckylog.jar
+      - name: Restart Service
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "📦 Deploying JAR file..."
+            sudo mv /tmp/*.jar /home/deploy/lucky-log/luckylog.jar
             sudo chown deploy:deploy /home/deploy/lucky-log/luckylog.jar
+
+            echo "🔄 Restarting service..."
             sudo systemctl restart luckylog
-            
-            # Health check
+
+            echo "⏳ Waiting for application to start..."
             for i in {1..20}; do
               if curl -s -f http://localhost:8080/actuator/health; then
                 echo "✅ Deployment successful!"
                 exit 0
               fi
-              echo "Attempt $i/20 failed, retrying..."
+              echo "Health check attempt $i failed. Retrying in 5 seconds..."
               sleep 5
             done
-            
+
             echo "❌ Health check failed!"
+            echo "=== 마지막 50줄 로그 ==="
             sudo journalctl -u luckylog -n 50
             exit 1
-          ENDSSH
