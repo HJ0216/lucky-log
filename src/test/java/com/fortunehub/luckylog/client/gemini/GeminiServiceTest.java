@@ -2,6 +2,7 @@ package com.fortunehub.luckylog.client.gemini;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -108,17 +109,13 @@ class GeminiServiceTest {
     int expectedFortuneTypes = 3;
     assertThat(responses).isNotNull().hasSize(expectedFortuneTypes);
 
-    assertThat(responses.get(0).getFortune()).isEqualTo(FortuneType.LOVE);
-    assertThat(responses.get(0).getMonth()).isEqualTo(MonthType.JANUARY);
-    assertThat(responses.get(0).getResult()).isEqualTo("연애운 좋음");
-
-    assertThat(responses.get(1).getFortune()).isEqualTo(FortuneType.LOVE);
-    assertThat(responses.get(1).getMonth()).isEqualTo(MonthType.FEBRUARY);
-    assertThat(responses.get(1).getResult()).isEqualTo("연애운 신경");
-
-    assertThat(responses.get(2).getFortune()).isEqualTo(FortuneType.HEALTH);
-    assertThat(responses.get(2).getMonth()).isEqualTo(MonthType.MARCH);
-    assertThat(responses.get(2).getResult()).isEqualTo("건강운 변화");
+    assertThat(responses)
+        .extracting(FortuneResponse::getFortune, FortuneResponse::getMonth, FortuneResponse::getResult)
+        .containsExactly(
+            tuple(FortuneType.LOVE, MonthType.JANUARY, "연애운 좋음"),
+            tuple(FortuneType.LOVE, MonthType.FEBRUARY, "연애운 신경"),
+            tuple(FortuneType.HEALTH, MonthType.MARCH, "건강운 변화")
+        );
 
     ArgumentCaptor<String> promptCaptor = ArgumentCaptor.forClass(String.class);
     verify(client.models).generateContent(
