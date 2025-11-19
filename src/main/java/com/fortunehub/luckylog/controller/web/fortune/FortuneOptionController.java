@@ -6,7 +6,7 @@ import com.fortunehub.luckylog.domain.common.LoadingMessage;
 import com.fortunehub.luckylog.domain.fortune.AIType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
-import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
+import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.service.fortune.FortuneService;
 import jakarta.servlet.http.HttpSession;
@@ -79,9 +79,9 @@ public class FortuneOptionController {
     }
 
     try {
-      List<FortuneResponseView> responses = fortuneService.analyzeFortune(savedBirthInfo, option);
+      List<FortuneResponse> responses = fortuneService.analyzeFortune(savedBirthInfo, option);
       redirectAttributes.addFlashAttribute("option", option); //자동으로 Model에 포함
-      redirectAttributes.addFlashAttribute("response", responses);
+      redirectAttributes.addFlashAttribute("responses", responses);
 
       return "redirect:/fortune/result";
 

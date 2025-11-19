@@ -20,7 +20,7 @@ import com.fortunehub.luckylog.domain.fortune.MonthType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
-import com.fortunehub.luckylog.dto.response.fortune.FortuneResponseView;
+import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
 import com.google.genai.Client;
@@ -70,7 +70,7 @@ class GeminiServiceTest {
         },
         {
           "fortune": "health",
-          "month": "february",
+          "month": "march",
           "result": "건강운 변화"
         }
       ]
@@ -102,20 +102,23 @@ class GeminiServiceTest {
 
     // when
     FortuneRequest request = createFortuneRequest();
-    List<FortuneResponseView> views = geminiService.analyzeFortune(request);
+    List<FortuneResponse> responses = geminiService.analyzeFortune(request);
 
     // then
-    int expectedFortuneTypes = 2;
-    assertThat(views).isNotNull().hasSize(expectedFortuneTypes);
+    int expectedFortuneTypes = 3;
+    assertThat(responses).isNotNull().hasSize(expectedFortuneTypes);
 
-    assertThat(views.get(0).getType()).isEqualTo(FortuneType.LOVE);
-    assertThat(views.get(0).getContents())
-        .containsEntry(MonthType.JANUARY, "연애운 좋음")
-        .containsEntry(MonthType.FEBRUARY, "연애운 신경");
+    assertThat(responses.get(0).getFortune()).isEqualTo(FortuneType.LOVE);
+    assertThat(responses.get(0).getMonth()).isEqualTo(MonthType.JANUARY);
+    assertThat(responses.get(0).getResult()).isEqualTo("연애운 좋음");
 
-    assertThat(views.get(1).getType()).isEqualTo(FortuneType.HEALTH);
-    assertThat(views.get(1).getContents())
-        .containsEntry(MonthType.FEBRUARY, "건강운 변화");
+    assertThat(responses.get(1).getFortune()).isEqualTo(FortuneType.LOVE);
+    assertThat(responses.get(1).getMonth()).isEqualTo(MonthType.FEBRUARY);
+    assertThat(responses.get(1).getResult()).isEqualTo("연애운 신경");
+
+    assertThat(responses.get(2).getFortune()).isEqualTo(FortuneType.HEALTH);
+    assertThat(responses.get(2).getMonth()).isEqualTo(MonthType.MARCH);
+    assertThat(responses.get(2).getResult()).isEqualTo("건강운 변화");
 
     ArgumentCaptor<String> promptCaptor = ArgumentCaptor.forClass(String.class);
     verify(client.models).generateContent(
