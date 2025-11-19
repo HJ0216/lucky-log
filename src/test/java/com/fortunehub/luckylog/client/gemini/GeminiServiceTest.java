@@ -106,10 +106,9 @@ class GeminiServiceTest {
     List<FortuneResponse> responses = geminiService.analyzeFortune(request);
 
     // then
-    int expectedFortuneTypes = 3;
-    assertThat(responses).isNotNull().hasSize(expectedFortuneTypes);
-
     assertThat(responses)
+        .isNotNull()
+        .hasSize(3)
         .extracting(FortuneResponse::getFortune, FortuneResponse::getMonth, FortuneResponse::getResult)
         .containsExactly(
             tuple(FortuneType.LOVE, MonthType.JANUARY, "연애운 좋음"),
