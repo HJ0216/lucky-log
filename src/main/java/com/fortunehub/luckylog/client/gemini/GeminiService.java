@@ -30,7 +30,7 @@ public class GeminiService {
   @Value("${gemini.model}")
   private String modelName;
 
-  @Value("${fortune.prompts.overall}")
+  @Value("${fortune.prompt}")
   private String promptTemplate;
 
   public List<FortuneResponseView> analyzeFortune(FortuneRequest request) {

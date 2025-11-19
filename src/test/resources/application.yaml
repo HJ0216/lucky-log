@@ -18,5 +18,4 @@ gemini:
   model: test-model
 
 fortune:
-  prompts:
-    overall: test-overall-prompt
+  prompt: test-prompt
