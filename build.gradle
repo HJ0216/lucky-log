@@ -23,6 +23,10 @@ jar {
     enabled = false
 }
 
+bootJar {
+    archiveFileName = 'luckylog.jar'
+}
+
 repositories {
 	mavenCentral()
 }
