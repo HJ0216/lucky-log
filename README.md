@@ -106,6 +106,10 @@ src
         └─fragments
 ```
 
+## 🗄️데이터베이스 설계
+
+![ERD_v1](./uploads/erd_v1.png)
+
 ## 🎫 Local 환경에서의 실행
 
 1. 프로젝트 클론
