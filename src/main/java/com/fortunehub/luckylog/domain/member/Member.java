@@ -1,6 +1,7 @@
 package com.fortunehub.luckylog.domain.member;
 
 import com.fortunehub.luckylog.domain.common.BaseTimeEntity;
+import com.fortunehub.luckylog.domain.fortune.FortuneResult;
 import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,8 +10,11 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +29,8 @@ import org.hibernate.annotations.ColumnDefault;
         @UniqueConstraint(name = "uk_member_email", columnNames = "email"),
         @UniqueConstraint(name = "uk_member_nickname", columnNames = "nickname")
     }
-)public class Member extends BaseTimeEntity {
+)
+public class Member extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +59,9 @@ import org.hibernate.annotations.ColumnDefault;
   @ColumnDefault("true")
   private boolean isActive = true;
 
+  @OneToMany(mappedBy = "member")
+  private List<FortuneResult> results = new ArrayList<>();
+
   public Member(String email, String password, String nickname) {
     this.email = normalizeEmail(email);
     this.password = password;
@@ -67,4 +75,6 @@ import org.hibernate.annotations.ColumnDefault;
   public static Member from(SignupRequest request, String encodedPassword) {
     return new Member(request.getEmail(), encodedPassword, request.getNickname());
   }
+
+  // 연관관계 편의 메서드
 }
