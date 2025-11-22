@@ -17,7 +17,7 @@ import com.fortunehub.luckylog.domain.fortune.CalendarType;
 import com.fortunehub.luckylog.domain.fortune.CityType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
-import com.fortunehub.luckylog.domain.fortune.MonthType;
+import com.fortunehub.luckylog.domain.fortune.PeriodValue;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
@@ -61,17 +61,17 @@ class GeminiServiceTest {
       [
         {
           "fortune": "love",
-          "month": "january",
+          "periodValue": "january",
           "result": "연애운 좋음"
         },
         {
           "fortune": "love",
-          "month": "february",
+          "periodValue": "february",
           "result": "연애운 신경"
         },
         {
           "fortune": "health",
-          "month": "march",
+          "periodValue": "march",
           "result": "건강운 변화"
         }
       ]
@@ -109,11 +109,11 @@ class GeminiServiceTest {
     assertThat(responses)
         .isNotNull()
         .hasSize(3)
-        .extracting(FortuneResponse::getFortune, FortuneResponse::getMonth, FortuneResponse::getResult)
+        .extracting(FortuneResponse::getFortune, FortuneResponse::getPeriodValue, FortuneResponse::getResult)
         .containsExactly(
-            tuple(FortuneType.LOVE, MonthType.JANUARY, "연애운 좋음"),
-            tuple(FortuneType.LOVE, MonthType.FEBRUARY, "연애운 신경"),
-            tuple(FortuneType.HEALTH, MonthType.MARCH, "건강운 변화")
+            tuple(FortuneType.LOVE, PeriodValue.JANUARY, "연애운 좋음"),
+            tuple(FortuneType.LOVE, PeriodValue.FEBRUARY, "연애운 신경"),
+            tuple(FortuneType.HEALTH, PeriodValue.MARCH, "건강운 변화")
         );
 
     ArgumentCaptor<String> promptCaptor = ArgumentCaptor.forClass(String.class);
