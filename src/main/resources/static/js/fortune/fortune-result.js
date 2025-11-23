@@ -105,8 +105,53 @@ const FortuneResultPage = {
       // 공유할 수 있게 page url을 만드는 방법
     });
 
-    this.elements.saveBtn.addEventListener('click', () => {
-      // TODO: 구현 예정
+    this.elements.saveBtn.addEventListener('click', async () => {
+      const {
+        fortuneResultYear,
+        fortuneOption: option,
+        responses,
+      } = window.fortuneData;
+
+      // TODO: Custom title로 변경 예정
+      const titleText =
+        document.querySelector('.fortune-title')?.textContent?.trim() || '';
+      const subtitleText =
+        document.querySelector('.fortune-sub-title')?.textContent?.trim() || '';
+      const fullTitle = `${titleText} ${subtitleText}`.trim();
+
+      try {
+        const response = await fetch('/api/fortune', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: fullTitle,
+            fortuneResultYear,
+            option,
+            responses,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          toast.error('저장 실패', this.messages.saveFailed || data.message);
+          return;
+        }
+
+        if (data.success) {
+          toast.success('저장 완료', this.messages.saveSuccess);
+          setTimeout(() => {
+            // TODO: url: /fortune/my-list
+            // window.location.href = data.redirectUrl;
+          }, 1000);
+        } else {
+          toast.error('저장 실패', this.messages.saveFailed);
+        }
+      } catch (error) {
+        toast.error('저장 실패', this.messages.saveFailed);
+      }
     });
   },
 

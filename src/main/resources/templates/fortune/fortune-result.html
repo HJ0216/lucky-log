@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
   <th:block th:replace="~{fragments/head :: common-meta}" />
@@ -62,7 +60,8 @@
     <section class="result-screen" id="result-screen">
       <div class="fortune-title">
         <span th:text="${fortuneResultYear}">2025</span>년
-        <span th:text="${periodDisplayValue}">월별</span> 운세</div>
+        <span th:text="${periodDisplayValue}">월별</span> 운세
+      </div>
       <div class="fortune-sub-title" th:text="${selectedOptions}">🔮종합운</div>
 
       <div th:if="${responses != null and !#lists.isEmpty(responses)}" class="fortune-content-container">
@@ -90,7 +89,7 @@
           <span>📤</span>
           <span>공유</span>
         </button>
-        <button type="button" class="action-btn save-btn" data-save-btn disabled>
+        <button type="button" class="action-btn save-btn" data-save-btn>
           <span>💾</span>
           <span>저장</span>
         </button>
@@ -98,6 +97,13 @@
     </section>
   </div>
 
+  <script th:inline="javascript">
+    window.fortuneData = {
+      fortuneResultYear: /*[[${fortuneResultYear}]]*/ 2025,
+      fortuneOption: /*[[${option}]]*/ {},
+      responses: /*[[${responses}]]*/[],
+    };
+  </script>
 </body>
 
 </html>
