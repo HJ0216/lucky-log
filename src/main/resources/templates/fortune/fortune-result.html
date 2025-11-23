@@ -58,10 +58,7 @@
 
     <!-- 결과 화면 -->
     <section class="result-screen" id="result-screen">
-      <div class="fortune-title">
-        <span th:text="${fortuneResultYear}">2025</span>년
-        <span th:text="${periodDisplayValue}">월별</span> 운세
-      </div>
+      <div class="fortune-title"><span th:text="${fortuneResultYear}">2025</span>년 <span th:text="${periodDisplayValue}">월별</span> 운세</div>
       <div class="fortune-sub-title" th:text="${selectedOptions}">🔮종합운</div>
 
       <div th:if="${responses != null and !#lists.isEmpty(responses)}" class="fortune-content-container">

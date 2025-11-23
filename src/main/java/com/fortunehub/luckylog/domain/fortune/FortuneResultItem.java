@@ -1,8 +1,11 @@
 package com.fortunehub.luckylog.domain.fortune;
 
 import com.fortunehub.luckylog.domain.common.BaseTimeEntity;
+import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -11,9 +14,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "fortune_result_item")
 public class FortuneResultItem extends BaseTimeEntity {
@@ -30,12 +36,26 @@ public class FortuneResultItem extends BaseTimeEntity {
   )
   private FortuneResult fortuneResult;
 
-  @Column(nullable = false)
-  private int periodValue;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, length = 10)
+  private PeriodValue periodValue;
 
   @Column(nullable = false, length = 255)
   private String content;
 
   @Column
-  private int accuracy;
+  private Integer accuracy;
+
+  public static FortuneResultItem create(FortuneResult result, FortuneResponse response) {
+    FortuneResultItem item = new FortuneResultItem();
+    item.fortuneResult = result;
+    item.periodValue = response.getPeriodValue();
+    item.content = response.getResult();
+    return item;
+  }
+
+  // 연관관계 편의 메서드
+  protected void setFortuneResult(FortuneResult result) {
+    this.fortuneResult = result;
+  }
 }

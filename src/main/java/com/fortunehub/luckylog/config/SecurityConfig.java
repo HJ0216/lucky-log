@@ -17,7 +17,8 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(
-            auth -> auth.anyRequest().permitAll())
+            auth -> auth.requestMatchers("/api/fortune/**").authenticated()
+                        .anyRequest().permitAll())
         .csrf(csrf -> csrf.disable())
         .formLogin(form -> form.disable())
         .headers(headers -> headers

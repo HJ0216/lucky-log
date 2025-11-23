@@ -35,4 +35,16 @@ public class FortuneResultCategory {
       foreignKey = @ForeignKey(name = "fk_fortune_result_category_fortune_category")
   )
   private FortuneCategory fortuneCategory;
+
+  public static FortuneResultCategory create(FortuneResult result, FortuneCategory category) {
+    FortuneResultCategory fortuneResultCategory = new FortuneResultCategory();
+    fortuneResultCategory.fortuneResult = result;
+    fortuneResultCategory.fortuneCategory = category;
+    return fortuneResultCategory;
+  }
+
+  // 연관관계 편의 메서드
+  protected void setFortuneResult(FortuneResult result) {
+    this.fortuneResult = result;
+  }
 }
