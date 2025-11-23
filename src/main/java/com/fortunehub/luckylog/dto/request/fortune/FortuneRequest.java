@@ -8,6 +8,7 @@ import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
 import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,10 +24,13 @@ public record FortuneRequest(
 
     // 운세 옵션 정보
     List<FortuneType> fortunes,
-    PeriodType period
+    PeriodType period,
+
+    // 운세 결과 연도
+    Integer fortuneResultYear
 ) {
 
-  public static FortuneRequest from(BirthInfoForm birthInfo, FortuneOptionForm fortuneOption) {
+  public static FortuneRequest from(BirthInfoForm birthInfo, FortuneOptionForm fortuneOption, int fortuneResultYear) {
     return new FortuneRequest(
         birthInfo.getGender(),
         birthInfo.getCalendar(),
@@ -36,7 +40,8 @@ public record FortuneRequest(
         birthInfo.getTime(),
         birthInfo.getCity(),
         fortuneOption.getFortunes(),
-        fortuneOption.getPeriod()
+        fortuneOption.getPeriod(),
+        fortuneResultYear
     );
   }
 

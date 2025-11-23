@@ -18,9 +18,9 @@ public class FortuneService {
   private final GeminiService geminiService;
 
   public List<FortuneResponse> analyzeFortune(
-      BirthInfoForm savedBirthInfo, FortuneOptionForm option) {
+      BirthInfoForm savedBirthInfo, FortuneOptionForm option, int fortuneResultYear) {
     return switch (option.getAi()) {
-      case GEMINI -> geminiService.analyzeFortune(FortuneRequest.from(savedBirthInfo, option));
+      case GEMINI -> geminiService.analyzeFortune(FortuneRequest.from(savedBirthInfo, option, fortuneResultYear));
       default -> throw new CustomException(ErrorCode.UNSUPPORTED_AI_TYPE);
     };
   }

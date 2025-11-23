@@ -9,8 +9,8 @@ import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.service.fortune.FortuneService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,7 +88,10 @@ public class FortuneOptionController {
     }
 
     try {
-      List<FortuneResponse> responses = fortuneService.analyzeFortune(savedBirthInfo, option);
+      int fortuneResultYear = LocalDateTime.now().getYear();
+      List<FortuneResponse> responses = fortuneService.analyzeFortune(savedBirthInfo, option,
+          fortuneResultYear);
+      redirectAttributes.addFlashAttribute("fortuneResultYear", fortuneResultYear);
       redirectAttributes.addFlashAttribute("option", option); //자동으로 Model에 포함
       redirectAttributes.addFlashAttribute("responses", responses);
 

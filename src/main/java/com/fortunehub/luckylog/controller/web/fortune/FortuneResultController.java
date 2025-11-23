@@ -19,6 +19,7 @@ public class FortuneResultController {
   public String show(
       Model model // 뷰로 데이터 보내기(서버 → 클라이언트)
   ) {
+    int fortuneResultYear = (int) model.getAttribute("fortuneResultYear");
     FortuneOptionForm form = (FortuneOptionForm) model.getAttribute("option");
     List<FortuneResponse> responses = (List<FortuneResponse>) model.getAttribute("responses");
 
@@ -28,11 +29,8 @@ public class FortuneResultController {
       return "redirect:/";
     }
 
-    int currentYear = LocalDate.now().getYear();
-    String periodText = form.getPeriod().getDisplayName();
-    String title = currentYear + "년 " + periodText + " 운세";
-
-    model.addAttribute("fortuneTitle", title);
+    model.addAttribute("fortuneResultYear", fortuneResultYear);
+    model.addAttribute("periodDisplayValue", form.getPeriod().getDisplayName());
     model.addAttribute("selectedOptions", form.getFortunesAsString());
 
     return "fortune/fortune-result";

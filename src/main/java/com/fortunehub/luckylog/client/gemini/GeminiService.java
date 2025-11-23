@@ -41,8 +41,7 @@ public class GeminiService {
   }
 
   private String buildPrompt(FortuneRequest request) {
-    int currentYear = LocalDateTime.now().getYear();
-    String basePrompt = promptTemplate.replace("[ANALYSIS_YEAR]", String.valueOf(currentYear))
+    String basePrompt = promptTemplate.replace("[ANALYSIS_YEAR]", String.valueOf(request.fortuneResultYear()))
                                       .replace("[FORTUNE_TYPES]",
                                           request.getFortuneTypesAsString());
 
