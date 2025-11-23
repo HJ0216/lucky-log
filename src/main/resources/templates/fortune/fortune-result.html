@@ -65,7 +65,7 @@
 
       <div th:if="${responses != null and !#lists.isEmpty(responses)}" class="fortune-content-container">
         <div th:each="res : ${responses}">
-          <p th:text="${res.month.displayName}" class="fortune-month">1월</p>
+          <p th:text="${res.periodValue.displayName}" class="fortune-month">1월</p>
           <p th:text="${res.result}" class="fortune-month-content">1월 운세 내용</p>
         </div>
       </div>
