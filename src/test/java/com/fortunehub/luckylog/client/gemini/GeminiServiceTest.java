@@ -214,7 +214,7 @@ class GeminiServiceTest {
     BirthInfoForm birthForm = createBirthInfoForm();
     FortuneOptionForm optionForm = createFortuneOptionForm();
 
-    return FortuneRequest.from(birthForm, optionForm);
+    return FortuneRequest.from(birthForm, optionForm, 2025);
   }
 
   private BirthInfoForm createBirthInfoForm() {
