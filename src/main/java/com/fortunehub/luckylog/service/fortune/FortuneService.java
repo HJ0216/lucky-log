@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FortuneService {
 
+  private static final int MAX_SAVE_COUNT = 5;
+
   private final GeminiService geminiService;
   private final FortuneResultRepository fortuneResultRepository;
   private final FortuneCategoryRepository fortuneCategoryRepository;
@@ -92,6 +94,6 @@ public class FortuneService {
 
   private boolean isExceedMaxSaveCount(Long memberId) {
     long count = fortuneResultRepository.countByMember_IdAndIsActiveTrue(memberId);
-    return count > 5;
+    return count > MAX_SAVE_COUNT;
   }
 }
