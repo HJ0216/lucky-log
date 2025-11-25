@@ -93,6 +93,6 @@ public class FortuneService {
 
   private boolean isExceedMaxSaveCount(Long memberId) {
     long count = fortuneResultRepository.countByMember_IdAndIsActiveTrue(memberId);
-    return count > MAX_SAVE_COUNT;
+    return count >= MAX_SAVE_COUNT;
   }
 }
