@@ -122,21 +122,9 @@ public class FortuneResult extends BaseTimeEntity {
     if (request == null) {
       throw new CustomException(ErrorCode.FORTUNE_REQUEST_REQUIRED);
     }
-    if (request.getFortuneResultYear() == null) {
-      throw new CustomException(ErrorCode.FORTUNE_YEAR_REQUIRED);
-    }
-    if (request.getOption() == null) {
-      throw new CustomException(ErrorCode.FORTUNE_OPTION_REQUIRED);
-    }
-    if (request.getResponses() == null || request.getResponses().isEmpty()) {
-      throw new CustomException(ErrorCode.FORTUNE_RESPONSE_REQUIRED);
-    }
 
     if (birth == null) {
       throw new CustomException(ErrorCode.BIRTH_INFO_REQUIRED);
-    }
-    if (birth.getYear() == null || birth.getMonth() == null || birth.getDay() == null) {
-      throw new CustomException(ErrorCode.BIRTH_DATE_REQUIRED);
     }
   }
 
