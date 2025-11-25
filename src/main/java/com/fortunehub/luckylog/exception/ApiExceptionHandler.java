@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.exception;
 
+import com.fortunehub.luckylog.dto.response.common.ApiResponse;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<Map<String, Object>> handleValidation(
+  public ResponseEntity<ApiResponse> handleValidation(
       MethodArgumentNotValidException ex
   ) {
     log.warn("[API Validation 실패] {}", ex.getMessage());
@@ -24,11 +25,7 @@ public class ApiExceptionHandler {
     );
 
     return ResponseEntity.badRequest()
-                         .body(Map.of(
-                             "success", false,
-                             "message", ErrorCode.ARGUMENT_NOT_VALID.getMessage(),
-                             "errors", errors
-                         ));
-
+                         .body(
+                             ApiResponse.error(ErrorCode.ARGUMENT_NOT_VALID.getMessage(), errors));
   }
 }
