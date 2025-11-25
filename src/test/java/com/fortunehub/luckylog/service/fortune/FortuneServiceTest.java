@@ -23,6 +23,8 @@ import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
+import com.fortunehub.luckylog.exception.CustomException;
+import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.repository.fortune.FortuneCategoryRepository;
 import com.fortunehub.luckylog.repository.fortune.FortuneResultRepository;
 import java.util.Arrays;
@@ -87,7 +89,8 @@ class FortuneServiceTest {
         .willReturn(5L);
 
     given(fortuneCategoryRepository
-        .findByFortuneTypeIn(any())).willReturn(getCategoriesByTypes(FortuneType.OVERALL, FortuneType.MONEY));
+        .findByFortuneTypeIn(any())).willReturn(
+        getCategoriesByTypes(FortuneType.OVERALL, FortuneType.MONEY));
 
     // when
     fortuneService.save(member, request, birthInfo);
@@ -101,8 +104,8 @@ class FortuneServiceTest {
   void save_WhenMemberIsNull_ThenThrowsException() {
     // when
     assertThatThrownBy(() -> fortuneService.save(null, request, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("유효하지 않은 회원입니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.INVALID_MEMBER.getMessage());
 
     verify(fortuneResultRepository, never()).save(any(FortuneResult.class));
   }
@@ -115,8 +118,8 @@ class FortuneServiceTest {
 
     // when
     assertThatThrownBy(() -> fortuneService.save(member, request, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("유효하지 않은 회원입니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.INVALID_MEMBER.getMessage());
 
     verify(fortuneResultRepository, never()).save(any(FortuneResult.class));
   }
@@ -130,8 +133,8 @@ class FortuneServiceTest {
 
     // when & then
     assertThatThrownBy(() -> fortuneService.save(member, request, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("이미 동일한 이름의 운세가 저장되어 있습니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.DUPLICATE_FORTUNE_TITLE.getMessage());
 
     verify(fortuneResultRepository, never()).save(any(FortuneResult.class));
   }
@@ -147,8 +150,8 @@ class FortuneServiceTest {
 
     // when & then
     assertThatThrownBy(() -> fortuneService.save(member, request, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("저장 가능한 운세 개수를 초과했습니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.EXCEED_MAX_SAVE_COUNT.getMessage());
 
     verify(fortuneResultRepository, never()).save(any(FortuneResult.class));
   }
@@ -173,8 +176,8 @@ class FortuneServiceTest {
 
     // when & then
     assertThatThrownBy(() -> fortuneService.save(member, request, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("일부 운세 카테고리를 찾을 수 없습니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.FORTUNE_CATEGORY_NOT_FOUND.getMessage());
 
     verify(fortuneResultRepository, never()).save(any(FortuneResult.class));
   }

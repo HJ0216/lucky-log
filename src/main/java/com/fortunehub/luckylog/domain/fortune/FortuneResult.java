@@ -4,6 +4,8 @@ import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
 import com.fortunehub.luckylog.domain.common.BaseTimeEntity;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
+import com.fortunehub.luckylog.exception.CustomException;
+import com.fortunehub.luckylog.exception.ErrorCode;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -113,27 +115,27 @@ public class FortuneResult extends BaseTimeEntity {
   private static void validateInputs(Member member, SaveFortuneRequest request,
       BirthInfoForm birth) {
     if (member == null) {
-      throw new IllegalArgumentException("회원 정보는 필수입니다.");
+      throw new CustomException(ErrorCode.MEMBER_INFO_REQUIRED);
     }
 
     if (request == null) {
-      throw new IllegalArgumentException("운세 저장 요청 정보는 필수입니다.");
+      throw new CustomException(ErrorCode.FORTUNE_REQUEST_REQUIRED);
     }
     if (request.getFortuneResultYear() == null) {
-      throw new IllegalArgumentException("운세 결과 연도는 필수입니다.");
+      throw new CustomException(ErrorCode.FORTUNE_YEAR_REQUIRED);
     }
     if (request.getOption() == null) {
-      throw new IllegalArgumentException("운세 옵션 정보는 필수입니다.");
+      throw new CustomException(ErrorCode.FORTUNE_OPTION_REQUIRED);
     }
     if (request.getResponses() == null || request.getResponses().isEmpty()) {
-      throw new IllegalArgumentException("운세 결과는 필수입니다.");
+      throw new CustomException(ErrorCode.FORTUNE_RESPONSE_REQUIRED);
     }
 
     if (birth == null) {
-      throw new IllegalArgumentException("생년월일 정보는 필수입니다.");
+      throw new CustomException(ErrorCode.BIRTH_INFO_REQUIRED);
     }
     if (birth.getYear() == null || birth.getMonth() == null || birth.getDay() == null) {
-      throw new IllegalArgumentException("생년월일은 필수입니다.");
+      throw new CustomException(ErrorCode.BIRTH_DATE_REQUIRED);
     }
   }
 
@@ -149,7 +151,7 @@ public class FortuneResult extends BaseTimeEntity {
     try {
       return LocalDate.of(birth.getYear(), birth.getMonth(), birth.getDay());
     } catch (Exception e) {
-      throw new IllegalArgumentException("유효하지 않은 생년월일입니다.", e);
+      throw new CustomException(ErrorCode.INVALID_BIRTH_DATE, e);
     }
   }
 

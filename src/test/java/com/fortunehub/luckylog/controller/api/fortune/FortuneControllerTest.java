@@ -24,6 +24,7 @@ import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
+import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.service.fortune.FortuneService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -89,7 +90,7 @@ class FortuneControllerTest {
   }
 
   @Test
-  @DisplayName("세션에 생년월일 정보가 없으면 500을 응답한다")
+  @DisplayName("세션에 생년월일 정보가 없으면 400을 응답한다")
   @WithMockCustomUser
   void save_WhenNoBirthInfo_ThenReturnsBadRequest() throws Exception {
     // given
@@ -102,7 +103,7 @@ class FortuneControllerTest {
                .content(objectMapper.writeValueAsString(request)))
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.success").value(false))
-           .andExpect(jsonPath("$.message").value("생년월일 정보가 없습니다. 처음부터 다시 진행해주세요."));
+           .andExpect(jsonPath("$.message").value(ErrorCode.BIRTH_INFO_REQUIRED.getMessage()));
 
     verify(fortuneService, never()).save(any(), any(), any());
   }
@@ -120,7 +121,7 @@ class FortuneControllerTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(invalidRequest)))
            .andExpect(status().isBadRequest())
-           .andExpect(jsonPath("$.message").value("입력값이 올바르지 않습니다."));
+           .andExpect(jsonPath("$.message").value(ErrorCode.ARGUMENT_NOT_VALID.getMessage()));
 
     verify(fortuneService, never()).save(any(), any(), any());
   }
@@ -145,7 +146,7 @@ class FortuneControllerTest {
                .content(objectMapper.writeValueAsString(request)))
            .andExpect(status().isInternalServerError())
            .andExpect(jsonPath("$.success").value(false))
-           .andExpect(jsonPath("$.message").value("저장 중 오류가 발생했습니다."));
+           .andExpect(jsonPath("$.message").value(ErrorCode.FORTUNE_SAVE_SYSTEM_ERROR.getMessage()));
   }
 
   private SaveFortuneRequest createValidFortuneRequest(List<FortuneType> fortunes) {

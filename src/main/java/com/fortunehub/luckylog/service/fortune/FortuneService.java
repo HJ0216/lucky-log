@@ -64,7 +64,7 @@ public class FortuneService {
         .findByFortuneTypeIn(fortuneTypes);
 
     if (categories.size() != fortuneTypes.size()) {
-      throw new IllegalArgumentException("일부 운세 카테고리를 찾을 수 없습니다.");
+      throw new CustomException(ErrorCode.FORTUNE_CATEGORY_NOT_FOUND);
     }
 
     categories.forEach(category -> {
@@ -75,17 +75,16 @@ public class FortuneService {
 
   private void validateBusinessRules(Member member, SaveFortuneRequest request) {
     if (member == null || !member.isActive()) {
-      throw new IllegalArgumentException("유효하지 않은 회원입니다.");
+      throw new CustomException(ErrorCode.INVALID_MEMBER);
     }
 
     if (isDuplicateFortuneTitle(member.getId(), request)) {
-      throw new IllegalArgumentException("이미 동일한 이름의 운세가 저장되어 있습니다.");
+      throw new CustomException(ErrorCode.DUPLICATE_FORTUNE_TITLE);
     }
 
     if (isExceedMaxSaveCount(member.getId())) {
-      throw new IllegalArgumentException("저장 가능한 운세 개수를 초과했습니다.");
+      throw new CustomException(ErrorCode.EXCEED_MAX_SAVE_COUNT);
     }
-
   }
 
   private boolean isDuplicateFortuneTitle(Long memberId, SaveFortuneRequest request) {

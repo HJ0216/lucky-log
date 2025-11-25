@@ -8,6 +8,8 @@ import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
+import com.fortunehub.luckylog.exception.CustomException;
+import com.fortunehub.luckylog.exception.ErrorCode;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,8 +34,8 @@ class FortuneResultTest {
   void create_WhenMemberIsNull_ThenThrowsException() {
     // when & then
     assertThatThrownBy(() -> FortuneResult.create(null, request, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("회원 정보는 필수입니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.MEMBER_INFO_REQUIRED.getMessage());
   }
 
   @Test
@@ -41,8 +43,8 @@ class FortuneResultTest {
   void create_WhenRequestIsNull_ThenThrowsException() {
     // when & then
     assertThatThrownBy(() -> FortuneResult.create(member, null, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("운세 저장 요청 정보는 필수입니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.FORTUNE_REQUEST_REQUIRED.getMessage());
   }
 
   @Test
@@ -53,8 +55,8 @@ class FortuneResultTest {
 
     // when & then
     assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("운세 결과 연도는 필수입니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.FORTUNE_YEAR_REQUIRED.getMessage());
   }
 
   @Test
@@ -65,8 +67,8 @@ class FortuneResultTest {
 
     // when & then
     assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("운세 옵션 정보는 필수입니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.FORTUNE_OPTION_REQUIRED.getMessage());
   }
 
   @Test
@@ -77,8 +79,8 @@ class FortuneResultTest {
 
     // when & then
     assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("운세 결과는 필수입니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.FORTUNE_RESPONSE_REQUIRED.getMessage());
   }
 
   @Test
@@ -86,8 +88,8 @@ class FortuneResultTest {
   void create_WhenBirthInfoIsNull_ThenThrowsException() {
     // when & then
     assertThatThrownBy(() -> FortuneResult.create(member, request, null))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("생년월일 정보는 필수입니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.BIRTH_INFO_REQUIRED.getMessage());
   }
 
   @Test
@@ -98,8 +100,8 @@ class FortuneResultTest {
 
     // when & then
     assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("생년월일은 필수입니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.BIRTH_DATE_REQUIRED.getMessage());
   }
 
 
@@ -111,8 +113,8 @@ class FortuneResultTest {
 
     // when & then
     assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("생년월일은 필수입니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.BIRTH_DATE_REQUIRED.getMessage());
   }
 
   @Test
@@ -157,8 +159,8 @@ class FortuneResultTest {
 
     // when & then
     assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("유효하지 않은 생년월일입니다.");
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.INVALID_BIRTH_DATE.getMessage());
   }
 
   private SaveFortuneRequest createValidRequest() {

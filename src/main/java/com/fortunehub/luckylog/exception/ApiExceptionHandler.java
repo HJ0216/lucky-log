@@ -26,7 +26,7 @@ public class ApiExceptionHandler {
     return ResponseEntity.badRequest()
                          .body(Map.of(
                              "success", false,
-                             "message", "입력값이 올바르지 않습니다.",
+                             "message", ErrorCode.ARGUMENT_NOT_VALID.getMessage(),
                              "errors", errors
                          ));
 

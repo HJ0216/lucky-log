@@ -2,6 +2,8 @@ package com.fortunehub.luckylog.controller.api.fortune;
 
 import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
+import com.fortunehub.luckylog.exception.CustomException;
+import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.security.CustomUserDetails;
 import com.fortunehub.luckylog.service.fortune.FortuneService;
 import jakarta.validation.Valid;
@@ -36,7 +38,7 @@ public class FortuneController {
       return ResponseEntity.badRequest()
                            .body(Map.of(
                                "success", false,
-                               "message", "생년월일 정보가 없습니다. 처음부터 다시 진행해주세요."
+                               "message", ErrorCode.BIRTH_INFO_REQUIRED.getMessage()
                            ));
     }
 
@@ -50,12 +52,21 @@ public class FortuneController {
           "message", "저장되었습니다."
       ));
 
+    } catch (CustomException e) {
+      log.warn("[운세 저장 실패]", e);
+
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                           .body(Map.of(
+                               "success", false,
+                               "message", e.getMessage()
+                           ));
+
     } catch (Exception e) {
       log.error("[운세 저장 실패]", e);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                            .body(Map.of(
                                "success", false,
-                               "message", "저장 중 오류가 발생했습니다."
+                               "message", ErrorCode.FORTUNE_SAVE_SYSTEM_ERROR.getMessage()
                            ));
     }
   }
