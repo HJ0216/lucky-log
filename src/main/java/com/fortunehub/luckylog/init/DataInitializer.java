@@ -37,14 +37,14 @@ public class DataInitializer {
     }
 
     fortuneCategoryRepository.saveAll(List.of(
-        FortuneCategory.create(FortuneType.OVERALL),
-        FortuneCategory.create(FortuneType.MONEY),
-        FortuneCategory.create(FortuneType.LOVE),
-        FortuneCategory.create(FortuneType.CAREER),
-        FortuneCategory.create(FortuneType.STUDY),
-        FortuneCategory.create(FortuneType.LUCK),
-        FortuneCategory.create(FortuneType.FAMILY),
-        FortuneCategory.create(FortuneType.HEALTH)
+        FortuneCategory.create(1, FortuneType.OVERALL),
+        FortuneCategory.create(2, FortuneType.MONEY),
+        FortuneCategory.create(3, FortuneType.LOVE),
+        FortuneCategory.create(4, FortuneType.CAREER),
+        FortuneCategory.create(5, FortuneType.STUDY),
+        FortuneCategory.create(6, FortuneType.LUCK),
+        FortuneCategory.create(7, FortuneType.FAMILY),
+        FortuneCategory.create(8, FortuneType.HEALTH)
     ));
   }
 

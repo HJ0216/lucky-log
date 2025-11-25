@@ -19,15 +19,15 @@ import lombok.NoArgsConstructor;
 public class FortuneCategory {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false, length = 20)
   private FortuneType fortuneType;
 
-  public static FortuneCategory create(FortuneType fortuneType) {
+  public static FortuneCategory create(int sequence, FortuneType fortuneType) {
     FortuneCategory category = new FortuneCategory();
+    category.id = sequence;
     category.fortuneType = fortuneType;
     return category;
   }

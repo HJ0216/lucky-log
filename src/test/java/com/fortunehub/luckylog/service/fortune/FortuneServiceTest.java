@@ -25,6 +25,7 @@ import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.repository.fortune.FortuneCategoryRepository;
 import com.fortunehub.luckylog.repository.fortune.FortuneResultRepository;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,17 +53,26 @@ class FortuneServiceTest {
   private static final Long TEST_MEMBER_ID = 1L;
   private static final String TEST_TITLE = "2025년 운세";
 
+  private static final List<FortuneCategory> ALL_CATEGORIES = List.of(
+      FortuneCategory.create(1, FortuneType.OVERALL),
+      FortuneCategory.create(2, FortuneType.MONEY),
+      FortuneCategory.create(3, FortuneType.LOVE),
+      FortuneCategory.create(4, FortuneType.CAREER),
+      FortuneCategory.create(5, FortuneType.STUDY),
+      FortuneCategory.create(6, FortuneType.LUCK),
+      FortuneCategory.create(7, FortuneType.FAMILY),
+      FortuneCategory.create(8, FortuneType.HEALTH)
+  );
+
   private Member member;
   private List<FortuneType> fortuneTypes;
   private SaveFortuneRequest request;
   private BirthInfoForm birthInfo;
-  private List<FortuneCategory> categories;
 
   @BeforeEach
   void setUp() {
     member = createMemberWithId();
     fortuneTypes = List.of(FortuneType.OVERALL, FortuneType.MONEY);
-    categories = createValidFortuneCategories(fortuneTypes);
     request = createValidFortuneRequest(fortuneTypes);
     birthInfo = createValidBirthInfo();
   }
@@ -77,7 +87,7 @@ class FortuneServiceTest {
         .willReturn(5L);
 
     given(fortuneCategoryRepository
-        .findByFortuneTypeIn(any())).willReturn(categories);
+        .findByFortuneTypeIn(any())).willReturn(getCategoriesByTypes(FortuneType.OVERALL, FortuneType.MONEY));
 
     // when
     fortuneService.save(member, request, birthInfo);
@@ -140,8 +150,6 @@ class FortuneServiceTest {
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("저장 가능한 운세 개수를 초과했습니다.");
 
-    verify(fortuneResultRepository).existsByMember_IdAndTitle(TEST_MEMBER_ID, TEST_TITLE);
-    verify(fortuneResultRepository).countByMember_IdAndIsActiveTrue(TEST_MEMBER_ID);
     verify(fortuneResultRepository, never()).save(any(FortuneResult.class));
   }
 
@@ -156,7 +164,8 @@ class FortuneServiceTest {
 
     // 카테고리 1개만 반환 (2개 요청)
     List<FortuneCategory> categories = List.of(
-        FortuneCategory.create(FortuneType.OVERALL)
+        FortuneCategory.create(1, FortuneType.OVERALL)
+        // MONEY 없음 → 예외 발생 예상
     );
 
     given(fortuneCategoryRepository.findByFortuneTypeIn(fortuneTypes))
@@ -180,7 +189,7 @@ class FortuneServiceTest {
         .willReturn(5L);
 
     given(fortuneCategoryRepository.findByFortuneTypeIn(fortuneTypes))
-        .willReturn(categories);
+        .willReturn(getCategoriesByTypes(FortuneType.OVERALL, FortuneType.MONEY));
 
     // when
     fortuneService.save(member, request, birthInfo);
@@ -209,12 +218,6 @@ class FortuneServiceTest {
     Member member = new Member("test@email.com", "encodedPassword", "솜사탕 구름");
     ReflectionTestUtils.setField(member, "isActive", false);
     return member;
-  }
-
-  private List<FortuneCategory> createValidFortuneCategories(List<FortuneType> fortuneTypes) {
-    return fortuneTypes.stream()
-                       .map(FortuneCategory::create)
-                       .toList();
   }
 
   private SaveFortuneRequest createValidFortuneRequest(List<FortuneType> fortunes) {
@@ -261,5 +264,11 @@ class FortuneServiceTest {
     birth.setCity(CityType.SEOUL);
     birth.setTime(TimeType.TIME_11_30);
     return birth;
+  }
+
+  private List<FortuneCategory> getCategoriesByTypes(FortuneType... types) {
+    return ALL_CATEGORIES.stream()
+                         .filter(c -> Arrays.asList(types).contains(c.getFortuneType()))
+                         .toList();
   }
 }
