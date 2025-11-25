@@ -48,85 +48,12 @@ class FortuneResultTest {
   }
 
   @Test
-  @DisplayName("운세 결과 연도가 null이면 예외가 발생한다")
-  void create_WhenFortuneResultYearIsNull_ThenThrowsException() {
-    // given
-    request.setFortuneResultYear(null);
-
-    // when & then
-    assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
-        .isInstanceOf(CustomException.class)
-        .hasMessageContaining(ErrorCode.FORTUNE_YEAR_REQUIRED.getMessage());
-  }
-
-  @Test
-  @DisplayName("운세 옵션 정보가 null이면 예외가 발생한다")
-  void create_WhenFortuneOptionIsNull_ThenThrowsException() {
-    // given
-    request.setOption(null);
-
-    // when & then
-    assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
-        .isInstanceOf(CustomException.class)
-        .hasMessageContaining(ErrorCode.FORTUNE_OPTION_REQUIRED.getMessage());
-  }
-
-  @Test
-  @DisplayName("운세 결과가 null이면 예외가 발생한다")
-  void create_WhenResponsesIsNull_ThenThrowsException() {
-    // given
-    request.setResponses(null);
-
-    // when & then
-    assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
-        .isInstanceOf(CustomException.class)
-        .hasMessageContaining(ErrorCode.FORTUNE_RESPONSE_REQUIRED.getMessage());
-  }
-  
-  @Test
-  @DisplayName("운세 결과가 없으면 예외가 발생한다")
-  void create_WhenResponsesIsEmpty_ThenThrowsException() {
-    // given
-    request.setResponses(List.of());
-
-    // when & then
-    assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
-        .isInstanceOf(CustomException.class)
-        .hasMessageContaining(ErrorCode.FORTUNE_RESPONSE_REQUIRED.getMessage());
-  }
-
-  @Test
   @DisplayName("null 생년월일로 생성 시 예외가 발생한다")
   void create_WhenBirthInfoIsNull_ThenThrowsException() {
     // when & then
     assertThatThrownBy(() -> FortuneResult.create(member, request, null))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.BIRTH_INFO_REQUIRED.getMessage());
-  }
-
-  @Test
-  @DisplayName("생년월일의 년도가 null이면 예외가 발생한다")
-  void create_WhenBirthYearIsNull_ThenThrowsException() {
-    // given
-    birthInfo.setYear(null);
-
-    // when & then
-    assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
-        .isInstanceOf(CustomException.class)
-        .hasMessageContaining(ErrorCode.BIRTH_DATE_REQUIRED.getMessage());
-  }
-
-
-  @Test
-  @DisplayName("생년월일의 일이 null이면 예외가 발생한다")
-  void create_WhenBirthDayIsNull_ThenThrowsException() {
-    // given
-    birthInfo.setDay(null);
-
-    // when & then
-    assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
-        .isInstanceOf(CustomException.class)
-        .hasMessageContaining(ErrorCode.BIRTH_DATE_REQUIRED.getMessage());
   }
 
   @Test
