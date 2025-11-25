@@ -106,6 +106,11 @@ const FortuneResultPage = {
     });
 
     this.elements.saveBtn.addEventListener('click', async () => {
+      if (!window.fortuneData) {
+       toast.error('저장 실패', this.messages.saveFailed);
+       return;
+      }
+
       const {
         fortuneResultYear,
         fortuneOption: option,
@@ -135,8 +140,17 @@ const FortuneResultPage = {
 
         const data = await response.json();
 
+        if (response.status === 401) {
+          toast.error('로그인 필요', this.messages.loginRequired);
+          // TODO: 모달 방식으로 변경 예정
+//          setTimeout(() => {
+//            window.location.href = '/login';
+//          }, 1000);
+          return;
+        }
+
         if (!response.ok) {
-          toast.error('저장 실패', this.messages.saveFailed || data.message);
+          toast.error('저장 실패', data.message || this.messages.saveFailed);
           return;
         }
 
