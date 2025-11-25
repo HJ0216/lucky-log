@@ -20,6 +20,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +151,7 @@ public class FortuneResult extends BaseTimeEntity {
   private static LocalDate createBirthDate(BirthInfoForm birth) {
     try {
       return LocalDate.of(birth.getYear(), birth.getMonth(), birth.getDay());
-    } catch (Exception e) {
+    } catch (DateTimeException e) {
       throw new CustomException(ErrorCode.INVALID_BIRTH_DATE, e);
     }
   }

@@ -146,7 +146,7 @@ class FortuneServiceTest {
     given(fortuneResultRepository.existsByMember_IdAndTitle(TEST_MEMBER_ID, TEST_TITLE))
         .willReturn(false);
     given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(TEST_MEMBER_ID))
-        .willReturn(11L); // MAX_SAVE_COUNT보다 큼
+        .willReturn(5L); // MAX_SAVE_COUNT만큼 운세가 저장됨
 
     // when & then
     assertThatThrownBy(() -> fortuneService.save(member, request, birthInfo))

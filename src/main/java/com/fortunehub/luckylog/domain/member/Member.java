@@ -75,6 +75,4 @@ public class Member extends BaseTimeEntity {
   public static Member from(SignupRequest request, String encodedPassword) {
     return new Member(request.getEmail(), encodedPassword, request.getNickname());
   }
-
-  // 연관관계 편의 메서드
 }
