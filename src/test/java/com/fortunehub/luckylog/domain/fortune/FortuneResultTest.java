@@ -82,6 +82,18 @@ class FortuneResultTest {
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.FORTUNE_RESPONSE_REQUIRED.getMessage());
   }
+  
+  @Test
+  @DisplayName("운세 결과가 없으면 예외가 발생한다")
+  void create_WhenResponsesIsEmpty_ThenThrowsException() {
+    // given
+    request.setResponses(List.of());
+
+    // when & then
+    assertThatThrownBy(() -> FortuneResult.create(member, request, birthInfo))
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.FORTUNE_RESPONSE_REQUIRED.getMessage());
+  }
 
   @Test
   @DisplayName("null 생년월일로 생성 시 예외가 발생한다")

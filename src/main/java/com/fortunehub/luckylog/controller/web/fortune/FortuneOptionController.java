@@ -30,7 +30,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/fortune/option")
 public class FortuneOptionController {
 
-  public static final String FORTUNE_OPTION_VIEW = "fortune/fortune-option";
+  private static final String FORTUNE_OPTION_VIEW = "fortune/fortune-option";
   private static final String REDIRECT_HOME = "redirect:/";
   private static final String REDIRECT_FORTUNE_RESULT = "redirect:/fortune/result";
 

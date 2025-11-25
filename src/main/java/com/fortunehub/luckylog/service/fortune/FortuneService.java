@@ -54,7 +54,7 @@ public class FortuneService {
 
   private void addItems(FortuneResult result, List<FortuneResponse> responses) {
     responses.forEach(response -> {
-      FortuneResultItem item = FortuneResultItem.create(result, response);
+      FortuneResultItem item = FortuneResultItem.create(response);
       result.addItem(item);
     });
   }

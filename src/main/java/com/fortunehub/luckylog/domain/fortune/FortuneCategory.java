@@ -25,6 +25,7 @@ public class FortuneCategory {
   @Column(nullable = false, length = 20)
   private FortuneType fortuneType;
 
+  // 이 엔티티는 초기 데이터 전용이며, 런타임에 임의 생성하지 않음
   public static FortuneCategory create(int sequence, FortuneType fortuneType) {
     FortuneCategory category = new FortuneCategory();
     category.id = sequence;

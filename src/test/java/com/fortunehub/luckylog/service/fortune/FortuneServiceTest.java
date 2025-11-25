@@ -86,7 +86,7 @@ class FortuneServiceTest {
     given(fortuneResultRepository.existsByMember_IdAndTitle(member.getId(), TEST_TITLE))
         .willReturn(false);
     given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(TEST_MEMBER_ID))
-        .willReturn(5L);
+        .willReturn(4L);
 
     given(fortuneCategoryRepository
         .findByFortuneTypeIn(any())).willReturn(
@@ -163,7 +163,7 @@ class FortuneServiceTest {
     given(fortuneResultRepository.existsByMember_IdAndTitle(TEST_MEMBER_ID, TEST_TITLE))
         .willReturn(false);
     given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(TEST_MEMBER_ID))
-        .willReturn(5L);
+        .willReturn(4L);
 
     // 카테고리 1개만 반환 (2개 요청)
     List<FortuneCategory> categories = List.of(
@@ -189,7 +189,7 @@ class FortuneServiceTest {
     given(fortuneResultRepository.existsByMember_IdAndTitle(TEST_MEMBER_ID, TEST_TITLE))
         .willReturn(false);
     given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(TEST_MEMBER_ID))
-        .willReturn(5L);
+        .willReturn(4L);
 
     given(fortuneCategoryRepository.findByFortuneTypeIn(fortuneTypes))
         .willReturn(getCategoriesByTypes(FortuneType.OVERALL, FortuneType.MONEY));
