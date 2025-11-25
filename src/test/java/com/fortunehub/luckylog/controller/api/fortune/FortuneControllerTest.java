@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fortunehub.luckylog.config.TestSecurityConfig;
+import com.fortunehub.luckylog.config.SecurityConfig;
 import com.fortunehub.luckylog.config.WithMockCustomUser;
 import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
 import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
@@ -35,7 +35,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@Import(TestSecurityConfig.class)
+@Import(SecurityConfig.class)
 @WebMvcTest(FortuneController.class)
 // 웹 계층만 로드해서 테스트
 @DisplayName("운세 Controller")
