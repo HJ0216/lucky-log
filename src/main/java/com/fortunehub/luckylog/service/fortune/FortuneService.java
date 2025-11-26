@@ -19,6 +19,7 @@ import com.fortunehub.luckylog.repository.fortune.FortuneResultRepository;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,12 +66,10 @@ public class FortuneService {
     List<FortuneCategory> categories = fortuneCategoryRepository
         .findByFortuneTypeIn(fortuneTypes);
 
-    Set requested = new HashSet<FortuneType>(fortuneTypes);
-    Set found = new HashSet<FortuneType>();
-
-    for (FortuneCategory c : categories) {
-      found.add(c.getFortuneType());
-    }
+    Set<FortuneType> requested = new HashSet<>(fortuneTypes);
+    Set<FortuneType> found = categories.stream()
+        .map(FortuneCategory::getFortuneType)
+        .collect(Collectors.toSet());
 
     if (!found.equals(requested)) {
       throw new CustomException(ErrorCode.FORTUNE_CATEGORY_NOT_FOUND);
