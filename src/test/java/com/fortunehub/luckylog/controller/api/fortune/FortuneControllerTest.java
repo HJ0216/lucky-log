@@ -141,7 +141,7 @@ class FortuneControllerTest {
                .content(objectMapper.writeValueAsString(request)))
            .andExpect(status().isInternalServerError())
            .andExpect(jsonPath("$.success").value(false))
-           .andExpect(jsonPath("$.message").value(ErrorCode.FORTUNE_SAVE_SYSTEM_ERROR.getMessage()));
+           .andExpect(jsonPath("$.message").value(ErrorCode.SYSTEM_ERROR.getMessage()));
   }
 
   private SaveFortuneRequest createValidFortuneRequest(List<FortuneType> fortunes) {

@@ -26,6 +26,7 @@ public enum ErrorCode {
 
   // API Validation
   ARGUMENT_NOT_VALID(HttpStatus.BAD_REQUEST, "😲 입력값이 올바르지 않습니다."),
+  SYSTEM_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "😲 서버 오류가 발생했습니다."),
 
   // 운세 저장
   INVALID_MEMBER(HttpStatus.BAD_REQUEST, "👤 유효하지 않은 회원입니다."),
