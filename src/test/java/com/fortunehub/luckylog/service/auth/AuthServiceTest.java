@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import com.fortunehub.luckylog.domain.member.Member;
@@ -11,6 +12,7 @@ import com.fortunehub.luckylog.dto.request.auth.LoginRequest;
 import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
+import com.fortunehub.luckylog.fixture.MemberFixtures;
 import com.fortunehub.luckylog.repository.member.MemberRepository;
 import com.fortunehub.luckylog.security.CustomUserDetails;
 import org.junit.jupiter.api.AfterEach;
@@ -61,6 +63,10 @@ class AuthServiceTest {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
+    given(memberRepository.existsByEmail(req.getEmail()))
+        .willReturn(false);
+    given(memberRepository.existsByNickname(req.getNickname()))
+        .willReturn(false);
     given(passwordEncoder.encode(req.getPassword())).willReturn(TEST_ENCODED_PASSWORD);
 
     // when
@@ -104,11 +110,51 @@ class AuthServiceTest {
   }
 
   @Test
+  @DisplayName("이미 가입한 이메일이 존재하면 예외가 발생한다")
+  void signup_WhenEmailAlreadyExists_ThenThrowsException() {
+    // given
+    SignupRequest request = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, null);
+
+    given(memberRepository.existsByEmail(request.getEmail()))
+        .willReturn(true);
+
+    // when & then
+    assertThatThrownBy(() -> authService.signup(request))
+        .isInstanceOf(CustomException.class)
+        .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATE_EMAIL);
+
+    verify(memberRepository).existsByEmail(request.getEmail());
+    verify(memberRepository, never()).save(any());
+  }
+
+  @Test
+  @DisplayName("이미 가입한 닉네임이 존재하면 예외가 발생한다")
+  void signup_WhenNicknameAlreadyExists_ThenThrowsExpcetion() {
+    // given
+    SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
+
+    given(memberRepository.existsByEmail(req.getEmail()))
+        .willReturn(false);
+    given(memberRepository.existsByNickname(req.getNickname()))
+        .willReturn(true);
+
+    // when & then
+    assertThatThrownBy(() -> authService.signup(req))
+        .isInstanceOf(CustomException.class)
+        .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATE_NICKNAME);
+
+    verify(memberRepository).existsByEmail(req.getEmail());
+    verify(memberRepository, never()).save(any());
+  }
+
+  @Test
   @DisplayName("이메일 중복 제약조건 위반 시 예외가 발생한다")
   void signup_WhenEmailConstraintViolated_ThenThrowsDuplicateEmailException() {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
+    given(memberRepository.existsByEmail(req.getEmail())).willReturn(false);
+    given(memberRepository.existsByNickname(req.getNickname())).willReturn(false);
     given(passwordEncoder.encode(req.getPassword())).willReturn(TEST_ENCODED_PASSWORD);
 
     DataIntegrityViolationException dbException = new DataIntegrityViolationException(
@@ -134,6 +180,8 @@ class AuthServiceTest {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
+    given(memberRepository.existsByEmail(req.getEmail())).willReturn(false);
+    given(memberRepository.existsByNickname(req.getNickname())).willReturn(false);
     given(passwordEncoder.encode(req.getPassword())).willReturn(TEST_ENCODED_PASSWORD);
 
     DataIntegrityViolationException dbException = new DataIntegrityViolationException(
@@ -159,6 +207,8 @@ class AuthServiceTest {
     // given
     SignupRequest req = new SignupRequest(TEST_EMAIL, TEST_RAW_PASSWORD, TEST_NICKNAME);
 
+    given(memberRepository.existsByEmail(req.getEmail())).willReturn(false);
+    given(memberRepository.existsByNickname(req.getNickname())).willReturn(false);
     given(passwordEncoder.encode(req.getPassword())).willReturn(TEST_ENCODED_PASSWORD);
 
     DataIntegrityViolationException exception =
@@ -181,7 +231,7 @@ class AuthServiceTest {
   void login_WhenValidCredentials_ThenSuccess() {
     // given
     LoginRequest req = new LoginRequest(TEST_EMAIL, TEST_RAW_PASSWORD);
-    Member member = new Member(TEST_EMAIL, TEST_ENCODED_PASSWORD, TEST_NICKNAME);
+    Member member = MemberFixtures.activeMember(TEST_EMAIL, TEST_NICKNAME);
 
     CustomUserDetails userDetails = new CustomUserDetails(member);
     Authentication authentication = new UsernamePasswordAuthenticationToken(
