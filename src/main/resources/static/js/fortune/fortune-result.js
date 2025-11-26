@@ -3,6 +3,7 @@
 const FortuneResultPage = {
   config: {
     INDEX_URL: '/',
+    FORTUNE_MY_URL: '/fortune/my',
   },
 
   messages: {
@@ -159,8 +160,7 @@ const FortuneResultPage = {
         if (data.success) {
           toast.success('저장 완료', this.messages.saveSuccess);
           setTimeout(() => {
-            // TODO: url: /fortune/my-list
-            // window.location.href = data.redirectUrl;
+            window.location.href = this.config.FORTUNE_MY_URL;
           }, 1000);
         } else {
           toast.error('저장 실패', this.messages.saveFailed);
