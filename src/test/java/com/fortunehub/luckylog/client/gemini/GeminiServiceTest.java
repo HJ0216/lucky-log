@@ -53,7 +53,8 @@ class GeminiServiceTest {
   GeminiService service;
 
   private static final String MODEL_NAME = "gemini-test";
-
+  private static final String PROMPT_TEMPLATE = "[ANALYSIS_YEAR]년 [FORTUNE_TYPES] 운세 분석";
+  private static final int TEST_YEAR = 2025;
   private static final String VALID_JSON_RESPONSE = """
       [
         {
@@ -83,8 +84,8 @@ class GeminiServiceTest {
         client,
         generateContentConfig,
         new ObjectMapper(),
-        "gemini-test",
-        "[ANALYSIS_YEAR]년 [FORTUNE_TYPES] 운세 분석"
+        MODEL_NAME,
+        PROMPT_TEMPLATE
     );
   }
 
@@ -129,7 +130,7 @@ class GeminiServiceTest {
 
     String prompt = promptCaptor.getValue();
     assertThat(prompt)
-        .contains("2025년")
+        .contains(String.valueOf(TEST_YEAR))
         .contains("애정, 건강")
         .contains("1995년 2월 16일")
         .contains("양력")
@@ -218,7 +219,7 @@ class GeminiServiceTest {
     BirthInfoForm birthForm = createBirthInfoForm();
     FortuneOptionForm optionForm = createFortuneOptionForm();
 
-    return FortuneRequest.from(birthForm, optionForm, 2025);
+    return FortuneRequest.from(birthForm, optionForm, TEST_YEAR);
   }
 
   private BirthInfoForm createBirthInfoForm() {

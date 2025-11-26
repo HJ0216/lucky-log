@@ -79,7 +79,7 @@ class FortuneResultTest {
 
   @Test
   @DisplayName("생년월일 정보가 null이면 예외가 발생한다")
-  void create_WhenBirthYearIsNull_ThenThrowsException() {
+  void create_WhenBirthInfoIsNull_ThenThrowsException() {
     // given
     request.setBirthInfo(null);
 
