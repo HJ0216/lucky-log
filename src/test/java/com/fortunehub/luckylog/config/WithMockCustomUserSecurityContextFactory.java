@@ -25,7 +25,7 @@ public class WithMockCustomUserSecurityContextFactory implements
 
     Authentication auth = new UsernamePasswordAuthenticationToken(
         userDetails,
-        userDetails.getPassword(),
+        null,
         userDetails.getAuthorities()
     );
 
