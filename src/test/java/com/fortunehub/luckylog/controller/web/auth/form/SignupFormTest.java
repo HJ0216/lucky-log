@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.controller.web.auth.form;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -9,6 +10,42 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("회원가입 Form")
 class SignupFormTest {
+
+  @Test
+  @DisplayName("비밀번호가 일치하면 true를 반환한다")
+  void isPasswordMatched_WhenPasswordMatched_ThenReturnsTure() {
+    // given
+    SignupForm form = new SignupForm();
+    form.setPassword("Password1!");
+    form.setConfirmPassword("Password1!");
+
+    // when & then
+    assertThat(form.isPasswordMatched()).isTrue();
+  }
+
+  @Test
+  @DisplayName("비밀번호가 일치하지 않으면 false를 반환한다")
+  void isPasswordMatched_WhenPasswordNotMatched_ThenReturnsFalse() {
+    // given
+    SignupForm form = new SignupForm();
+    form.setPassword("Password1!");
+    form.setConfirmPassword("Different2!");
+
+    // when & then
+    assertThat(form.isPasswordMatched()).isFalse();
+  }
+
+  @Test
+  @DisplayName("비밀번호가 없으면 false를 반환한다")
+  void isPasswordMatched_WhenPasswordIsNull_ThenReturnsFalse() {
+    // given
+    SignupForm form = new SignupForm();
+    form.setPassword(null);
+    form.setConfirmPassword("Password1!");
+
+    // when & then
+    assertThat(form.isPasswordMatched()).isFalse();
+  }
 
   @Test
   @DisplayName("닉네임 앞뒤 공백이 제거된다")
