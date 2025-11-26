@@ -1,6 +1,7 @@
 package com.fortunehub.luckylog.domain.fortune;
 
 import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
+import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
 import com.fortunehub.luckylog.domain.common.BaseTimeEntity;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
@@ -96,15 +97,18 @@ public class FortuneResult extends BaseTimeEntity {
 
     FortuneResult result = new FortuneResult();
     result.member = member;
-    result.title =
-        StringUtils.hasText(request.getTitle()) ? request.getTitle() : generateTitle(request);
-    result.gender = request.getBirthInfo().getGender();
+    result.title = getOrGenerateTitle(request);
     result.resultYear = request.getFortuneResultYear();
-    result.birthDate = createBirthDate(request.getBirthInfo());
-    result.birthTimeZone = request.getBirthInfo().getTime();
-    result.birthRegion = request.getBirthInfo().getCity();
-    result.aiType = request.getOption().getAi();
-    result.periodType = request.getOption().getPeriod();
+
+    BirthInfoForm birthInfo = request.getBirthInfo();
+    result.gender = birthInfo.getGender();
+    result.birthDate = createBirthDate(birthInfo);
+    result.birthTimeZone = birthInfo.getTime();
+    result.birthRegion = birthInfo.getCity();
+
+    FortuneOptionForm option = request.getOption();
+    result.aiType = option.getAi();
+    result.periodType = option.getPeriod();
 
     return result;
   }
@@ -117,6 +121,19 @@ public class FortuneResult extends BaseTimeEntity {
     if (request == null) {
       throw new CustomException(ErrorCode.FORTUNE_REQUEST_REQUIRED);
     }
+    if (request.getBirthInfo() == null) {
+      throw new CustomException(ErrorCode.BIRTH_INFO_REQUIRED);
+    }
+    if (request.getOption() == null) {
+      throw new CustomException(ErrorCode.FORTUNE_OPTION_REQUIRED);
+    }
+  }
+
+  private static String getOrGenerateTitle(SaveFortuneRequest request) {
+    if (StringUtils.hasText(request.getTitle())) {
+      return request.getTitle();
+    }
+    return generateTitle(request);
   }
 
   private static String generateTitle(SaveFortuneRequest request) {

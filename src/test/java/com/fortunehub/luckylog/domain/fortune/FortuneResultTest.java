@@ -78,6 +78,18 @@ class FortuneResultTest {
   }
 
   @Test
+  @DisplayName("생년월일 정보가 null이면 예외가 발생한다")
+  void create_WhenBirthYearIsNull_ThenThrowsException() {
+    // given
+    request.setBirthInfo(null);
+
+    // when & then
+    assertThatThrownBy(() -> FortuneResult.create(member, request))
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.BIRTH_INFO_REQUIRED.getMessage());
+  }
+
+  @Test
   @DisplayName("유효하지 않은 날짜로 생성 시 예외가 발생한다")
   void create_WhenInvalidDate_ThenThrowsException() {
     // given
@@ -89,6 +101,18 @@ class FortuneResultTest {
     assertThatThrownBy(() -> FortuneResult.create(member, request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.INVALID_BIRTH_DATE.getMessage());
+  }
+
+  @Test
+  @DisplayName("운세 옵션 정보가 null이면 예외가 발생한다")
+  void create_WhenFortuneOptionIsNull_ThenThrowsException() {
+    // given
+    request.setOption(null);
+
+    // when & then
+    assertThatThrownBy(() -> FortuneResult.create(member, request))
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.FORTUNE_OPTION_REQUIRED.getMessage());
   }
 
   private SaveFortuneRequest createValidRequest() {
@@ -124,4 +148,5 @@ class FortuneResultTest {
     form.setTime(TimeType.TIME_11_30);
     return form;
   }
+
 }
