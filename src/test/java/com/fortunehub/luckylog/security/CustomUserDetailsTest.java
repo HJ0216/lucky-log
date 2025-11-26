@@ -71,17 +71,17 @@ class CustomUserDetailsTest {
   }
 
   @Test
-  @DisplayName("getPassword는 암호화된 비밀번호를 반환한다")
-  void getPassword_ReturnsPassword() {
+  @DisplayName("isEnabled는 회원의 활성 상태를 반환한다")
+  void isEnabled_ReturnsIsActive() {
     // given
     Member member = new Member(TEST_EMAIL, TEST_ENCODED_PASSWORD, TEST_NICKNAME);
     CustomUserDetails userDetails = new CustomUserDetails(member);
 
     // when
-    String password = userDetails.getPassword();
+    boolean isEnabled = userDetails.isEnabled();
 
     // then
-    assertThat(password).isEqualTo(member.getPassword());
+    assertThat(isEnabled).isTrue();
   }
 
   @Test
@@ -99,5 +99,19 @@ class CustomUserDetailsTest {
     assertThat(authorities)
         .extracting(GrantedAuthority::getAuthority)
         .containsExactly("ROLE_USER");
+  }
+
+  @Test
+  @DisplayName("getPassword는 암호화된 비밀번호를 반환한다")
+  void getPassword_ReturnsPassword() {
+    // given
+    Member member = new Member(TEST_EMAIL, TEST_ENCODED_PASSWORD, TEST_NICKNAME);
+    CustomUserDetails userDetails = new CustomUserDetails(member);
+
+    // when
+    String password = userDetails.getPassword();
+
+    // then
+    assertThat(password).isEqualTo(member.getPassword());
   }
 }
