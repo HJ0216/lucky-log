@@ -1,7 +1,6 @@
 package com.fortunehub.luckylog.controller.web.auth.form;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
@@ -61,7 +60,7 @@ class SignupFormTest {
     SignupRequest request = SignupRequest.from(form);
 
     // then
-    assertEquals("테스터", request.getNickname());
+    assertThat("테스터").isEqualTo(request.getNickname());
   }
 
   @Test
