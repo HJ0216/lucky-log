@@ -17,8 +17,8 @@ import com.fortunehub.luckylog.domain.fortune.CalendarType;
 import com.fortunehub.luckylog.domain.fortune.CityType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
-import com.fortunehub.luckylog.domain.fortune.PeriodValue;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
+import com.fortunehub.luckylog.domain.fortune.PeriodValue;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
@@ -36,7 +36,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -51,11 +50,9 @@ class GeminiServiceTest {
   @Mock // Mock 객체 생성
   private GenerateContentConfig generateContentConfig;
 
-  @InjectMocks // Mock 객체들을 자동으로 주입(service instance 생성 -> @Mock으로 만든 필드 주입)
-  private GeminiService geminiService;
+  GeminiService service;
 
   private static final String MODEL_NAME = "gemini-test";
-  private static final String PROMPT_TEMPLATE = "[ANALYSIS_YEAR]년 [FORTUNE_TYPES] 운세 분석";
 
   private static final String VALID_JSON_RESPONSE = """
       [
@@ -81,9 +78,14 @@ class GeminiServiceTest {
   @BeforeEach
   void setUp() {
     ReflectionTestUtils.setField(client, "models", models); // final field
-    ReflectionTestUtils.setField(geminiService, "modelName", MODEL_NAME);
-    ReflectionTestUtils.setField(geminiService, "promptTemplate", PROMPT_TEMPLATE);
-    ReflectionTestUtils.setField(geminiService, "objectMapper", new ObjectMapper());
+
+    service = new GeminiService(
+        client,
+        generateContentConfig,
+        new ObjectMapper(),
+        "gemini-test",
+        "[ANALYSIS_YEAR]년 [FORTUNE_TYPES] 운세 분석"
+    );
   }
 
   @Test
@@ -103,13 +105,14 @@ class GeminiServiceTest {
 
     // when
     FortuneRequest request = createFortuneRequest();
-    List<FortuneResponse> responses = geminiService.analyzeFortune(request);
+    List<FortuneResponse> responses = service.analyzeFortune(request);
 
     // then
     assertThat(responses)
         .isNotNull()
         .hasSize(3)
-        .extracting(FortuneResponse::getFortune, FortuneResponse::getPeriodValue, FortuneResponse::getResult)
+        .extracting(FortuneResponse::getFortune, FortuneResponse::getPeriodValue,
+            FortuneResponse::getResult)
         .containsExactly(
             tuple(FortuneType.LOVE, PeriodValue.JANUARY, "연애운 좋음"),
             tuple(FortuneType.LOVE, PeriodValue.FEBRUARY, "연애운 신경"),
@@ -149,7 +152,7 @@ class GeminiServiceTest {
     // when & then
     FortuneRequest request = createFortuneRequest();
 
-    assertThatThrownBy(() -> geminiService.analyzeFortune(request))
+    assertThatThrownBy(() -> service.analyzeFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_EMPTY_RESPONSE.getMessage());
   }
@@ -166,7 +169,7 @@ class GeminiServiceTest {
     // when & then
     FortuneRequest request = createFortuneRequest();
 
-    assertThatThrownBy(() -> geminiService.analyzeFortune(request))
+    assertThatThrownBy(() -> service.analyzeFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_UNKNOWN_ERROR.getMessage());
   }
@@ -187,7 +190,7 @@ class GeminiServiceTest {
     // when & then
     FortuneRequest request = createFortuneRequest();
 
-    assertThatThrownBy(() -> geminiService.analyzeFortune(request))
+    assertThatThrownBy(() -> service.analyzeFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_RESPONSE_PARSE_ERROR.getMessage());
   }
@@ -204,7 +207,7 @@ class GeminiServiceTest {
     // when & then
     FortuneRequest request = createFortuneRequest();
 
-    assertThatThrownBy(() -> geminiService.analyzeFortune(request))
+    assertThatThrownBy(() -> service.analyzeFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_OVERLOAD.getMessage());
 

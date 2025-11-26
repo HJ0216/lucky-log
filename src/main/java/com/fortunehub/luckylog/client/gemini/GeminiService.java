@@ -10,27 +10,35 @@ import com.google.genai.Client;
 import com.google.genai.errors.ServerException;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
-import java.time.LocalDateTime;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class GeminiService {
+
+  private final String modelName;
+  private final String promptTemplate;
 
   private final Client client;
   private final GenerateContentConfig generateContentConfig;
   private final ObjectMapper objectMapper;
 
-  @Value("${gemini.model}")
-  private String modelName;
-
-  @Value("${fortune.prompt}")
-  private String promptTemplate;
+  public GeminiService(
+      Client client,
+      GenerateContentConfig generateContentConfig,
+      ObjectMapper objectMapper,
+      @Value("${gemini.model}") String modelName,
+      @Value("${fortune.prompt}") String promptTemplate
+  ) {
+    this.client = client;
+    this.generateContentConfig = generateContentConfig;
+    this.objectMapper = objectMapper;
+    this.modelName = modelName;
+    this.promptTemplate = promptTemplate;
+  }
 
   public List<FortuneResponse> analyzeFortune(FortuneRequest request) {
 
@@ -41,7 +49,8 @@ public class GeminiService {
   }
 
   private String buildPrompt(FortuneRequest request) {
-    String basePrompt = promptTemplate.replace("[ANALYSIS_YEAR]", String.valueOf(request.fortuneResultYear()))
+    String basePrompt = promptTemplate.replace("[ANALYSIS_YEAR]",
+                                          String.valueOf(request.fortuneResultYear()))
                                       .replace("[FORTUNE_TYPES]",
                                           request.getFortuneTypesAsString());
 
