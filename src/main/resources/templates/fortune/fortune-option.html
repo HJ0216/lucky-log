@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
   <th:block th:replace="~{fragments/head :: common-meta}" />
@@ -27,7 +25,7 @@
       <div class="loading-animation">
         <div class="loading-ring"></div>
       </div>
-      <div class="loading-text">🕐 약 1분 정도의 시간이 소요됩니다</div>
+      <div class="loading-text">🕐 약 30초 정도의 시간이 소요됩니다</div>
       <div class="loading-subtext" th:text="${loadingMessage}">
         📜 역사 속 사주 이야기 📜
         조선 왕들의 사주
@@ -79,8 +77,8 @@
         <div class="fortune-type-container">
           <div th:each="type: ${fortuneTypes}" th:data-tooltip="${type.tooltip}"
             class="form-option-content-item option-type-content-item">
-            <input type="checkbox" th:field="*{fortunes}" th:value="${type.name()}"
-                   th:disabled="${!type.enabled}" th:data-is-overall="${type.isOverall()}">
+            <input type="checkbox" th:field="*{fortunes}" th:value="${type.name()}" th:disabled="${!type.enabled}"
+              th:data-is-overall="${type.isOverall()}">
             <label th:for="${#ids.prev('fortunes')}" th:text="${type.icon}" class="form-option-btn">🔮</label>
           </div>
         </div>

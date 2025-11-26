@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum MonthType {
+public enum PeriodValue {
 
   JANUARY("january", "1월", 1),
   FEBRUARY("february", "2월", 2),
@@ -19,10 +19,16 @@ public enum MonthType {
   SEPTEMBER("september", "9월", 9),
   OCTOBER("october", "10월", 10),
   NOVEMBER("november", "11월", 11),
-  DECEMBER("december", "12월", 12);
+  DECEMBER("december", "12월", 12),
 
+  Q1("q1", "1분기", 1),
+  Q2("q2", "2분기", 2),
+  Q3("q3", "3분기", 3),
+  Q4("q4", "4분기", 4),
+
+  YEAR("year", "연간", 1);
   @JsonValue
   private final String jsonKey;
   private final String displayName;
-  private final int monthNumber;
+  private final int periodNumber;
 }

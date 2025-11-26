@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
@@ -17,8 +17,8 @@ import com.fortunehub.luckylog.domain.fortune.CalendarType;
 import com.fortunehub.luckylog.domain.fortune.CityType;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
-import com.fortunehub.luckylog.domain.fortune.MonthType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
+import com.fortunehub.luckylog.domain.fortune.PeriodValue;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
@@ -36,7 +36,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -51,27 +50,25 @@ class GeminiServiceTest {
   @Mock // Mock 객체 생성
   private GenerateContentConfig generateContentConfig;
 
-  @InjectMocks // Mock 객체들을 자동으로 주입(service instance 생성 -> @Mock으로 만든 필드 주입)
-  private GeminiService geminiService;
+  GeminiService service;
 
   private static final String MODEL_NAME = "gemini-test";
-  private static final String PROMPT_TEMPLATE = "[ANALYSIS_YEAR]년 [FORTUNE_TYPES] 운세 분석";
 
   private static final String VALID_JSON_RESPONSE = """
       [
         {
           "fortune": "love",
-          "month": "january",
+          "periodValue": "january",
           "result": "연애운 좋음"
         },
         {
           "fortune": "love",
-          "month": "february",
+          "periodValue": "february",
           "result": "연애운 신경"
         },
         {
           "fortune": "health",
-          "month": "march",
+          "periodValue": "march",
           "result": "건강운 변화"
         }
       ]
@@ -81,9 +78,14 @@ class GeminiServiceTest {
   @BeforeEach
   void setUp() {
     ReflectionTestUtils.setField(client, "models", models); // final field
-    ReflectionTestUtils.setField(geminiService, "modelName", MODEL_NAME);
-    ReflectionTestUtils.setField(geminiService, "promptTemplate", PROMPT_TEMPLATE);
-    ReflectionTestUtils.setField(geminiService, "objectMapper", new ObjectMapper());
+
+    service = new GeminiService(
+        client,
+        generateContentConfig,
+        new ObjectMapper(),
+        "gemini-test",
+        "[ANALYSIS_YEAR]년 [FORTUNE_TYPES] 운세 분석"
+    );
   }
 
   @Test
@@ -91,29 +93,31 @@ class GeminiServiceTest {
   void analyzeFortune_WhenValidRequest_ThenReturnsFortuneResponses() {
     // given
     GenerateContentResponse response = mock(GenerateContentResponse.class);
-    when(client.models.generateContent(
+
+    given(client.models.generateContent(
         eq(MODEL_NAME),
         anyString(),
-        eq(generateContentConfig))).thenReturn(response);
+        eq(generateContentConfig))).willReturn(response);
 
     String rawResponse = "```json\n" + VALID_JSON_RESPONSE + "\n```";
-    when(response.text()).thenReturn(rawResponse);
+    given(response.text()).willReturn(rawResponse);
 
     // private method인 parseFortuneResponse는 public method를 통해 간접 테스트
 
     // when
     FortuneRequest request = createFortuneRequest();
-    List<FortuneResponse> responses = geminiService.analyzeFortune(request);
+    List<FortuneResponse> responses = service.analyzeFortune(request);
 
     // then
     assertThat(responses)
         .isNotNull()
         .hasSize(3)
-        .extracting(FortuneResponse::getFortune, FortuneResponse::getMonth, FortuneResponse::getResult)
+        .extracting(FortuneResponse::getFortune, FortuneResponse::getPeriodValue,
+            FortuneResponse::getResult)
         .containsExactly(
-            tuple(FortuneType.LOVE, MonthType.JANUARY, "연애운 좋음"),
-            tuple(FortuneType.LOVE, MonthType.FEBRUARY, "연애운 신경"),
-            tuple(FortuneType.HEALTH, MonthType.MARCH, "건강운 변화")
+            tuple(FortuneType.LOVE, PeriodValue.JANUARY, "연애운 좋음"),
+            tuple(FortuneType.LOVE, PeriodValue.FEBRUARY, "연애운 신경"),
+            tuple(FortuneType.HEALTH, PeriodValue.MARCH, "건강운 변화")
         );
 
     ArgumentCaptor<String> promptCaptor = ArgumentCaptor.forClass(String.class);
@@ -139,17 +143,17 @@ class GeminiServiceTest {
   void analyzeFortune_WhenResponseEmpty_ThenThrowsException() {
     // given
     GenerateContentResponse response = mock(GenerateContentResponse.class);
-    when(client.models.generateContent(
+    given(client.models.generateContent(
         eq(MODEL_NAME),
         anyString(),
-        eq(generateContentConfig))).thenReturn(response);
+        eq(generateContentConfig))).willReturn(response);
 
-    when(response.text()).thenReturn("  ");
+    given(response.text()).willReturn("  ");
 
     // when & then
     FortuneRequest request = createFortuneRequest();
 
-    assertThatThrownBy(() -> geminiService.analyzeFortune(request))
+    assertThatThrownBy(() -> service.analyzeFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_EMPTY_RESPONSE.getMessage());
   }
@@ -158,15 +162,15 @@ class GeminiServiceTest {
   @DisplayName("응답이 없을 경우 예외가 발생한다")
   void analyzeFortune_WhenResponseNull_ThenThrowsException() {
     // given
-    when(client.models.generateContent(
+    given(client.models.generateContent(
         eq(MODEL_NAME),
         anyString(),
-        eq(generateContentConfig))).thenReturn(null);
+        eq(generateContentConfig))).willReturn(null);
 
     // when & then
     FortuneRequest request = createFortuneRequest();
 
-    assertThatThrownBy(() -> geminiService.analyzeFortune(request))
+    assertThatThrownBy(() -> service.analyzeFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_UNKNOWN_ERROR.getMessage());
   }
@@ -176,18 +180,18 @@ class GeminiServiceTest {
   void analyzeFortune_WhenInvalidResponse_ThenThrowsException() {
     // given
     GenerateContentResponse response = mock(GenerateContentResponse.class);
-    when(client.models.generateContent(
+    given(client.models.generateContent(
         eq(MODEL_NAME),
         anyString(),
-        eq(generateContentConfig))).thenReturn(response);
+        eq(generateContentConfig))).willReturn(response);
 
     String rawResponse = "```json\ninvalid json\n```";
-    when(response.text()).thenReturn(rawResponse);
+    given(response.text()).willReturn(rawResponse);
 
     // when & then
     FortuneRequest request = createFortuneRequest();
 
-    assertThatThrownBy(() -> geminiService.analyzeFortune(request))
+    assertThatThrownBy(() -> service.analyzeFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_RESPONSE_PARSE_ERROR.getMessage());
   }
@@ -196,15 +200,15 @@ class GeminiServiceTest {
   @DisplayName("API 호출이 실패하면 예외가 발생한다")
   void analyzeFortune_WhenApiFails_ThenThrowsException() {
     // given
-    when(client.models.generateContent(
+    given(client.models.generateContent(
         eq(MODEL_NAME),
         anyString(),
-        eq(generateContentConfig))).thenThrow(new ServerException(500, "ERROR", "API 서버 오류"));
+        eq(generateContentConfig))).willThrow(new ServerException(500, "ERROR", "API 서버 오류"));
 
     // when & then
     FortuneRequest request = createFortuneRequest();
 
-    assertThatThrownBy(() -> geminiService.analyzeFortune(request))
+    assertThatThrownBy(() -> service.analyzeFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_OVERLOAD.getMessage());
 
@@ -214,7 +218,7 @@ class GeminiServiceTest {
     BirthInfoForm birthForm = createBirthInfoForm();
     FortuneOptionForm optionForm = createFortuneOptionForm();
 
-    return FortuneRequest.from(birthForm, optionForm);
+    return FortuneRequest.from(birthForm, optionForm, 2025);
   }
 
   private BirthInfoForm createBirthInfoForm() {

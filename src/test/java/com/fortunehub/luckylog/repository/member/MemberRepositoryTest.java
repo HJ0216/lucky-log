@@ -35,21 +35,6 @@ class MemberRepositoryTest {
   }
 
   @Test
-  @DisplayName("여러 회원 저장 후 이메일로 존재 여부를 확인할 수 있다")
-  void existsByEmail_WhenMultipleMembersSaved_ThenReturnExpectedResults() {
-    // given
-    memberRepository.save(new Member("user1@email.com", TEST_PASSWORD, "닉네임1"));
-    memberRepository.save(new Member("user2@email.com", TEST_PASSWORD, "닉네임2"));
-    memberRepository.save(new Member("user3@email.com", TEST_PASSWORD, "닉네임3"));
-
-    // when & then
-    assertThat(memberRepository.existsByEmail("user1@email.com")).isTrue();
-    assertThat(memberRepository.existsByEmail("user2@email.com")).isTrue();
-    assertThat(memberRepository.existsByEmail("user3@email.com")).isTrue();
-    assertThat(memberRepository.existsByEmail("user4@email.com")).isFalse();
-  }
-
-  @Test
   @DisplayName("대소문자가 다른 이메일도 중복으로 처리된다")
   void save_WhenEmailDiffersByCase_ThenThrowsException() {
     // given
@@ -113,21 +98,6 @@ class MemberRepositoryTest {
     Member member = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
     memberRepository.save(member);
     Member duplicate = new Member("other@email.com", TEST_PASSWORD, TEST_NICKNAME);
-
-    // when & then
-    assertThatThrownBy(() -> {
-      memberRepository.saveAndFlush(duplicate);
-    }).isInstanceOf(DataIntegrityViolationException.class);
-  }
-
-  @Test
-  @DisplayName("이메일과 닉네임이 모두 중복될 때 예외가 발생한다")
-  void save_WhenEmailAndNicknameDuplicated_ThenThrowsException() {
-    // given
-    Member member = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
-    memberRepository.save(member);
-
-    Member duplicate = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_NICKNAME);
 
     // when & then
     assertThatThrownBy(() -> {

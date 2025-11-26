@@ -2,6 +2,7 @@ package com.fortunehub.luckylog.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -17,7 +19,8 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(
-            auth -> auth.anyRequest().permitAll())
+            auth -> auth.requestMatchers("/api/fortune/**").authenticated()
+                        .anyRequest().permitAll())
         .csrf(csrf -> csrf.disable())
         .formLogin(form -> form.disable())
         .headers(headers -> headers
@@ -25,6 +28,9 @@ public class SecurityConfig {
         .httpBasic(httpBasic -> httpBasic.disable()) // HTTP Basic 인증 대신 JWT 사용
         .securityContext(context -> context
             .requireExplicitSave(false) // 명시적으로 작성하지 않아도 자동으로 SecurityContext에 저장
+        )
+        .exceptionHandling(handling -> handling
+            .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
         );
     return http.build();
   }

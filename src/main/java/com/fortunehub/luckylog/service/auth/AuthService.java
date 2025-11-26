@@ -33,6 +33,8 @@ public class AuthService {
     log.info("[회원가입 시도]");
 
     try {
+      validateDuplicates(request);
+
       String encodedPassword = passwordEncoder.encode(request.getPassword());
       memberRepository.save(Member.from(request, encodedPassword));
 
@@ -42,6 +44,21 @@ public class AuthService {
       // DB의 unique 제약조건 위반 시
       log.error("[회원가입 실패] - [DB 제약조건 위반]", e);
       throw parseConstraintViolation(e);
+    }
+  }
+
+  private void validateDuplicates(SignupRequest request) {
+    if (memberRepository.existsByEmail(request.getEmail())) {
+      log.warn("[회원가입 실패] | DUPLICATE_EMAIL");
+      throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
+    }
+
+    String nickname = request.getNickname();
+    if (nickname != null && !nickname.isBlank()) {
+      if (memberRepository.existsByNickname(nickname)) {
+        log.warn("[회원가입 실패] | reason=DUPLICATE_NICKNAME");
+        throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
+      }
     }
   }
 

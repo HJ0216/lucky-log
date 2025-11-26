@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import com.fortunehub.luckylog.config.TestSecurityConfig;
+import com.fortunehub.luckylog.config.SecurityConfig;
 import com.fortunehub.luckylog.dto.request.auth.LoginRequest;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@Import(TestSecurityConfig.class)
+@Import(SecurityConfig.class)
 @WebMvcTest(LoginController.class)
 // 웹 계층만 로드해서 테스트
 @DisplayName("로그인 Controller")

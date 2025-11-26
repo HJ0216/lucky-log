@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class LoginController {
 
-  public static final String LOGIN_VIEW = "auth/login";
+  private static final String LOGIN_VIEW = "auth/login";
   private static final String REDIRECT_HOME = "redirect:/";
 
   private final AuthService authService;
