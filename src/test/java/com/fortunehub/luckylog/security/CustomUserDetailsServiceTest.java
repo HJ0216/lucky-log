@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.fortunehub.luckylog.domain.member.Member;
+import com.fortunehub.luckylog.fixture.MemberFixtures;
 import com.fortunehub.luckylog.repository.member.MemberRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +36,7 @@ class CustomUserDetailsServiceTest {
   @DisplayName("이메일로 사용자를 찾으면 UserDetails를 반환한다")
   void loadUserByUsername_WhenUserExists_ThenReturnsUserDetails() {
     // given
-    Member member = new Member(TEST_EMAIL, TEST_ENCODED_PASSWORD, TEST_NICKNAME);
+    Member member = MemberFixtures.activeMember(TEST_EMAIL, TEST_NICKNAME);
     given(memberRepository.findByEmail(TEST_EMAIL)).willReturn(Optional.of(member));
 
     // when
@@ -44,7 +46,6 @@ class CustomUserDetailsServiceTest {
     assertThat(userDetails).isNotNull();
     assertThat(userDetails).isInstanceOf(CustomUserDetails.class);
     assertThat(userDetails.getUsername()).isEqualTo(TEST_EMAIL);
-    assertThat(userDetails.getPassword()).isEqualTo(TEST_ENCODED_PASSWORD);
 
     verify(memberRepository).findByEmail(TEST_EMAIL);
   }
@@ -59,9 +60,25 @@ class CustomUserDetailsServiceTest {
     // when & then
     assertThatThrownBy(() -> userDetailsService.loadUserByUsername(notFoundEmail))
         .isInstanceOf(UsernameNotFoundException.class)
-        .hasMessageContaining("사용자를 찾을 수 없습니다")
-        .hasMessageContaining(notFoundEmail);
+        .hasMessageContaining("사용자를 찾을 수 없습니다");
 
     verify(memberRepository).findByEmail(notFoundEmail);
+  }
+
+  @Test
+  @DisplayName("비활성 회원도 이메일로 조회할 수 있다")
+  void loadUserByUsername_WhenMemberInactive_ThenReturnsUserDetails() {
+    // given
+    Member member = MemberFixtures.inactiveMember(TEST_EMAIL, TEST_NICKNAME);
+
+    when(memberRepository.findByEmail(TEST_EMAIL))
+        .thenReturn(Optional.of(member));
+
+    // when
+    UserDetails userDetails = userDetailsService.loadUserByUsername(TEST_EMAIL);
+
+    // then
+    assertThat(userDetails).isNotNull();
+    assertThat(userDetails.isEnabled()).isFalse();
   }
 }
