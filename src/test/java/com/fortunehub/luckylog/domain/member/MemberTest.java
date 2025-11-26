@@ -19,6 +19,6 @@ class MemberTest {
     Member member = Member.from(request, "EncodedPassword147@");
 
     // then
-    assertThat("email@email.com").isEqualTo(member.getEmail());
+    assertThat(member.getEmail()).isEqualTo("email@email.com");
   }
 }
