@@ -1,8 +1,7 @@
 package com.fortunehub.luckylog.controller.web.auth;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -53,7 +52,8 @@ class SignupControllerTest {
   @DisplayName("유효한 회원정보로 가입 시 로그인 페이지로 리다이렉트된다")
   void submit_WhenValidData_ThenRedirectsToLogin() throws Exception {
     // given
-    doNothing().when(authService).signup(any(SignupRequest.class));
+//    willDoNothing().given(authService).signup(any(SignupRequest.class));
+    // void 메서드의 기본 동작이 아무것도 안하므로 생략 가능
 
     // when & then
     mockMvc.perform(post("/signup")
@@ -105,8 +105,8 @@ class SignupControllerTest {
   @DisplayName("중복된 이메일로 가입 시 검증 오류가 발생한다")
   void submit_WhenEmailDuplicated_ThenReturnsValidationError() throws Exception {
     // given
-    doThrow(new CustomException(ErrorCode.DUPLICATE_EMAIL))
-        .when(authService).signup(any(SignupRequest.class));
+    willThrow(new CustomException(ErrorCode.DUPLICATE_EMAIL))
+        .given(authService).signup(any(SignupRequest.class));
 
     // when & then
     mockMvc.perform(post("/signup")
@@ -156,9 +156,6 @@ class SignupControllerTest {
   @Test
   @DisplayName("닉네임에 띄어 쓰기가 있더라도 가입 후 로그인 페이지로 리다이렉트된다")
   void submit_WhenNicknameHasSpace_ThenRedirectsToLogin() throws Exception {
-    // given
-    doNothing().when(authService).signup(any(SignupRequest.class));
-
     // when & then
     mockMvc.perform(post("/signup")
                .param("email", "test@email.com")
@@ -174,9 +171,6 @@ class SignupControllerTest {
   @Test
   @DisplayName("닉네임에 자음만 있어도 가입 후 로그인 페이지로 리다이렉트된다")
   void submit_WhenNicknameHasOnlyConsonants_ThenRedirectsToLogin() throws Exception {
-    // given
-    doNothing().when(authService).signup(any(SignupRequest.class));
-
     // when & then
     mockMvc.perform(post("/signup")
                .param("email", "test@email.com")
@@ -192,9 +186,6 @@ class SignupControllerTest {
   @Test
   @DisplayName("닉네임 없이 가입 시 로그인 페이지로 리다이렉트된다")
   void submit_WhenNicknameEmpty_ThenRedirectsToLogin() throws Exception {
-    // given
-    doNothing().when(authService).signup(any(SignupRequest.class));
-
     // when & then
     mockMvc.perform(post("/signup")
                .param("email", "test@email.com")
@@ -211,8 +202,8 @@ class SignupControllerTest {
   @DisplayName("중복된 닉네임으로 가입 시 검증 오류가 발생한다")
   void submit_WhenNicknameDuplicated_ThenReturnsValidationError() throws Exception {
     // given
-    doThrow(new CustomException(ErrorCode.DUPLICATE_NICKNAME))
-        .when(authService).signup(any(SignupRequest.class));
+    willThrow(new CustomException(ErrorCode.DUPLICATE_NICKNAME))
+        .given(authService).signup(any(SignupRequest.class));
 
     // when & then
     mockMvc.perform(post("/signup")
@@ -246,8 +237,8 @@ class SignupControllerTest {
   @DisplayName("예상치 못한 오류 발생 시 검증 오류가 발생한다")
   void submit_WhenUnexpectedError_ThenRedirectsToErrorPage() throws Exception {
     // given
-    doThrow(new RuntimeException("예상치 못한 오류 발생"))
-        .when(authService).signup(any(SignupRequest.class));
+    willThrow(new RuntimeException("예상치 못한 오류 발생"))
+        .given(authService).signup(any(SignupRequest.class));
 
     // when & then
     mockMvc.perform(post("/signup")

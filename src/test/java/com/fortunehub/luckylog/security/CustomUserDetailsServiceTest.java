@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.fixture.MemberFixtures;
@@ -71,8 +70,8 @@ class CustomUserDetailsServiceTest {
     // given
     Member member = MemberFixtures.inactiveMember(TEST_EMAIL, TEST_NICKNAME);
 
-    when(memberRepository.findByEmail(TEST_EMAIL))
-        .thenReturn(Optional.of(member));
+    given(memberRepository.findByEmail(TEST_EMAIL))
+        .willReturn(Optional.of(member));
 
     // when
     UserDetails userDetails = userDetailsService.loadUserByUsername(TEST_EMAIL);

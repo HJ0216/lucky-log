@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
@@ -93,13 +93,14 @@ class GeminiServiceTest {
   void analyzeFortune_WhenValidRequest_ThenReturnsFortuneResponses() {
     // given
     GenerateContentResponse response = mock(GenerateContentResponse.class);
-    when(client.models.generateContent(
+
+    given(client.models.generateContent(
         eq(MODEL_NAME),
         anyString(),
-        eq(generateContentConfig))).thenReturn(response);
+        eq(generateContentConfig))).willReturn(response);
 
     String rawResponse = "```json\n" + VALID_JSON_RESPONSE + "\n```";
-    when(response.text()).thenReturn(rawResponse);
+    given(response.text()).willReturn(rawResponse);
 
     // private method인 parseFortuneResponse는 public method를 통해 간접 테스트
 
@@ -142,12 +143,12 @@ class GeminiServiceTest {
   void analyzeFortune_WhenResponseEmpty_ThenThrowsException() {
     // given
     GenerateContentResponse response = mock(GenerateContentResponse.class);
-    when(client.models.generateContent(
+    given(client.models.generateContent(
         eq(MODEL_NAME),
         anyString(),
-        eq(generateContentConfig))).thenReturn(response);
+        eq(generateContentConfig))).willReturn(response);
 
-    when(response.text()).thenReturn("  ");
+    given(response.text()).willReturn("  ");
 
     // when & then
     FortuneRequest request = createFortuneRequest();
@@ -161,10 +162,10 @@ class GeminiServiceTest {
   @DisplayName("응답이 없을 경우 예외가 발생한다")
   void analyzeFortune_WhenResponseNull_ThenThrowsException() {
     // given
-    when(client.models.generateContent(
+    given(client.models.generateContent(
         eq(MODEL_NAME),
         anyString(),
-        eq(generateContentConfig))).thenReturn(null);
+        eq(generateContentConfig))).willReturn(null);
 
     // when & then
     FortuneRequest request = createFortuneRequest();
@@ -179,13 +180,13 @@ class GeminiServiceTest {
   void analyzeFortune_WhenInvalidResponse_ThenThrowsException() {
     // given
     GenerateContentResponse response = mock(GenerateContentResponse.class);
-    when(client.models.generateContent(
+    given(client.models.generateContent(
         eq(MODEL_NAME),
         anyString(),
-        eq(generateContentConfig))).thenReturn(response);
+        eq(generateContentConfig))).willReturn(response);
 
     String rawResponse = "```json\ninvalid json\n```";
-    when(response.text()).thenReturn(rawResponse);
+    given(response.text()).willReturn(rawResponse);
 
     // when & then
     FortuneRequest request = createFortuneRequest();
@@ -199,10 +200,10 @@ class GeminiServiceTest {
   @DisplayName("API 호출이 실패하면 예외가 발생한다")
   void analyzeFortune_WhenApiFails_ThenThrowsException() {
     // given
-    when(client.models.generateContent(
+    given(client.models.generateContent(
         eq(MODEL_NAME),
         anyString(),
-        eq(generateContentConfig))).thenThrow(new ServerException(500, "ERROR", "API 서버 오류"));
+        eq(generateContentConfig))).willThrow(new ServerException(500, "ERROR", "API 서버 오류"));
 
     // when & then
     FortuneRequest request = createFortuneRequest();
