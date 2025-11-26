@@ -96,8 +96,9 @@
 
   <script th:inline="javascript">
     window.fortuneData = {
-      fortuneResultYear: /*[[${fortuneResultYear}]]*/ 2025,
+      birthInfo: /*[[${session.birthInfo}]]*/ {},
       fortuneOption: /*[[${option}]]*/ {},
+      fortuneResultYear: /*[[${fortuneResultYear}]]*/ 2025,
       responses: /*[[${responses}]]*/[],
     };
   </script>

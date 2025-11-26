@@ -43,10 +43,10 @@ public class FortuneService {
   }
 
   @Transactional
-  public void save(Member member, SaveFortuneRequest request, BirthInfoForm birth) {
+  public void save(Member member, SaveFortuneRequest request) {
     validateBusinessRules(member, request);
 
-    FortuneResult result = FortuneResult.create(member, request, birth);
+    FortuneResult result = FortuneResult.create(member, request);
 
     addItems(result, request.getResponses());
     addCategories(result, request.getOption().getFortunes());

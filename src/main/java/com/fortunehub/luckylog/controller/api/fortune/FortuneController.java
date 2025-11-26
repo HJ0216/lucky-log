@@ -30,17 +30,10 @@ public class FortuneController {
   @PostMapping
   public ResponseEntity<ApiResponse> save(
       @AuthenticationPrincipal CustomUserDetails userDetails,
-      @SessionAttribute(name = "birthInfo", required = false) BirthInfoForm birthInfo,
       @Valid @RequestBody SaveFortuneRequest request
   ) {
-    if (birthInfo == null) {
-      log.warn("[운세 저장 실패] - [세션 데이터 누락] | 생년월일 정보가 세션에 저장되지 않음");
-      return ResponseEntity.badRequest()
-                           .body(ApiResponse.error(ErrorCode.BIRTH_INFO_REQUIRED.getMessage()));
-    }
-
     try {
-      fortuneService.save(userDetails.getMember(), request, birthInfo);
+      fortuneService.save(userDetails.getMember(), request);
 
       log.info("[운세 저장 완료]");
 

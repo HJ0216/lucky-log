@@ -112,8 +112,9 @@ const FortuneResultPage = {
       }
 
       const {
-        fortuneResultYear,
+        birthInfo,
         fortuneOption: option,
+        fortuneResultYear,
         responses,
       } = window.fortuneData;
 
@@ -132,8 +133,9 @@ const FortuneResultPage = {
           },
           body: JSON.stringify({
             title: fullTitle,
-            fortuneResultYear,
+            birthInfo,
             option,
+            fortuneResultYear,
             responses,
           }),
         });

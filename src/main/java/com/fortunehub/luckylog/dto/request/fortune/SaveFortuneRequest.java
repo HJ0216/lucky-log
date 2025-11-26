@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.dto.request.fortune;
 
+import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
 import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import jakarta.validation.Valid;
@@ -29,4 +30,7 @@ public class SaveFortuneRequest {
   @Valid // 리스트 내부 객체도 검증
   private List<FortuneResponse> responses = new ArrayList<>();
 
+  @NotNull(message = "😵 생년 월일 정보를 찾을 수 없습니다!")
+  @Valid
+  private BirthInfoForm birthInfo;
 }

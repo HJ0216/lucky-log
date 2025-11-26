@@ -56,21 +56,18 @@ class FortuneControllerTest {
   @WithMockCustomUser
   void save_WhenValidRequest_ThenReturnsOk() throws Exception {
     // given
-    BirthInfoForm birthInfo = createValidBirthInfo();
     List<FortuneType> fortuneTypes = List.of(FortuneType.OVERALL, FortuneType.MONEY);
     SaveFortuneRequest request = createValidFortuneRequest(fortuneTypes);
 
     // when & then
     mockMvc.perform(post("/api/fortune")
-               .sessionAttr("birthInfo", birthInfo)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andExpect(status().isOk())
            .andExpect(jsonPath("$.success").value(true))
            .andExpect(jsonPath("$.message").value("저장되었습니다."));
 
-    verify(fortuneService).save(any(Member.class), any(SaveFortuneRequest.class),
-        any(BirthInfoForm.class));
+    verify(fortuneService).save(any(Member.class), any(SaveFortuneRequest.class));
   }
 
   @Test
@@ -96,6 +93,7 @@ class FortuneControllerTest {
     // given
     List<FortuneType> fortuneTypes = List.of(FortuneType.OVERALL, FortuneType.MONEY);
     SaveFortuneRequest request = createValidFortuneRequest(fortuneTypes);
+    request.setBirthInfo(null);
 
     // when & then
     mockMvc.perform(post("/api/fortune")
@@ -103,9 +101,9 @@ class FortuneControllerTest {
                .content(objectMapper.writeValueAsString(request)))
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.success").value(false))
-           .andExpect(jsonPath("$.message").value(ErrorCode.BIRTH_INFO_REQUIRED.getMessage()));
+           .andExpect(jsonPath("$.message").value(ErrorCode.ARGUMENT_NOT_VALID.getMessage()));
 
-    verify(fortuneService, never()).save(any(), any(), any());
+    verify(fortuneService, never()).save(any(), any());
   }
 
   @Test
@@ -123,7 +121,7 @@ class FortuneControllerTest {
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.message").value(ErrorCode.ARGUMENT_NOT_VALID.getMessage()));
 
-    verify(fortuneService, never()).save(any(), any(), any());
+    verify(fortuneService, never()).save(any(), any());
   }
 
   @Test
@@ -131,17 +129,14 @@ class FortuneControllerTest {
   @WithMockCustomUser
   void save_WhenServiceThrowsException_ThenReturnsInternalServerError() throws Exception {
     // given
-    BirthInfoForm birthInfo = createValidBirthInfo();
     List<FortuneType> fortuneTypes = List.of(FortuneType.OVERALL, FortuneType.MONEY);
     SaveFortuneRequest request = createValidFortuneRequest(fortuneTypes);
 
     doThrow(new RuntimeException("예상치 못한 오류 발생"))
-        .when(fortuneService).save(any(Member.class), any(SaveFortuneRequest.class), any(
-            BirthInfoForm.class));
+        .when(fortuneService).save(any(Member.class), any(SaveFortuneRequest.class));
 
     // when & then
     mockMvc.perform(post("/api/fortune")
-               .sessionAttr("birthInfo", birthInfo)
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andExpect(status().isInternalServerError())
@@ -155,8 +150,9 @@ class FortuneControllerTest {
 
     SaveFortuneRequest request = new SaveFortuneRequest();
     request.setTitle("2025년 운세");
-    request.setFortuneResultYear(2025);
+    request.setBirthInfo(createValidBirthInfo());
     request.setOption(option);
+    request.setFortuneResultYear(2025);
     request.setResponses(responses);
 
     return request;

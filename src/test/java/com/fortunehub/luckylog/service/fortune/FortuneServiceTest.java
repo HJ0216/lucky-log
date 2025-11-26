@@ -69,14 +69,12 @@ class FortuneServiceTest {
   private Member member;
   private List<FortuneType> fortuneTypes;
   private SaveFortuneRequest request;
-  private BirthInfoForm birthInfo;
 
   @BeforeEach
   void setUp() {
     member = createMemberWithId();
     fortuneTypes = List.of(FortuneType.OVERALL, FortuneType.MONEY);
     request = createValidFortuneRequest(fortuneTypes);
-    birthInfo = createValidBirthInfo();
   }
 
   @Test
@@ -93,7 +91,7 @@ class FortuneServiceTest {
         getCategoriesByTypes(FortuneType.OVERALL, FortuneType.MONEY));
 
     // when
-    fortuneService.save(member, request, birthInfo);
+    fortuneService.save(member, request);
 
     // then
     verify(fortuneResultRepository).save(any(FortuneResult.class));
@@ -103,7 +101,7 @@ class FortuneServiceTest {
   @DisplayName("null 회원으로 저장 시 예외가 발생한다")
   void save_WhenMemberIsNull_ThenThrowsException() {
     // when
-    assertThatThrownBy(() -> fortuneService.save(null, request, birthInfo))
+    assertThatThrownBy(() -> fortuneService.save(null, request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.INVALID_MEMBER.getMessage());
 
@@ -117,7 +115,7 @@ class FortuneServiceTest {
     Member member = createMemberWithInactive();
 
     // when
-    assertThatThrownBy(() -> fortuneService.save(member, request, birthInfo))
+    assertThatThrownBy(() -> fortuneService.save(member, request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.INVALID_MEMBER.getMessage());
 
@@ -132,7 +130,7 @@ class FortuneServiceTest {
         .willReturn(true);
 
     // when & then
-    assertThatThrownBy(() -> fortuneService.save(member, request, birthInfo))
+    assertThatThrownBy(() -> fortuneService.save(member, request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.DUPLICATE_FORTUNE_TITLE.getMessage());
 
@@ -149,7 +147,7 @@ class FortuneServiceTest {
         .willReturn(5L); // MAX_SAVE_COUNT만큼 운세가 저장됨
 
     // when & then
-    assertThatThrownBy(() -> fortuneService.save(member, request, birthInfo))
+    assertThatThrownBy(() -> fortuneService.save(member, request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.EXCEED_MAX_SAVE_COUNT.getMessage());
 
@@ -175,7 +173,7 @@ class FortuneServiceTest {
         .willReturn(categories);
 
     // when & then
-    assertThatThrownBy(() -> fortuneService.save(member, request, birthInfo))
+    assertThatThrownBy(() -> fortuneService.save(member, request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.FORTUNE_CATEGORY_NOT_FOUND.getMessage());
 
@@ -195,7 +193,7 @@ class FortuneServiceTest {
         .willReturn(getCategoriesByTypes(FortuneType.OVERALL, FortuneType.MONEY));
 
     // when
-    fortuneService.save(member, request, birthInfo);
+    fortuneService.save(member, request);
 
     // then
     ArgumentCaptor<FortuneResult> captor = ArgumentCaptor.forClass(FortuneResult.class);
@@ -229,8 +227,9 @@ class FortuneServiceTest {
 
     SaveFortuneRequest request = new SaveFortuneRequest();
     request.setTitle(TEST_TITLE);
-    request.setFortuneResultYear(2025);
+    request.setBirthInfo(createValidBirthInfo());
     request.setOption(option);
+    request.setFortuneResultYear(2025);
     request.setResponses(responses);
 
     return request;

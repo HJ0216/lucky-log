@@ -91,40 +91,31 @@ public class FortuneResult extends BaseTimeEntity {
       orphanRemoval = true)
   private List<FortuneResultItem> items = new ArrayList<>();
 
-  public static FortuneResult create(
-      Member member,
-      SaveFortuneRequest request,
-      BirthInfoForm birth
-  ) {
-    validateInputs(member, request, birth);
+  public static FortuneResult create(Member member, SaveFortuneRequest request) {
+    validateInputs(member, request);
 
     FortuneResult result = new FortuneResult();
     result.member = member;
     result.title =
         StringUtils.hasText(request.getTitle()) ? request.getTitle() : generateTitle(request);
-    result.gender = birth.getGender();
+    result.gender = request.getBirthInfo().getGender();
     result.resultYear = request.getFortuneResultYear();
-    result.birthDate = createBirthDate(birth);
-    result.birthTimeZone = birth.getTime();
-    result.birthRegion = birth.getCity();
+    result.birthDate = createBirthDate(request.getBirthInfo());
+    result.birthTimeZone = request.getBirthInfo().getTime();
+    result.birthRegion = request.getBirthInfo().getCity();
     result.aiType = request.getOption().getAi();
     result.periodType = request.getOption().getPeriod();
 
     return result;
   }
 
-  private static void validateInputs(Member member, SaveFortuneRequest request,
-      BirthInfoForm birth) {
+  private static void validateInputs(Member member, SaveFortuneRequest request) {
     if (member == null) {
       throw new CustomException(ErrorCode.MEMBER_INFO_REQUIRED);
     }
 
     if (request == null) {
       throw new CustomException(ErrorCode.FORTUNE_REQUEST_REQUIRED);
-    }
-
-    if (birth == null) {
-      throw new CustomException(ErrorCode.BIRTH_INFO_REQUIRED);
     }
   }
 
