@@ -3,7 +3,7 @@ package com.fortunehub.luckylog.fixture;
 import com.fortunehub.luckylog.domain.member.Member;
 import org.springframework.test.util.ReflectionTestUtils;
 
-public class MemberFixtures {
+public class MemberFixture {
 
   public static Member activeMember(String email, String nickname) {
     return new Member(email, "encodedPassword", nickname);

@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import com.fortunehub.luckylog.domain.member.Member;
-import com.fortunehub.luckylog.fixture.MemberFixtures;
+import com.fortunehub.luckylog.fixture.MemberFixture;
 import com.fortunehub.luckylog.repository.member.MemberRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +35,7 @@ class CustomUserDetailsServiceTest {
   @DisplayName("이메일로 사용자를 찾으면 UserDetails를 반환한다")
   void loadUserByUsername_WhenUserExists_ThenReturnsUserDetails() {
     // given
-    Member member = MemberFixtures.activeMember(TEST_EMAIL, TEST_NICKNAME);
+    Member member = MemberFixture.activeMember(TEST_EMAIL, TEST_NICKNAME);
     given(memberRepository.findByEmail(TEST_EMAIL)).willReturn(Optional.of(member));
 
     // when
@@ -68,7 +68,7 @@ class CustomUserDetailsServiceTest {
   @DisplayName("비활성 회원도 이메일로 조회할 수 있다")
   void loadUserByUsername_WhenMemberInactive_ThenReturnsUserDetails() {
     // given
-    Member member = MemberFixtures.inactiveMember(TEST_EMAIL, TEST_NICKNAME);
+    Member member = MemberFixture.inactiveMember(TEST_EMAIL, TEST_NICKNAME);
 
     given(memberRepository.findByEmail(TEST_EMAIL))
         .willReturn(Optional.of(member));
