@@ -40,6 +40,9 @@ public class FortuneResultFixture {
     );
   }
 
+  private FortuneResultFixture() {
+  }
+
   // Public Methods
   public static FortuneResult createFortuneResultWithTitle(Member member, String title) {
     SaveFortuneRequest request = createSaveFortuneRequest(title);

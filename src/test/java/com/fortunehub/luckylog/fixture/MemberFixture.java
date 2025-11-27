@@ -10,6 +10,9 @@ public class MemberFixture {
   private static final String DEFAULT_NICKNAME = "테스트 유저";
   private static final String DEFAULT_PASSWORD = "encodedPassword123";
 
+  private MemberFixture() {
+  }
+
   public static Member createMember() {
     return createMember(DEFAULT_EMAIL, DEFAULT_PASSWORD);
   }
