@@ -23,8 +23,10 @@ import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
+import com.fortunehub.luckylog.dto.response.fortune.MyFortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
+import com.fortunehub.luckylog.fixture.FortuneResultFixture;
 import com.fortunehub.luckylog.repository.fortune.FortuneCategoryRepository;
 import com.fortunehub.luckylog.repository.fortune.FortuneResultRepository;
 import java.util.Arrays;
@@ -207,6 +209,49 @@ class FortuneServiceTest {
     assertThat(savedResult.getItems())
         .extracting(FortuneResultItem::getContent)
         .containsExactly("좋은 한 해가 될 것입니다.", "재물운이 상승합니다.");
+  }
+
+  @Test
+  @DisplayName("정상적인 운세 목록 요청 시 조회된다")
+  void getMyFortunes_WhenValidRequest_ThenReturnsMyFortunes() {
+    // given
+    List<FortuneResult> results = FortuneResultFixture.createFortuneResults(member, 3);
+
+    given(fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(member.getId()))
+        .willReturn(results);
+
+    // when
+    List<MyFortuneResponse> result = fortuneService.getMyFortunes(member.getId());
+
+    // then
+    verify(fortuneResultRepository).findAllByMember_IdAndIsActiveTrue(member.getId());
+
+    MyFortuneResponse firstFortune = result.get(0);
+    assertThat(firstFortune.getTitle()).isEqualTo("2025년 월별 운세 1");
+    assertThat(firstFortune.getFortuneTypeDisplayName()).isNotBlank();
+    assertThat(firstFortune.getCreatedAt()).isNotBlank();
+
+    assertThat(result)
+        .extracting(MyFortuneResponse::getTitle)
+        .containsExactly(
+            "2025년 월별 운세 1",
+            "2025년 월별 운세 2",
+            "2025년 월별 운세 3"
+        );
+  }
+
+  @Test
+  @DisplayName("저장된 운세가 없으면 빈 리스트를 반환한다")
+  void getMyFortunes_WhenNoFortunes_ThenReturnsEmptyList() {
+    // given
+    given(fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(member.getId()))
+        .willReturn(List.of());
+
+    // when
+    List<MyFortuneResponse> result = fortuneService.getMyFortunes(member.getId());
+
+    // then
+    assertThat(result).isEmpty();
   }
 
   private Member createMemberWithId() {
