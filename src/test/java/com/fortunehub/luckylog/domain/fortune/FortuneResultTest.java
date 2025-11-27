@@ -56,9 +56,9 @@ class FortuneResultTest {
 
     // then
     assertThat(result.getTitle()).isNotBlank();
+    assertThat(result.getTitle()).contains(request.getOption().getAi().getNickname());
     assertThat(result.getTitle()).contains(String.valueOf(request.getFortuneResultYear()));
     assertThat(result.getTitle()).contains(request.getOption().getPeriod().getDisplayName());
-    assertThat(result.getTitle()).contains(request.getOption().getFortunesAsString());
   }
 
   @Test
@@ -72,9 +72,9 @@ class FortuneResultTest {
 
     // then
     assertThat(result.getTitle()).isNotBlank();
+    assertThat(result.getTitle()).contains(request.getOption().getAi().getNickname());
     assertThat(result.getTitle()).contains(String.valueOf(request.getFortuneResultYear()));
     assertThat(result.getTitle()).contains(request.getOption().getPeriod().getDisplayName());
-    assertThat(result.getTitle()).contains(request.getOption().getFortunesAsString());
   }
 
   @Test

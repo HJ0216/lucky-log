@@ -137,10 +137,10 @@ public class FortuneResult extends BaseTimeEntity {
   }
 
   private static String generateTitle(SaveFortuneRequest request) {
-    return String.format("%d년 %s %s",
+    return String.format("%s가 알아본 %d %s 운세",
+        request.getOption().getAi().getNickname(),
         request.getFortuneResultYear(),
-        request.getOption().getPeriod().getDisplayName(),
-        request.getOption().getFortunesAsString()
+        request.getOption().getPeriod().getDisplayName()
     );
   }
 
