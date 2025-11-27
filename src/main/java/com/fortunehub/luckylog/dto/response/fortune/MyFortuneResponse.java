@@ -8,28 +8,27 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class MyFortuneResponse {
 
-  private Long id;
-  private String title;
-  private String fortuneTypeDisplayName;
-  private String createdAt;
+  private final Long id;
+  private final String title;
+  private final String fortuneTypeDisplayName;
+  private final String createdAt;
 
   public static MyFortuneResponse from(FortuneResult result) {
-    MyFortuneResponse response = new MyFortuneResponse();
-    response.id = result.getId();
-    response.title = result.getTitle();
-    response.fortuneTypeDisplayName = generateFortuneTypeDisplayName(result.getCategories());
-    response.createdAt = getFormattedCreatedAt(result.getCreatedAt());
-
-    return response;
+    return new MyFortuneResponse(
+        result.getId(),
+        result.getTitle(),
+        generateFortuneTypeDisplayName(result.getCategories()),
+        getFormattedCreatedAt(result.getCreatedAt()));
   }
 
-  private static String generateFortuneTypeDisplayName(List<FortuneResultCategory> resultCategories) {
+  private static String generateFortuneTypeDisplayName(
+      List<FortuneResultCategory> resultCategories) {
     List<String> types = resultCategories.stream()
                                          .map(FortuneResultCategory::getFortuneCategory)
                                          .map(FortuneCategory::getFortuneType)
