@@ -1,10 +1,12 @@
 'use strict';
 
-const FortuneOptionPage = {
+const FortuneMyPage = {
   config: { ERROR_DURATION: 5000 },
 
   // DOM 요소 캐싱
-  elements: {},
+  elements: {
+    errorMessages: [],
+  },
 
   init() {
     this.cacheElements();
@@ -13,7 +15,11 @@ const FortuneOptionPage = {
     this.autoHideErrors();
   },
 
-  cacheElements() {},
+  cacheElements() {
+    this.elements.errorMessages = document.querySelectorAll(
+      '[data-error-message]'
+    );
+  },
 
   validateRequiredElements() {
     const required = [];

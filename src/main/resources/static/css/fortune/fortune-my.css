@@ -21,3 +21,13 @@
   font-size: 0.75rem;
   color: #666;
 }
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mb-0 {
+  margin-bottom: 0px;
+}

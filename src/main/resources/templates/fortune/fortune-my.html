@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <th:block th:replace="~{fragments/head :: common-meta}" />
@@ -20,6 +20,8 @@
   <div class="float-emoji">💝</div>
 
   <div class="fortune-page-container">
+    <a class="back-btn" href="/"><span>홈으로</span></a>
+
     <div th:replace="~{fragments/header :: authButtons}"></div>
 
     <div class="logo">
@@ -28,20 +30,25 @@
     </div>
 
     <section>
-      <div th:if="${responses != null and !#lists.isEmpty(responses)}">
-        <div th:each="res : ${responses}">
-          <a class="my-fortune-container" title="전체 보기">
-            <div class="my-fortune-title">2025년 월별 운세</div>
+      <div th:if="${myFortunes != null and !#lists.isEmpty(myFortunes)}">
+        <div th:each="myFortune : ${myFortunes}">
+          <a th:href="@{/fortune/my/{id}(id=${myFortune.id})}"
+             class="my-fortune-container" title="전체 보기">
+            <div class="my-fortune-title" th:text="${myFortune.title}">2025년 월별 운세</div>
             <div class="my-fortune-info">
-              <span>🔮 종합운</span>
-              <span><span>✍️작성일: </span>2025년 11월 26일</span>
+              <span th:text="${myFortune.fortuneTypeDisplayName}">🔮 종합운</span>
+              <span th:text="${myFortune.createdAt}">2025년 11월 26일</span>
             </div>
           </a>
         </div>
       </div>
 
-      <div th:if="${responses == null}" data-error-container>
-        <div class="error-message" data-error-message>운세 결과를 불러올 수 없습니다. 다시 시도해주세요.</div>
+      <div th:if="${#lists.isEmpty(myFortunes)}" class="my-fortune-container flex-center">
+        <div class="my-fortune-title mb-0">아직 저장된 운세가 없습니다 😉</div>
+      </div>
+
+      <div th:if="${myFortunes == null}" data-error-container>
+        <div class="error-message" data-error-message>운세 목록을 불러올 수 없습니다. 다시 시도해주세요.</div>
       </div>
 
     </section>
