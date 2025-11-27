@@ -1,6 +1,8 @@
 package com.fortunehub.luckylog.repository.fortune;
 
 import com.fortunehub.luckylog.domain.fortune.FortuneResult;
+import com.fortunehub.luckylog.dto.response.fortune.MyFortuneResponse;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -22,4 +24,11 @@ public interface FortuneResultRepository extends JpaRepository<FortuneResult, Lo
    */
   long countByMember_IdAndIsActiveTrue(@Param("memberId") Long memberId);
 
+  /**
+   * SELECT *
+   * FROM FortuneResult f
+   * WHERE f.member.id = :memberId
+   * AND f.isActive = true
+   */
+  List<FortuneResult> findAllByMember_IdAndIsActiveTrue(Long memberId);
 }
