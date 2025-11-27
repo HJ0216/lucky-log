@@ -103,8 +103,8 @@ public class FortuneResult extends BaseTimeEntity {
     BirthInfoForm birthInfo = request.getBirthInfo();
     result.gender = birthInfo.getGender();
     result.birthDate = createBirthDate(birthInfo);
-    result.birthTimeZone = birthInfo.getTime();
-    result.birthRegion = birthInfo.getCity();
+    result.birthTimeZone = (birthInfo.getTime() == null) ? TimeType.UNKNOWN : birthInfo.getTime();
+    result.birthRegion = (birthInfo.getCity() == null) ? CityType.UNKNOWN : birthInfo.getCity();
 
     FortuneOptionForm option = request.getOption();
     result.aiType = option.getAi();
