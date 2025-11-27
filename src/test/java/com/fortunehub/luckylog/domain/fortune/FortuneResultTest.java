@@ -10,6 +10,7 @@ import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
+import com.fortunehub.luckylog.fixture.MemberFixture;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +24,7 @@ class FortuneResultTest {
 
   @BeforeEach
   void setUp() {
-    member = new Member("test@email.com", "password123", "테스터");
+    member = MemberFixture.createMember();
     request = createValidRequest();
   }
 

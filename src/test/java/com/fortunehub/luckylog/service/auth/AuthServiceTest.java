@@ -231,7 +231,7 @@ class AuthServiceTest {
   void login_WhenValidCredentials_ThenSuccess() {
     // given
     LoginRequest req = new LoginRequest(TEST_EMAIL, TEST_RAW_PASSWORD);
-    Member member = MemberFixture.activeMember(TEST_EMAIL, TEST_NICKNAME);
+    Member member = MemberFixture.createMember();
 
     CustomUserDetails userDetails = new CustomUserDetails(member);
     Authentication authentication = new UsernamePasswordAuthenticationToken(

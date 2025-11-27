@@ -5,14 +5,31 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 public class MemberFixture {
 
-  public static Member activeMember(String email, String nickname) {
-    return new Member(email, "encodedPassword", nickname);
+  private static final Long DEFAULT_ID = 1L;
+  private static final String DEFAULT_EMAIL = "lucky@email.com";
+  private static final String DEFAULT_NICKNAME = "테스트 유저";
+  private static final String DEFAULT_PASSWORD = "encodedPassword123";
+
+  public static Member createMember() {
+    return createMember(DEFAULT_EMAIL, DEFAULT_PASSWORD);
   }
 
-  public static Member inactiveMember(String email, String nickname) {
-    Member member = new Member(email, "encodedPassword", nickname);
+  public static Member createMember(String email) {
+    return createMember(email, DEFAULT_NICKNAME);
+  }
 
+  public static Member createMember(String email, String nickname) {
+    return new Member(email, DEFAULT_PASSWORD, nickname);
+  }
+
+  public static Member createInactiveMember() {
+    return createInactiveMember(DEFAULT_EMAIL, DEFAULT_NICKNAME);
+  }
+
+  public static Member createInactiveMember(String email, String nickname) {
+    Member member = new Member(email, DEFAULT_PASSWORD, nickname);
     ReflectionTestUtils.setField(member, "isActive", false);
+
     return member;
   }
 }

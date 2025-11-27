@@ -27,26 +27,22 @@ class CustomUserDetailsServiceTest {
   @InjectMocks // Mockito가 AuthService 객체 생성 + mock 의존성 주입
   private CustomUserDetailsService userDetailsService;
 
-  private static final String TEST_EMAIL = "lucky@email.com";
-  private static final String TEST_ENCODED_PASSWORD = "encodedPassword123";
-  private static final String TEST_NICKNAME = "솜사탕";
-
   @Test
   @DisplayName("이메일로 사용자를 찾으면 UserDetails를 반환한다")
   void loadUserByUsername_WhenUserExists_ThenReturnsUserDetails() {
     // given
-    Member member = MemberFixture.activeMember(TEST_EMAIL, TEST_NICKNAME);
-    given(memberRepository.findByEmail(TEST_EMAIL)).willReturn(Optional.of(member));
+    Member member = MemberFixture.createMember();
+    given(memberRepository.findByEmail(member.getEmail())).willReturn(Optional.of(member));
 
     // when
-    UserDetails userDetails = userDetailsService.loadUserByUsername(TEST_EMAIL);
+    UserDetails userDetails = userDetailsService.loadUserByUsername(member.getEmail());
 
     // then
     assertThat(userDetails).isNotNull();
     assertThat(userDetails).isInstanceOf(CustomUserDetails.class);
-    assertThat(userDetails.getUsername()).isEqualTo(TEST_EMAIL);
+    assertThat(userDetails.getUsername()).isEqualTo(member.getEmail());
 
-    verify(memberRepository).findByEmail(TEST_EMAIL);
+    verify(memberRepository).findByEmail(member.getEmail());
   }
 
   @Test
@@ -68,13 +64,13 @@ class CustomUserDetailsServiceTest {
   @DisplayName("비활성 회원도 이메일로 조회할 수 있다")
   void loadUserByUsername_WhenMemberInactive_ThenReturnsUserDetails() {
     // given
-    Member member = MemberFixture.inactiveMember(TEST_EMAIL, TEST_NICKNAME);
+    Member member = MemberFixture.createInactiveMember();
 
-    given(memberRepository.findByEmail(TEST_EMAIL))
+    given(memberRepository.findByEmail(member.getEmail()))
         .willReturn(Optional.of(member));
 
     // when
-    UserDetails userDetails = userDetailsService.loadUserByUsername(TEST_EMAIL);
+    UserDetails userDetails = userDetailsService.loadUserByUsername(member.getEmail());
 
     // then
     assertThat(userDetails).isNotNull();
