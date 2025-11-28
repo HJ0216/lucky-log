@@ -93,12 +93,12 @@ public class FortuneResultFixture {
 
   private static List<FortuneResponse> createValidFortuneResponses() {
     FortuneResponse response1 = new FortuneResponse();
-    response1.setFortune(FortuneType.OVERALL);
+    response1.setFortune(FortuneType.LOVE);
     response1.setPeriodValue(PeriodValue.JANUARY);
     response1.setResult("좋은 한 해가 될 것입니다.");
 
     FortuneResponse response2 = new FortuneResponse();
-    response2.setFortune(FortuneType.MONEY);
+    response2.setFortune(FortuneType.HEALTH);
     response2.setPeriodValue(PeriodValue.FEBRUARY);
     response2.setResult("재물운이 상승합니다.");
     return List.of(response1, response2);

@@ -14,10 +14,10 @@ const FortuneOptionPage = {
     backBtn: null,
     form: null,
     fortuneOptionContainer: null,
-    fortuneOptions: [],
+    fortuneOptions: null,
     submitBtn: null,
-    errorMessages: [],
-    disabledOptionContainers: [],
+    errorMessages: null,
+    disabledOptionContainers: null,
   },
 
   init() {

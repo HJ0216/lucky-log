@@ -7,7 +7,7 @@ const FortuneMyPage = {
 
   // DOM 요소 캐싱
   elements: {
-      errorMessages: [],
+      errorMessages: null,
   },
 
   init() {

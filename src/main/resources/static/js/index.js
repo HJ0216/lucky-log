@@ -19,7 +19,7 @@ const IndexPage = {
     dateInputs: [],
     allInputs: [],
     errorContainer: null,
-    errorMessages: [],
+    errorMessages: null,
   },
 
   init() {
