@@ -214,6 +214,7 @@ class FortuneServiceTest {
   @DisplayName("정상적인 운세 목록 요청 시 조회된다")
   void getMyFortunes_WhenValidRequest_ThenReturnsMyFortunes() {
     // given
+    Member member = MemberFixture.createMemberWithId();
     List<FortuneResult> results = FortuneResultFixture.createFortuneResults(member, 3);
 
     given(fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(member.getId()))
@@ -243,6 +244,7 @@ class FortuneServiceTest {
   @DisplayName("저장된 운세가 없으면 빈 리스트를 반환한다")
   void getMyFortunes_WhenNoFortunes_ThenReturnsEmptyList() {
     // given
+    Member member = MemberFixture.createMemberWithId();
     given(fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(member.getId()))
         .willReturn(List.of());
 
