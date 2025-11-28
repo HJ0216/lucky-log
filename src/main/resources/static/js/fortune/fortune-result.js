@@ -9,9 +9,9 @@ const FortuneResultPage = {
   messages: {
     copySuccess: '운세 결과가 복사되었습니다! 📋',
     copyFailed: '복사에 실패했습니다. 😅',
-    shareSuccess: '공유 링크가 복사되었습니다! 🔗',
+    shareSuccess: '운세 결과 공유 페이지가 생성되었습니다! 💌',
     shareFailed: '공유에 실패했습니다. 😅',
-    saveSuccess: '운세가 저장되었습니다! 📂',
+    saveSuccess: '운세 결과가 저장되었습니다! 🗂️',
     saveFailed: '저장에 실패했습니다. 😅',
     loginRequired: '로그인 페이지로 이동합니다! 🔐',
   },
@@ -108,8 +108,8 @@ const FortuneResultPage = {
 
     this.elements.saveBtn.addEventListener('click', async () => {
       if (!window.fortuneData) {
-       toast.error('저장 실패', this.messages.saveFailed);
-       return;
+        toast.error('저장 실패', this.messages.saveFailed);
+        return;
       }
 
       const {
@@ -146,9 +146,9 @@ const FortuneResultPage = {
         if (response.status === 401) {
           toast.error('로그인 필요', this.messages.loginRequired);
           // TODO: 모달 방식으로 변경 예정
-//          setTimeout(() => {
-//            window.location.href = '/login';
-//          }, 1000);
+          //          setTimeout(() => {
+          //            window.location.href = '/login';
+          //          }, 1000);
           return;
         }
 

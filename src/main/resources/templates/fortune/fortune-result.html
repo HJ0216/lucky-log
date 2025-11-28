@@ -19,10 +19,10 @@
   <!-- Thymeleaf 메시지 (숨겨진 상태) -->
   <div id="messages">
     <span id="msg-copy-success" th:text="#{fortune.copy.success}">운세 결과가 복사되었습니다! 📋</span>
-    <span id="msg-share-success" th:text="#{fortune.share.success}">운세 결과 공유 페이지가 생성되었습니다! 💌</span>
-    <span id="msg-save-success" th:text="#{fortune.save.success}">운세 결과가 저장되었습니다! 🗂️</span>
     <span id="msg-copy-failed" th:text="#{fortune.copy.failed}">복사에 실패했습니다. 😅</span>
+    <span id="msg-share-success" th:text="#{fortune.share.success}">운세 결과 공유 페이지가 생성되었습니다! 💌</span>
     <span id="msg-share-failed" th:text="#{fortune.share.failed}">공유에 실패했습니다. 😅</span>
+    <span id="msg-save-success" th:text="#{fortune.save.success}">운세 결과가 저장되었습니다! 🗂️</span>
     <span id="msg-save-failed" th:text="#{fortune.save.failed}">저장에 실패했습니다. 😅</span>
   </div>
 
@@ -33,6 +33,8 @@
   <div class="float-emoji">🪂</div>
 
   <div class="fortune-page-container">
+    <a class="back-btn" href="/" th:href="@{/}"><span>홈으로</span></a>
+
     <div th:replace="~{fragments/header :: authButtons}"></div>
 
     <section class="logo user-selection-container">
@@ -58,7 +60,8 @@
 
     <!-- 결과 화면 -->
     <section class="result-screen" id="result-screen">
-      <div class="fortune-title"><span th:text="${fortuneResultYear}">2025</span>년 <span th:text="${periodDisplayValue}">월별</span> 운세</div>
+      <div class="fortune-title"><span th:text="${fortuneResultYear}">2025</span>년 <span
+          th:text="${periodDisplayValue}">월별</span> 운세</div>
       <div class="fortune-sub-title" th:text="${selectedOptions}">🔮종합운</div>
 
       <div th:if="${responses != null and !#lists.isEmpty(responses)}" class="fortune-content-container">
