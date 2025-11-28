@@ -101,7 +101,18 @@ public class FortuneResultFixture {
     response2.setFortune(FortuneType.HEALTH);
     response2.setPeriodValue(PeriodValue.FEBRUARY);
     response2.setResult("건강운이 상승합니다.");
-    return List.of(response1, response2);
+
+    FortuneResponse response3 = new FortuneResponse();
+    response3.setFortune(FortuneType.HEALTH);
+    response3.setPeriodValue(PeriodValue.MARCH);
+    response3.setResult("건강 유지를 위해 운동이 필요합니다.");
+
+    FortuneResponse response4 = new FortuneResponse();
+    response4.setFortune(FortuneType.LOVE);
+    response4.setPeriodValue(PeriodValue.APRIL);
+    response4.setResult("좋은 인연을 만나게 될 것입니다.");
+
+    return List.of(response1, response2, response3, response4);
   }
 
   private static BirthInfoForm createValidBirthInfo() {

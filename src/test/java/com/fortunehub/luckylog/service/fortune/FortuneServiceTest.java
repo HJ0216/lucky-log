@@ -74,7 +74,7 @@ class FortuneServiceTest {
   @BeforeEach
   void setUp() {
     member = MemberFixture.createMember();
-    fortuneTypes = List.of(FortuneType.OVERALL, FortuneType.MONEY);
+    fortuneTypes = List.of(FortuneType.LOVE, FortuneType.HEALTH);
     request = createValidFortuneRequest(fortuneTypes);
   }
 
@@ -89,7 +89,7 @@ class FortuneServiceTest {
 
     given(fortuneCategoryRepository
         .findByFortuneTypeIn(any())).willReturn(
-        getCategoriesByTypes(FortuneType.OVERALL, FortuneType.MONEY));
+        getCategoriesByTypes(FortuneType.LOVE, FortuneType.HEALTH));
 
     // when
     fortuneService.save(member, request);
@@ -166,8 +166,8 @@ class FortuneServiceTest {
 
     // 카테고리 1개만 반환 (2개 요청)
     List<FortuneCategory> categories = List.of(
-        FortuneCategory.create(1, FortuneType.OVERALL)
-        // MONEY 없음 → 예외 발생 예상
+        FortuneCategory.create(1, FortuneType.LOVE)
+        // HEALTH 없음 → 예외 발생 예상
     );
 
     given(fortuneCategoryRepository.findByFortuneTypeIn(fortuneTypes))
@@ -191,7 +191,7 @@ class FortuneServiceTest {
         .willReturn(4L);
 
     given(fortuneCategoryRepository.findByFortuneTypeIn(fortuneTypes))
-        .willReturn(getCategoriesByTypes(FortuneType.OVERALL, FortuneType.MONEY));
+        .willReturn(getCategoriesByTypes(FortuneType.LOVE, FortuneType.HEALTH));
 
     // when
     fortuneService.save(member, request);
@@ -203,11 +203,12 @@ class FortuneServiceTest {
     FortuneResult savedResult = captor.getValue();
     assertThat(savedResult.getTitle()).isEqualTo(TEST_TITLE);
     assertThat(savedResult.getMember()).isEqualTo(member);
-    assertThat(savedResult.getItems()).hasSize(2);
+    assertThat(savedResult.getItems()).hasSize(4);
     assertThat(savedResult.getCategories()).hasSize(2);
     assertThat(savedResult.getItems())
         .extracting(FortuneResultItem::getContent)
-        .containsExactly("좋은 한 해가 될 것입니다.", "재물운이 상승합니다.");
+        .containsExactlyInAnyOrder("좋은 한 해가 될 것입니다.", "건강운이 상승합니다.",
+            "건강 유지를 위해 운동이 필요합니다.", "좋은 인연을 만나게 될 것입니다.");
   }
 
   @Test
@@ -279,15 +280,26 @@ class FortuneServiceTest {
 
   private List<FortuneResponse> createValidFortuneResponses() {
     FortuneResponse response1 = new FortuneResponse();
-    response1.setFortune(FortuneType.OVERALL);
+    response1.setFortune(FortuneType.LOVE);
     response1.setPeriodValue(PeriodValue.JANUARY);
     response1.setResult("좋은 한 해가 될 것입니다.");
 
     FortuneResponse response2 = new FortuneResponse();
-    response2.setFortune(FortuneType.MONEY);
+    response2.setFortune(FortuneType.HEALTH);
     response2.setPeriodValue(PeriodValue.FEBRUARY);
-    response2.setResult("재물운이 상승합니다.");
-    return List.of(response1, response2);
+    response2.setResult("건강운이 상승합니다.");
+
+    FortuneResponse response3 = new FortuneResponse();
+    response3.setFortune(FortuneType.HEALTH);
+    response3.setPeriodValue(PeriodValue.MARCH);
+    response3.setResult("건강 유지를 위해 운동이 필요합니다.");
+
+    FortuneResponse response4 = new FortuneResponse();
+    response4.setFortune(FortuneType.LOVE);
+    response4.setPeriodValue(PeriodValue.APRIL);
+    response4.setResult("좋은 인연을 만나게 될 것입니다.");
+
+    return List.of(response1, response2, response3, response4);
   }
 
   private BirthInfoForm createValidBirthInfo() {

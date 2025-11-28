@@ -7,6 +7,7 @@ import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +29,7 @@ public class MyFortuneResponse {
   }
 
   private static String generateFortuneTypeDisplayName(
-      List<FortuneResultCategory> resultCategories) {
+      Set<FortuneResultCategory> resultCategories) {
     List<String> types = resultCategories.stream()
                                          .map(FortuneResultCategory::getFortuneCategory)
                                          .map(FortuneCategory::getFortuneType)

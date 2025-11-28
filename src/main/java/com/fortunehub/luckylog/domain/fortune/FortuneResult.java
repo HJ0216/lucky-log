@@ -20,12 +20,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -86,12 +87,14 @@ public class FortuneResult extends BaseTimeEntity {
   @OneToMany(mappedBy = "fortuneResult",
       cascade = CascadeType.ALL,
       orphanRemoval = true)
-  private List<FortuneResultCategory> categories = new ArrayList<>();
+  @OrderBy("fortuneCategory.id ASC")
+  private Set<FortuneResultCategory> categories = new HashSet<>();
 
   @OneToMany(mappedBy = "fortuneResult",
       cascade = CascadeType.ALL,
       orphanRemoval = true)
-  private List<FortuneResultItem> items = new ArrayList<>();
+  @OrderBy("periodValue ASC")
+  private Set<FortuneResultItem> items = new HashSet<>();
 
   public static FortuneResult create(Member member, SaveFortuneRequest request) {
     validateInputs(member, request);
