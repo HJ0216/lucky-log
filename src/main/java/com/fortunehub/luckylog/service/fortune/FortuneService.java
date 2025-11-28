@@ -106,6 +106,10 @@ public class FortuneService {
   }
 
   public List<MyFortuneResponse> getMyFortunes(Long memberId) {
+    if (memberId == null) {
+      throw new CustomException(ErrorCode.INVALID_MEMBER);
+    }
+
     return fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(memberId).stream()
                                   .map(MyFortuneResponse::from)
                                   .toList();

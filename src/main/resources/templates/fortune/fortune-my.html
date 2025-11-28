@@ -30,7 +30,7 @@
     </div>
 
     <section>
-      <div th:if="${myFortunes != null and !#lists.isEmpty(myFortunes)}">
+      <div th:if="${!#lists.isEmpty(myFortunes)}">
         <div th:each="myFortune : ${myFortunes}">
           <a th:href="@{/fortune/my/{id}(id=${myFortune.id})}"
              class="my-fortune-container" title="전체 보기">
@@ -47,8 +47,8 @@
         <div class="my-fortune-title mb-0">아직 저장된 운세가 없습니다 😉</div>
       </div>
 
-      <div th:if="${myFortunes == null}" data-error-container>
-        <div class="error-message" data-error-message>운세 목록을 불러올 수 없습니다. 다시 시도해주세요.</div>
+      <div th:if="${#fields.hasErrors()}" data-error-container>
+        <div th:each="err : ${#fields.errors('*')}" th:text="${err}" class="error-message" data-error-message></div>
       </div>
 
     </section>
