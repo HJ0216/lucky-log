@@ -66,6 +66,8 @@ src
 │              ├─common
 │              ├─config # 설정 파일
 │              ├─controller # 웹 컨트롤러
+│              │  ├─api
+│              │  │   └─fortune
 │              │  └─web
 │              │      ├─auth
 │              │      │  └─form
@@ -80,9 +82,12 @@ src
 │              │  │  ├─auth
 │              │  │  └─fortune
 │              │  └─response
+│              │      ├─common
 │              │      └─fortune
 │              ├─exception # 예외 처리
+│              ├─init # local용 초기 데이터
 │              ├─repository # 데이터 처리
+│              │  ├─fortune
 │              │  └─member
 │              ├─security # 인증, 인가
 │              └─service # 비즈니스 로직 처리

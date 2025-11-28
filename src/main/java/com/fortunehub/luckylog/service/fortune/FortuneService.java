@@ -12,6 +12,7 @@ import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
+import com.fortunehub.luckylog.dto.response.fortune.MyFortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.repository.fortune.FortuneCategoryRepository;
@@ -68,8 +69,8 @@ public class FortuneService {
 
     Set<FortuneType> requested = new HashSet<>(fortuneTypes);
     Set<FortuneType> found = categories.stream()
-        .map(FortuneCategory::getFortuneType)
-        .collect(Collectors.toSet());
+                                       .map(FortuneCategory::getFortuneType)
+                                       .collect(Collectors.toSet());
 
     if (!found.equals(requested)) {
       throw new CustomException(ErrorCode.FORTUNE_CATEGORY_NOT_FOUND);
@@ -102,5 +103,15 @@ public class FortuneService {
   private boolean isExceedMaxSaveCount(Long memberId) {
     long count = fortuneResultRepository.countByMember_IdAndIsActiveTrue(memberId);
     return count >= MAX_SAVE_COUNT;
+  }
+
+  public List<MyFortuneResponse> getMyFortunes(Long memberId) {
+    if (memberId == null) {
+      throw new CustomException(ErrorCode.INVALID_MEMBER);
+    }
+
+    return fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(memberId).stream()
+                                  .map(MyFortuneResponse::from)
+                                  .toList();
   }
 }

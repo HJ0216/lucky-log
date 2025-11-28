@@ -13,7 +13,7 @@
      passwordInput: null,
      allInputs: [],
      errorContainer: null,
-     errorMessages: [],
+     errorMessages: null,
    },
 
    init() {

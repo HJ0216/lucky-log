@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <th:block th:replace="~{fragments/head :: common-meta}" />
+
+  <title>LUCKY LOG</title>
+
+  <th:block th:replace="~{fragments/head :: common-resources}" />
+  <link rel="stylesheet" href="../../static/css/fortune/fortune-my.css" th:href="@{/css/fortune/fortune-my.css}">
+  <script src="../../static/js/fortune/fortune-my.js" th:src="@{/js/fortune/fortune-my.js}" defer></script>
+</head>
+
+<body>
+
+  <div class="float-emoji">📜</div>
+  <div class="float-emoji">⏰</div>
+  <div class="float-emoji">🌟</div>
+  <div class="float-emoji">🎴</div>
+  <div class="float-emoji">💝</div>
+
+  <div class="fortune-page-container">
+    <a class="back-btn" href="/" th:href="@{/}"><span>홈으로</span></a>
+
+    <div th:replace="~{fragments/header :: authButtons}"></div>
+
+    <div class="logo">
+      <h1>운세 보관함</h1>
+      <p>저장한 운세 모음입니다 🤗</p>
+    </div>
+
+    <section>
+      <div th:if="${!#lists.isEmpty(myFortunes)}">
+        <div th:each="myFortune : ${myFortunes}">
+          <a th:href="@{/fortune/my/{id}(id=${myFortune.id})}"
+             class="my-fortune-container" title="전체 보기">
+            <div class="my-fortune-title" th:text="${myFortune.title}">2025년 월별 운세</div>
+            <div class="my-fortune-info">
+              <span th:text="${myFortune.fortuneTypeDisplayName}">🔮 종합운</span>
+              <span th:text="${myFortune.createdAt}">2025년 11월 26일</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div th:if="${#lists.isEmpty(myFortunes)}" class="my-fortune-container flex-center">
+        <div class="my-fortune-title mb-0">아직 저장된 운세가 없습니다 😉</div>
+      </div>
+
+      <div th:if="${#fields.hasErrors()}" data-error-container>
+        <div th:each="err : ${#fields.errors('*')}" th:text="${err}" class="error-message" data-error-message></div>
+      </div>
+
+    </section>
+  </div>
+</body>
+
+</html>

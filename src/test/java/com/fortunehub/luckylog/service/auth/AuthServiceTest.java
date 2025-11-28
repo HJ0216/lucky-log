@@ -12,7 +12,7 @@ import com.fortunehub.luckylog.dto.request.auth.LoginRequest;
 import com.fortunehub.luckylog.dto.request.auth.SignupRequest;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
-import com.fortunehub.luckylog.fixture.MemberFixtures;
+import com.fortunehub.luckylog.fixture.MemberFixture;
 import com.fortunehub.luckylog.repository.member.MemberRepository;
 import com.fortunehub.luckylog.security.CustomUserDetails;
 import org.junit.jupiter.api.AfterEach;
@@ -231,7 +231,7 @@ class AuthServiceTest {
   void login_WhenValidCredentials_ThenSuccess() {
     // given
     LoginRequest req = new LoginRequest(TEST_EMAIL, TEST_RAW_PASSWORD);
-    Member member = MemberFixtures.activeMember(TEST_EMAIL, TEST_NICKNAME);
+    Member member = MemberFixture.createMember();
 
     CustomUserDetails userDetails = new CustomUserDetails(member);
     Authentication authentication = new UsernamePasswordAuthenticationToken(

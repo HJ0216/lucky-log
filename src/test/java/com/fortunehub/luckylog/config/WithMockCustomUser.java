@@ -13,7 +13,7 @@ public @interface WithMockCustomUser {
 
   long id() default 1L;
 
-  String email() default "test@test.com";
+  String email() default "lucky@email.com";
 
-  String nickname() default "테스터";
+  String nickname() default "테스트 유저";
 }

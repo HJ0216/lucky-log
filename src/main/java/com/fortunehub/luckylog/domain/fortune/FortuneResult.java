@@ -25,6 +25,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -103,8 +104,8 @@ public class FortuneResult extends BaseTimeEntity {
     BirthInfoForm birthInfo = request.getBirthInfo();
     result.gender = birthInfo.getGender();
     result.birthDate = createBirthDate(birthInfo);
-    result.birthTimeZone = birthInfo.getTime();
-    result.birthRegion = birthInfo.getCity();
+    result.birthTimeZone = Optional.ofNullable(birthInfo.getTime()).orElse(TimeType.UNKNOWN);
+    result.birthRegion = Optional.ofNullable(birthInfo.getCity()).orElse(CityType.UNKNOWN);
 
     FortuneOptionForm option = request.getOption();
     result.aiType = option.getAi();
@@ -137,10 +138,10 @@ public class FortuneResult extends BaseTimeEntity {
   }
 
   private static String generateTitle(SaveFortuneRequest request) {
-    return String.format("%d년 %s %s",
+    return String.format("%s가 알아본 %d %s 운세",
+        request.getOption().getAi().getNickname(),
         request.getFortuneResultYear(),
-        request.getOption().getPeriod().getDisplayName(),
-        request.getOption().getFortunesAsString()
+        request.getOption().getPeriod().getDisplayName()
     );
   }
 

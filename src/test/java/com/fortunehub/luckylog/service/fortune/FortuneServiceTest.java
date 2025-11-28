@@ -23,8 +23,11 @@ import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
+import com.fortunehub.luckylog.dto.response.fortune.MyFortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
+import com.fortunehub.luckylog.fixture.FortuneResultFixture;
+import com.fortunehub.luckylog.fixture.MemberFixture;
 import com.fortunehub.luckylog.repository.fortune.FortuneCategoryRepository;
 import com.fortunehub.luckylog.repository.fortune.FortuneResultRepository;
 import java.util.Arrays;
@@ -37,7 +40,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("운세 Service")
@@ -52,7 +54,6 @@ class FortuneServiceTest {
   @InjectMocks
   private FortuneService fortuneService;
 
-  private static final Long TEST_MEMBER_ID = 1L;
   private static final String TEST_TITLE = "2025년 운세";
 
   private static final List<FortuneCategory> ALL_CATEGORIES = List.of(
@@ -72,7 +73,7 @@ class FortuneServiceTest {
 
   @BeforeEach
   void setUp() {
-    member = createMemberWithId();
+    member = MemberFixture.createMember();
     fortuneTypes = List.of(FortuneType.OVERALL, FortuneType.MONEY);
     request = createValidFortuneRequest(fortuneTypes);
   }
@@ -83,7 +84,7 @@ class FortuneServiceTest {
     // given
     given(fortuneResultRepository.existsByMember_IdAndTitle(member.getId(), TEST_TITLE))
         .willReturn(false);
-    given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(TEST_MEMBER_ID))
+    given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(member.getId()))
         .willReturn(4L);
 
     given(fortuneCategoryRepository
@@ -112,7 +113,7 @@ class FortuneServiceTest {
   @DisplayName("비활성화된 회원으로 저장 시 예외가 발생한다")
   void save_WhenMemberIsInactive_ThenThrowsException() {
     // given
-    Member member = createMemberWithInactive();
+    Member member = MemberFixture.createInactiveMember();
 
     // when
     assertThatThrownBy(() -> fortuneService.save(member, request))
@@ -141,9 +142,9 @@ class FortuneServiceTest {
   @DisplayName("최대 저장 개수 초과 시 예외가 발생한다")
   void save_WhenExceedMaxSaveCount_ThenThrowsException() {
     // given
-    given(fortuneResultRepository.existsByMember_IdAndTitle(TEST_MEMBER_ID, TEST_TITLE))
+    given(fortuneResultRepository.existsByMember_IdAndTitle(member.getId(), TEST_TITLE))
         .willReturn(false);
-    given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(TEST_MEMBER_ID))
+    given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(member.getId()))
         .willReturn(5L); // MAX_SAVE_COUNT만큼 운세가 저장됨
 
     // when & then
@@ -158,9 +159,9 @@ class FortuneServiceTest {
   @DisplayName("운세 카테고리를 찾을 수 없을 때 예외가 발생한다")
   void save_WhenCategoryNotFound_ThenThrowsException() {
     // given
-    given(fortuneResultRepository.existsByMember_IdAndTitle(TEST_MEMBER_ID, TEST_TITLE))
+    given(fortuneResultRepository.existsByMember_IdAndTitle(member.getId(), TEST_TITLE))
         .willReturn(false);
-    given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(TEST_MEMBER_ID))
+    given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(member.getId()))
         .willReturn(4L);
 
     // 카테고리 1개만 반환 (2개 요청)
@@ -184,9 +185,9 @@ class FortuneServiceTest {
   @DisplayName("저장된 운세 객체의 내용이 올바르게 설정된다")
   void save_WhenValidRequest_ThenSavesCorrectFortuneData() {
     // given
-    given(fortuneResultRepository.existsByMember_IdAndTitle(TEST_MEMBER_ID, TEST_TITLE))
+    given(fortuneResultRepository.existsByMember_IdAndTitle(member.getId(), TEST_TITLE))
         .willReturn(false);
-    given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(TEST_MEMBER_ID))
+    given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(member.getId()))
         .willReturn(4L);
 
     given(fortuneCategoryRepository.findByFortuneTypeIn(fortuneTypes))
@@ -209,16 +210,47 @@ class FortuneServiceTest {
         .containsExactly("좋은 한 해가 될 것입니다.", "재물운이 상승합니다.");
   }
 
-  private Member createMemberWithId() {
-    Member member = new Member("test@email.com", "encodedPassword", "솜사탕 구름");
-    ReflectionTestUtils.setField(member, "id", TEST_MEMBER_ID);
-    return member;
+  @Test
+  @DisplayName("정상적인 운세 목록 요청 시 조회된다")
+  void getMyFortunes_WhenValidRequest_ThenReturnsMyFortunes() {
+    // given
+    List<FortuneResult> results = FortuneResultFixture.createFortuneResults(member, 3);
+
+    given(fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(member.getId()))
+        .willReturn(results);
+
+    // when
+    List<MyFortuneResponse> result = fortuneService.getMyFortunes(member.getId());
+
+    // then
+    verify(fortuneResultRepository).findAllByMember_IdAndIsActiveTrue(member.getId());
+
+    MyFortuneResponse firstFortune = result.get(0);
+    assertThat(firstFortune.getTitle()).isEqualTo("2025년 월별 운세 1");
+    assertThat(firstFortune.getFortuneTypeDisplayName()).isNotBlank();
+    assertThat(firstFortune.getCreatedAt()).isNotBlank();
+
+    assertThat(result)
+        .extracting(MyFortuneResponse::getTitle)
+        .containsExactly(
+            "2025년 월별 운세 1",
+            "2025년 월별 운세 2",
+            "2025년 월별 운세 3"
+        );
   }
 
-  private Member createMemberWithInactive() {
-    Member member = new Member("test@email.com", "encodedPassword", "솜사탕 구름");
-    ReflectionTestUtils.setField(member, "isActive", false);
-    return member;
+  @Test
+  @DisplayName("저장된 운세가 없으면 빈 리스트를 반환한다")
+  void getMyFortunes_WhenNoFortunes_ThenReturnsEmptyList() {
+    // given
+    given(fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(member.getId()))
+        .willReturn(List.of());
+
+    // when
+    List<MyFortuneResponse> result = fortuneService.getMyFortunes(member.getId());
+
+    // then
+    assertThat(result).isEmpty();
   }
 
   private SaveFortuneRequest createValidFortuneRequest(List<FortuneType> fortunes) {

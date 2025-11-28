@@ -9,6 +9,10 @@ spring:
       - classpath:application-prompts.yaml
   messages:
     encoding: UTF-8
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 10
 
 gemini:
   api:

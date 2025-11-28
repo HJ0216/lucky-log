@@ -10,6 +10,7 @@ import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
+import com.fortunehub.luckylog.fixture.MemberFixture;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +24,7 @@ class FortuneResultTest {
 
   @BeforeEach
   void setUp() {
-    member = new Member("test@email.com", "password123", "테스터");
+    member = MemberFixture.createMember();
     request = createValidRequest();
   }
 
@@ -56,13 +57,13 @@ class FortuneResultTest {
 
     // then
     assertThat(result.getTitle()).isNotBlank();
+    assertThat(result.getTitle()).contains(request.getOption().getAi().getNickname());
     assertThat(result.getTitle()).contains(String.valueOf(request.getFortuneResultYear()));
     assertThat(result.getTitle()).contains(request.getOption().getPeriod().getDisplayName());
-    assertThat(result.getTitle()).contains(request.getOption().getFortunesAsString());
   }
 
   @Test
-  @DisplayName("제목이 null이면 자동으로 생성한다")
+  @DisplayName("제목이 없으면 자동으로 생성한다")
   void create_WhenTitleIsNull_ThenGeneratesTitle() {
     // given
     request.setTitle(null);
@@ -72,9 +73,9 @@ class FortuneResultTest {
 
     // then
     assertThat(result.getTitle()).isNotBlank();
+    assertThat(result.getTitle()).contains(request.getOption().getAi().getNickname());
     assertThat(result.getTitle()).contains(String.valueOf(request.getFortuneResultYear()));
     assertThat(result.getTitle()).contains(request.getOption().getPeriod().getDisplayName());
-    assertThat(result.getTitle()).contains(request.getOption().getFortunesAsString());
   }
 
   @Test
@@ -87,6 +88,32 @@ class FortuneResultTest {
     assertThatThrownBy(() -> FortuneResult.create(member, request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.BIRTH_INFO_REQUIRED.getMessage());
+  }
+
+  @Test
+  @DisplayName("태어난 시간을 선택하지 않으면 모름으로 생성된다")
+  void create_WhenBirthTimeZoneIsNull_ThenCreateUnknown() {
+    // given
+    request.getBirthInfo().setTime(null);
+
+    // when
+    FortuneResult result = FortuneResult.create(member, request);
+
+    // then
+    assertThat(result.getBirthTimeZone()).isEqualTo(TimeType.UNKNOWN);
+  }
+
+  @Test
+  @DisplayName("태어난 시간을 모름으로 선택하면 모름으로 생성된다")
+  void create_WhenBirthTimeZoneIsUnknown_ThenCreateUnknown() {
+    // given
+    request.getBirthInfo().setTime(TimeType.UNKNOWN);
+
+    // when
+    FortuneResult result = FortuneResult.create(member, request);
+
+    // then
+    assertThat(result.getBirthTimeZone()).isEqualTo(TimeType.UNKNOWN);
   }
 
   @Test

@@ -13,9 +13,9 @@ const SignupPage = {
     passwordInput: null,
     confirmPasswordInput: null,
     nicknameInput: null,
-    allInputs: [],
+    allInputs: null,
     errorContainer: null,
-    errorMessages: [],
+    errorMessages: null,
   },
 
   init() {
