@@ -1,7 +1,6 @@
 package com.fortunehub.luckylog.repository.fortune;
 
 import com.fortunehub.luckylog.domain.fortune.FortuneResult;
-import com.fortunehub.luckylog.dto.response.fortune.MyFortuneResponse;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

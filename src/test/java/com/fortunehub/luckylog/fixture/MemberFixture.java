@@ -5,7 +5,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 public class MemberFixture {
 
-  private static final Long DEFAULT_ID = 1L;
   private static final String DEFAULT_EMAIL = "lucky@email.com";
   private static final String DEFAULT_NICKNAME = "테스트 유저";
   private static final String DEFAULT_PASSWORD = "encodedPassword123";
@@ -14,7 +13,7 @@ public class MemberFixture {
   }
 
   public static Member createMember() {
-    return createMember(DEFAULT_EMAIL, DEFAULT_PASSWORD);
+    return createMember(DEFAULT_EMAIL, DEFAULT_NICKNAME);
   }
 
   public static Member createMember(String email) {
