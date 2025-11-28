@@ -100,7 +100,7 @@ public class FortuneResultFixture {
     FortuneResponse response2 = new FortuneResponse();
     response2.setFortune(FortuneType.HEALTH);
     response2.setPeriodValue(PeriodValue.FEBRUARY);
-    response2.setResult("재물운이 상승합니다.");
+    response2.setResult("건강운이 상승합니다.");
     return List.of(response1, response2);
   }
 
