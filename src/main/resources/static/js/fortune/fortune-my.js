@@ -7,7 +7,7 @@ const FortuneMyPage = {
 
   // DOM 요소 캐싱
   elements: {
-      errorMessages: null,
+      errorMessage: null,
   },
 
   init() {
@@ -17,7 +17,7 @@ const FortuneMyPage = {
   },
 
   cacheElements() {
-    this.elements.errorMessages = document.querySelectorAll(
+    this.elements.errorMessage = document.querySelector(
       '[data-error-message]'
     );
   },
@@ -25,14 +25,9 @@ const FortuneMyPage = {
   attachEvents() {},
 
   autoHideErrors() {
-    this.elements.errorMessages.forEach((message) => {
-      // 메시지에 내용이 있을 때만 타이머 작동
-      if (!message.textContent.trim()) return;
-
-      setTimeout(() => {
-        message.classList.add('hidden');
-      }, this.config.ERROR_DURATION);
-    });
+    setTimeout(() => {
+      this.elements.errorMessage.classList.add('hidden');
+    }, this.config.ERROR_DURATION);
   },
 };
 
