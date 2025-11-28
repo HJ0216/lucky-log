@@ -96,7 +96,12 @@ const FortuneOptionPage = {
       'input[name="period"]:checked'
     );
 
+    // 임시: loading screen이 나오지 않는 오류 확인용
+    console.log('loading screen');
+
     if (!selectedAI || selectedFortunes.length === 0 || !selectedPeriod) {
+      // 임시: loading screen이 나오지 않는 오류 확인용
+      console.log('unsatisfied validation');
       return;
     }
 
