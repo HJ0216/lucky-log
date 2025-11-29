@@ -110,7 +110,7 @@ public class FortuneService {
       throw new CustomException(ErrorCode.INVALID_MEMBER);
     }
 
-    return fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(memberId).stream()
+    return fortuneResultRepository.findAllByMemberIdAndIsActiveTrue(memberId).stream()
                                   .map(MyFortuneResponse::from)
                                   .toList();
   }

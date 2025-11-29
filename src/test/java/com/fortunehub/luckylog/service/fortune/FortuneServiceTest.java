@@ -218,14 +218,14 @@ class FortuneServiceTest {
     Member member = MemberFixture.createMemberWithId();
     List<FortuneResult> results = FortuneResultFixture.createFortuneResults(member, 3);
 
-    given(fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(member.getId()))
+    given(fortuneResultRepository.findAllByMemberIdAndIsActiveTrue(member.getId()))
         .willReturn(results);
 
     // when
     List<MyFortuneResponse> result = fortuneService.getMyFortunes(member.getId());
 
     // then
-    verify(fortuneResultRepository).findAllByMember_IdAndIsActiveTrue(member.getId());
+    verify(fortuneResultRepository).findAllByMemberIdAndIsActiveTrue(member.getId());
 
     MyFortuneResponse firstFortune = result.get(0);
     assertThat(firstFortune.getTitle()).isEqualTo("2025년 월별 운세 1");
@@ -246,7 +246,7 @@ class FortuneServiceTest {
   void getMyFortunes_WhenNoFortunes_ThenReturnsEmptyList() {
     // given
     Member member = MemberFixture.createMemberWithId();
-    given(fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(member.getId()))
+    given(fortuneResultRepository.findAllByMemberIdAndIsActiveTrue(member.getId()))
         .willReturn(List.of());
 
     // when

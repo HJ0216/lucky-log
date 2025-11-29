@@ -9,20 +9,15 @@ import org.springframework.data.repository.query.Param;
 public interface FortuneResultRepository extends JpaRepository<FortuneResult, Long> {
 
   /**
-   * SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END
-   * FROM FortuneResult f
-   * WHERE f.member.id = :memberId
-   * AND f.title = :title
+   * SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END FROM FortuneResult f WHERE f.member.id =
+   * :memberId AND f.title = :title
    */
   boolean existsByMember_IdAndTitle(Long memberId, String title);
 
   /**
-   * SELECT COUNT(f)
-   * FROM FortuneResult f
-   * WHERE f.member.id = :memberId
-   * AND f.isActive = true
+   * SELECT COUNT(f) FROM FortuneResult f WHERE f.member.id = :memberId AND f.isActive = true
    */
-  long countByMember_IdAndIsActiveTrue(@Param("memberId") Long memberId);
+  long countByMember_IdAndIsActiveTrue(Long memberId);
 
   @Query("SELECT DISTINCT fr FROM FortuneResult fr "
       + "JOIN FETCH fr.categories c "
@@ -30,5 +25,5 @@ public interface FortuneResultRepository extends JpaRepository<FortuneResult, Lo
       + "WHERE fr.member.id = :memberId  "
       + "AND fr.isActive = true "
       + "ORDER BY fr.createdAt DESC")
-  List<FortuneResult> findAllByMember_IdAndIsActiveTrue(@Param("memberId") Long memberId);
+  List<FortuneResult> findAllByMemberIdAndIsActiveTrue(@Param("memberId") Long memberId);
 }
