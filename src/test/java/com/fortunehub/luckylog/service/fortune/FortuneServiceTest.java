@@ -23,6 +23,7 @@ import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
+import com.fortunehub.luckylog.dto.response.fortune.MyFortuneDetailResponse;
 import com.fortunehub.luckylog.dto.response.fortune.MyFortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
@@ -32,6 +33,7 @@ import com.fortunehub.luckylog.repository.fortune.FortuneCategoryRepository;
 import com.fortunehub.luckylog.repository.fortune.FortuneResultRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -73,7 +75,7 @@ class FortuneServiceTest {
 
   @BeforeEach
   void setUp() {
-    member = MemberFixture.createMember();
+    member = MemberFixture.createMemberWithId();
     fortuneTypes = List.of(FortuneType.LOVE, FortuneType.HEALTH);
     request = createValidFortuneRequest(fortuneTypes);
   }
@@ -254,6 +256,105 @@ class FortuneServiceTest {
 
     // then
     assertThat(result).isEmpty();
+  }
+
+  @Test
+  @DisplayName("정상적인 운세 상세 정보 요청 시 조회된다")
+  void getMyFortune_WhenValidRequest_ThenReturnsMyFortuneDetail() {
+    // given
+    FortuneResult result = FortuneResultFixture.createFortuneResultWithId(member);
+
+    given(
+        fortuneResultRepository.findByIdAndMember_IdAndIsActiveTrue(result.getId(), member.getId()))
+        .willReturn(Optional.of(result));
+
+    // when
+    MyFortuneDetailResponse response = fortuneService.getMyFortune(result.getId(), member.getId());
+
+    // then
+    verify(fortuneResultRepository)
+        .findByIdAndMember_IdAndIsActiveTrue(result.getId(), member.getId());
+
+    assertThat(response)
+        .isNotNull()
+        .satisfies(r -> {
+          assertThat(r.getTitle()).isEqualTo("2025년 월별 운세");
+          assertThat(r.getItems()).hasSize(4);
+
+          assertThat(r.getBirthInfo())
+              .extracting("year", "month", "day")
+              .containsExactly(1995, 2, 16);
+
+          assertThat(r.getFortuneOption())
+              .satisfies(opt -> {
+                assertThat(opt.getAi()).isEqualTo(AIType.GEMINI);
+                assertThat(opt.getTypes()).hasSize(2);
+              });
+        });
+  }
+
+  @Test
+  @DisplayName("운세 Id가 없으면 오류가 발생한다")
+  void getMyFortune_WhenFortuneIdIsNull_ThenThrowsException() {
+    // when & then
+    assertThatThrownBy(() -> fortuneService.getMyFortune(null, member.getId()))
+        .isInstanceOf(CustomException.class)
+        .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_FORTUNE);
+
+    verify(fortuneResultRepository, never()).findByIdAndMember_IdAndIsActiveTrue(null,
+        member.getId());
+  }
+
+  @Test
+  @DisplayName("회원 Id가 없으면 오류가 발생한다")
+  void getMyFortune_WhenMemberIdIsNull_ThenThrowsException() {
+    // given
+    Long resultId = 1L;
+
+    // when & then
+    assertThatThrownBy(() -> fortuneService.getMyFortune(resultId, null))
+        .isInstanceOf(CustomException.class)
+        .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_MEMBER);
+
+    verify(fortuneResultRepository, never())
+        .findByIdAndMember_IdAndIsActiveTrue(resultId, null);
+  }
+
+  @Test
+  @DisplayName("저장된 운세가 없으면 오류가 발생한다")
+  void getMyFortune_WhenFortuneIsEmpty_ThenThrowsException() {
+    // given
+    Long resultId = 1L;
+
+    given(
+        fortuneResultRepository
+            .findByIdAndMember_IdAndIsActiveTrue(resultId, member.getId()))
+            .willReturn(Optional.empty());
+
+    // when & then
+    assertThatThrownBy(() -> fortuneService.getMyFortune(resultId, member.getId()))
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.INVALID_FORTUNE.getMessage());
+
+    verify(fortuneResultRepository)
+        .findByIdAndMember_IdAndIsActiveTrue(resultId, member.getId());
+  }
+
+  @Test
+  @DisplayName("다른 회원의 운세를 조회하면 오류가 발생한다")
+  void getMyFortune_WhenOtherMemberFortune_ThenThrowException() {
+    // given
+    Member otherMember = MemberFixture.createMemberWithId(999L);
+    FortuneResult otherFortune = FortuneResultFixture.createFortuneResultWithId(otherMember);
+
+    given(fortuneResultRepository
+        .findByIdAndMember_IdAndIsActiveTrue(otherFortune.getId(), member.getId()))
+        .willReturn(Optional.empty());
+
+    // when & then
+    assertThatThrownBy(() -> fortuneService.getMyFortune(otherFortune.getId(), member.getId()))
+        .isInstanceOf(CustomException.class)
+        .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_FORTUNE);
   }
 
   private SaveFortuneRequest createValidFortuneRequest(List<FortuneType> fortunes) {

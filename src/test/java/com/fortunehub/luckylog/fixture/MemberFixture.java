@@ -25,12 +25,14 @@ public class MemberFixture {
   }
 
   public static Member createMemberWithId() {
-    Member member = new Member(DEFAULT_EMAIL, DEFAULT_PASSWORD, DEFAULT_NICKNAME);
-    ReflectionTestUtils.setField(member, "id", 1L);
-
-    return member;
+    return createMemberWithId(1L);
   }
 
+  public static Member createMemberWithId(Long id) {
+    Member member = new Member(DEFAULT_EMAIL, DEFAULT_PASSWORD, DEFAULT_NICKNAME);
+    ReflectionTestUtils.setField(member, "id", id);
+    return member;
+  }
 
   public static Member createInactiveMember() {
     return createInactiveMember(DEFAULT_EMAIL, DEFAULT_NICKNAME);

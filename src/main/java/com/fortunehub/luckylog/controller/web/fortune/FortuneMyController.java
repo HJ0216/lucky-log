@@ -56,7 +56,7 @@ public class FortuneMyController {
       Model model) {
 
     try {
-      fortuneService.getMyFortune(userDetails.getMember().getId(), resultId);
+      fortuneService.getMyFortune(resultId, userDetails.getMember().getId());
 
       return FORTUNE_MY_DETAIL_VIEW;
 

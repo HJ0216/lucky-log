@@ -47,6 +47,7 @@ public class FortuneResultFixture {
   public static FortuneResult createFortuneResultWithTitle(Member member, String title) {
     SaveFortuneRequest request = createSaveFortuneRequest(title);
     FortuneResult result = FortuneResult.create(member, request);
+
     ReflectionTestUtils.setField(result, "createdAt", LocalDateTime.now());
     ReflectionTestUtils.setField(result, "updatedAt", LocalDateTime.now());
 
@@ -66,6 +67,23 @@ public class FortuneResultFixture {
                     .toList();
   }
 
+  public static FortuneResult createFortuneResultWithTitleAndId(Member member, String title) {
+    SaveFortuneRequest request = createSaveFortuneRequest(title);
+    FortuneResult result = FortuneResult.create(member, request);
+
+    ReflectionTestUtils.setField(result, "id", 1L);
+    ReflectionTestUtils.setField(result, "createdAt", LocalDateTime.now());
+    ReflectionTestUtils.setField(result, "updatedAt", LocalDateTime.now());
+
+    addItems(result, request.getResponses());
+    addCategories(result, request.getOption().getFortunes());
+
+    return result;
+  }
+
+  public static FortuneResult createFortuneResultWithId(Member member) {
+    return createFortuneResultWithTitleAndId(member, "2025년 월별 운세");
+  }
 
   // Private Helper Methods
   private static SaveFortuneRequest createSaveFortuneRequest(String title) {

@@ -116,17 +116,17 @@ public class FortuneService {
                                   .toList();
   }
 
-  public MyFortuneDetailResponse getMyFortune(Long memberId, Long fortuneId) {
-    if (memberId == null) {
-      throw new CustomException(ErrorCode.INVALID_MEMBER);
-    }
-
+  public MyFortuneDetailResponse getMyFortune(Long fortuneId, Long memberId) {
     if (fortuneId == null) {
       throw new CustomException(ErrorCode.INVALID_FORTUNE);
     }
 
+    if (memberId == null) {
+      throw new CustomException(ErrorCode.INVALID_MEMBER);
+    }
+
     FortuneResult fortune = fortuneResultRepository
-        .findByIdAndIsActiveTrue(fortuneId)
+        .findByIdAndMember_IdAndIsActiveTrue(fortuneId, memberId)
         .orElseThrow(() -> new CustomException(ErrorCode.INVALID_FORTUNE));
 
     return MyFortuneDetailResponse.from(fortune);
