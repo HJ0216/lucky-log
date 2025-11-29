@@ -30,8 +30,8 @@ public interface FortuneResultRepository extends JpaRepository<FortuneResult, Lo
   List<FortuneResult> findAllByMemberIdAndIsActiveTrue(@Param("memberId") Long memberId);
 
   /**
-   * SELECT fr FROM FortuneResult fr WHERE fr.id = :fortuneId AND fr.isActive = true
+   * SELECT fr FROM FortuneResult fr WHERE fr.id = :fortuneId AND fr.member.id = :memberId AND fr.isActive = true
    */
-  @EntityGraph(attributePaths = {"member", "categories", "items"})
-  Optional<FortuneResult> findByIdAndIsActiveTrue(Long fortuneId);
+  @EntityGraph(attributePaths = {"categories.fortuneCategory", "items"})
+  Optional<FortuneResult> findByIdAndMember_IdAndIsActiveTrue(Long fortuneId, Long memberId);
 }

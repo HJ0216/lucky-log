@@ -2,6 +2,7 @@ package com.fortunehub.luckylog.dto.response.fortune;
 
 import com.fortunehub.luckylog.domain.fortune.AIType;
 import com.fortunehub.luckylog.domain.fortune.FortuneResultCategory;
+import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class FortuneOptionResponse {
 
   private final AIType ai;
-  private final List<FortuneCategoryResponse> categories;
+  private final List<FortuneType> types;
   private final PeriodType period;
 
   public static FortuneOptionResponse from(
@@ -24,7 +25,7 @@ public class FortuneOptionResponse {
     return new FortuneOptionResponse(
         ai,
         resultCategories.stream()
-                        .map(FortuneCategoryResponse::from)
+                        .map(rc -> rc.getFortuneCategory().getFortuneType())
                         .toList(),
         period
     );

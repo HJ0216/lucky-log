@@ -36,13 +36,13 @@ class FortuneResultRepositoryTest {
 
   @Test
   @DisplayName("id로 조회 시 운세 결과를 반환한다")
-  void findByIdAndIsActiveTrue_WhenFortuneResultExists_ThenReturnsFortuneResult() {
+  void findByIdAndMember_IdAndIsActiveTrue_WhenFortuneResultExists_ThenReturnsFortuneResult() {
     // given
     FortuneResult saved = fortuneResultRepository.save(result);
 
     // when
-    Optional<FortuneResult> found = fortuneResultRepository.findByIdAndIsActiveTrue(
-        saved.getId());
+    Optional<FortuneResult> found = fortuneResultRepository
+        .findByIdAndMember_IdAndIsActiveTrue(saved.getId(), member.getId());
 
     // then
     assertThat(found).isPresent();
@@ -53,9 +53,25 @@ class FortuneResultRepositoryTest {
 
   @Test
   @DisplayName("존재하지 않는 id로 조회 시 빈 Optional을 반환한다")
-  void findByIdAndIsActiveTrue_WhenNotExists_ThenReturnsEmpty() {
+  void findByIdAndMember_IdAndIsActiveTrue_WhenNotExists_ThenReturnsEmpty() {
     // when
-    Optional<FortuneResult> found = fortuneResultRepository.findByIdAndIsActiveTrue(999L);
+    Optional<FortuneResult> found = fortuneResultRepository
+        .findByIdAndMember_IdAndIsActiveTrue(999L, member.getId());
+
+    // then
+    assertThat(found).isEmpty();
+  }
+
+  @Test
+  @DisplayName("다른 회원의 조회 시 빈 Optional을 반환한다")
+  void findByIdAndMember_IdAndIsActiveTrue_WhenOtherMemberFortune_ThenReturnsEmpty() {
+    // given
+    FortuneResult saved = fortuneResultRepository.save(result);
+    Long otherMemberId = 10L;
+
+    // when
+    Optional<FortuneResult> found = fortuneResultRepository
+        .findByIdAndMember_IdAndIsActiveTrue(saved.getId(), otherMemberId);
 
     // then
     assertThat(found).isEmpty();
@@ -63,13 +79,14 @@ class FortuneResultRepositoryTest {
 
   @Test
   @DisplayName("isActive가 false인 경우 조회되지 않는다")
-  void findByIdAndIsActiveTrue_WhenInactive_ReturnsEmpty() {
+  void findByIdAndMember_IdAndIsActiveTrue_WhenInactive_ReturnsEmpty() {
     // given
     result.softDelete();
     FortuneResult saved = fortuneResultRepository.save(result);
 
     // when
-    Optional<FortuneResult> found = fortuneResultRepository.findByIdAndIsActiveTrue(saved.getId());
+    Optional<FortuneResult> found = fortuneResultRepository
+        .findByIdAndMember_IdAndIsActiveTrue(saved.getId(), member.getId());
 
     // then
     assertThat(found).isEmpty();
