@@ -61,6 +61,10 @@ public class FortuneResult extends BaseTimeEntity {
   @Column(nullable = false, length = 10)
   private GenderType gender;
 
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, length = 10)
+  private CalendarType calendar;
+
   @Column(nullable = false)
   private LocalDate birthDate;
 
@@ -106,6 +110,7 @@ public class FortuneResult extends BaseTimeEntity {
 
     BirthInfoForm birthInfo = request.getBirthInfo();
     result.gender = birthInfo.getGender();
+    result.calendar = birthInfo.getCalendar();
     result.birthDate = createBirthDate(birthInfo);
     result.birthTimeZone = Optional.ofNullable(birthInfo.getTime()).orElse(TimeType.UNKNOWN);
     result.birthRegion = Optional.ofNullable(birthInfo.getCity()).orElse(CityType.UNKNOWN);
