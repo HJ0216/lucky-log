@@ -7,6 +7,7 @@ import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.fixture.FortuneResultFixture;
 import com.fortunehub.luckylog.fixture.MemberFixture;
 import com.fortunehub.luckylog.repository.member.MemberRepository;
+import jakarta.persistence.EntityManager;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +25,9 @@ class FortuneResultRepositoryTest {
 
   @Autowired
   private MemberRepository memberRepository;
+
+  @Autowired
+  private EntityManager entityManager;
 
   private FortuneResult result;
   private Member member;
@@ -49,6 +53,38 @@ class FortuneResultRepositoryTest {
     assertThat(found.get())
         .extracting("id", "isActive")
         .containsExactly(saved.getId(), true);
+  }
+
+  // EntityGraph가 실제로 N+1 문제를 방지하는지 검증하는 테스트
+  @Test
+  @DisplayName("EntityGraph로 items와 categories를 함께 조회한다 (N+1 없음)")
+  void findByIdAndMember_IdAndIsActiveTrue_FetchesItemsAndCategories() {
+    // given
+    FortuneResult saved = fortuneResultRepository.save(result);
+    fortuneResultRepository.flush(); // DB에 실제로 저장
+
+    entityManager.clear();
+    // repository.save 시, 영속성 컨텍스트(JPA가 엔티티를 관리하는 환경)에 캐시됨
+    // repository.findById 시, DB 조회 안 하고 1차 캐시(영속성 컨텍스트 내부의 캐시 저장소)에서 가져옴
+
+    // when
+    Optional<FortuneResult> found = fortuneResultRepository
+        .findByIdAndMember_IdAndIsActiveTrue(saved.getId(), member.getId());
+    // 실제로 DB 조회 쿼리 실행
+
+    // then
+    assertThat(found).isPresent();
+    FortuneResult foundResult = found.get();
+
+    // 지연 로딩 없이 접근 가능
+    assertThat(foundResult.getItems()).isNotEmpty();
+    assertThat(foundResult.getCategories()).isNotEmpty();
+
+    // 2단계 fetch 확인
+    foundResult.getCategories().forEach(category -> {
+      assertThat(category.getFortuneCategory()).isNotNull();
+      assertThat(category.getFortuneCategory().getFortuneType()).isNotNull();
+    });
   }
 
   @Test
