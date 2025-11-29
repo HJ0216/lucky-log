@@ -117,6 +117,10 @@ public class FortuneResult extends BaseTimeEntity {
     return result;
   }
 
+  public void softDelete() {
+    this.isActive = false;
+  }
+
   private static void validateInputs(Member member, SaveFortuneRequest request) {
     if (member == null) {
       throw new CustomException(ErrorCode.MEMBER_INFO_REQUIRED);

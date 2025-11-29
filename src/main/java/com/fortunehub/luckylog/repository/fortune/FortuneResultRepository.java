@@ -2,6 +2,8 @@ package com.fortunehub.luckylog.repository.fortune;
 
 import com.fortunehub.luckylog.domain.fortune.FortuneResult;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,4 +28,10 @@ public interface FortuneResultRepository extends JpaRepository<FortuneResult, Lo
       + "AND fr.isActive = true "
       + "ORDER BY fr.createdAt DESC")
   List<FortuneResult> findAllByMemberIdAndIsActiveTrue(@Param("memberId") Long memberId);
+
+  /**
+   * SELECT fr FROM FortuneResult fr WHERE fr.id = :fortuneId AND fr.isActive = true
+   */
+  @EntityGraph(attributePaths = {"member", "categories", "items"})
+  Optional<FortuneResult> findByIdAndIsActiveTrue(Long fortuneId);
 }
