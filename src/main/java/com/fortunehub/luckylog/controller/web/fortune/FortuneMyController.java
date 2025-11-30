@@ -59,7 +59,7 @@ public class FortuneMyController {
     try {
       MyFortuneDetailResponse response =
           fortuneService.getMyFortune(resultId, userDetails.getMember().getId());
-      model.addAttribute("myFortune", null);
+      model.addAttribute("myFortune", response);
 
       return FORTUNE_MY_DETAIL_VIEW;
 
