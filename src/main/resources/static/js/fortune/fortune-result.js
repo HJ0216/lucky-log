@@ -177,17 +177,14 @@ const FortuneResultPage = {
         .querySelector('.fortune-title')
         .textContent.trim();
 
-      const resultContent =
-        this.elements.resultScreen.querySelector('.result-content');
-
-      const subTitle = resultContent
+      const subTitle = this.elements.resultScreen
         .querySelector('.fortune-sub-title')
         .textContent.trim()
         .replace(/\s+/g, '');
 
-      const fortunes = resultContent.querySelectorAll('.fortune-content');
-
       let formattedText = `${mainTitle}: ${subTitle}\n\n`;
+
+      const fortunes = this.elements.resultScreen.querySelectorAll('.fortune-item');
 
       fortunes.forEach((fortune) => {
         const month = fortune

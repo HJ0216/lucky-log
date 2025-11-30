@@ -65,7 +65,7 @@
       <div class="fortune-sub-title" th:text="${selectedOptions}">🔮종합운</div>
 
       <div th:if="${responses != null and !#lists.isEmpty(responses)}" class="fortune-content-container">
-        <div th:each="res : ${responses}">
+        <div th:each="res : ${responses}" class="fortune-item">
           <p th:text="${res.periodValue.displayName}" class="fortune-month">1월</p>
           <p th:text="${res.result}" class="fortune-month-content">1월 운세 내용</p>
         </div>
