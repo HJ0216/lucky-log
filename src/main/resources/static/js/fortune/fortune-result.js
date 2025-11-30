@@ -88,6 +88,7 @@ const FortuneResultPage = {
 
       if(!text) {
         toast.error('복사 실패', this.messages.copyFailed);
+        return;
       }
 
       navigator.clipboard
