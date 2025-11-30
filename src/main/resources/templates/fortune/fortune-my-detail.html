@@ -63,7 +63,7 @@
       <div class="fortune-sub-title" th:text="*{getTypeDisplayName}">🔮종합운</div>
 
       <div class="fortune-content-container">
-        <div th:each="item : *{items}">
+        <div th:each="item : *{items}" class="fortune-item">
           <p th:text="${item.periodValue.displayName}" class="fortune-month">1월</p>
           <p th:text="${item.content}" class="fortune-month-content">1월 운세 내용</p>
         </div>
