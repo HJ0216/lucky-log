@@ -3,11 +3,14 @@ package com.fortunehub.luckylog.repository.fortune;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fortunehub.luckylog.domain.fortune.FortuneResult;
+import com.fortunehub.luckylog.domain.fortune.FortuneResultItem;
+import com.fortunehub.luckylog.domain.fortune.PeriodValue;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.fixture.FortuneResultFixture;
 import com.fortunehub.luckylog.fixture.MemberFixture;
 import com.fortunehub.luckylog.repository.member.MemberRepository;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -126,5 +129,32 @@ class FortuneResultRepositoryTest {
 
     // then
     assertThat(found).isEmpty();
+  }
+
+  @Test
+  @DisplayName("LinkedHashSet으로 월별 운세 순서가 보장된다")
+  void findByIdAndMember_IdAndIsActiveTrue_WhenlinkedHashSet_ReturnsOrder() {
+    // given
+    FortuneResult result = FortuneResultFixture.createFortuneResult(member);
+    FortuneResult saved = fortuneResultRepository.save(result);
+
+    entityManager.flush();
+    entityManager.clear();
+
+    // when
+    FortuneResult found = fortuneResultRepository
+        .findByIdAndMember_IdAndIsActiveTrue(saved.getId(), member.getId())
+        .get();
+
+    List<PeriodValue> periodValues = found.getItems().stream()
+                                          .map(FortuneResultItem::getPeriodValue)
+                                          .toList();
+
+    assertThat(periodValues).containsExactly(
+        PeriodValue.JANUARY,
+        PeriodValue.FEBRUARY,
+        PeriodValue.MARCH,
+        PeriodValue.APRIL
+    );
   }
 }

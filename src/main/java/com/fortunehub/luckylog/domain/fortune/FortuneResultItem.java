@@ -40,6 +40,9 @@ public class FortuneResultItem extends BaseTimeEntity {
   @Column(nullable = false, length = 10)
   private PeriodValue periodValue;
 
+  @Column(nullable = false)
+  private int periodSequence;
+
   @Column(nullable = false, length = 1000)
   private String content;
 
@@ -49,6 +52,7 @@ public class FortuneResultItem extends BaseTimeEntity {
   public static FortuneResultItem create(FortuneResponse response) {
     FortuneResultItem item = new FortuneResultItem();
     item.periodValue = response.getPeriodValue();
+    item.periodSequence = response.getPeriodValue().getPeriodNumber();
     item.content = response.getResult();
     return item;
   }

@@ -24,7 +24,7 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -93,14 +93,14 @@ public class FortuneResult extends BaseTimeEntity {
       cascade = CascadeType.ALL,
       orphanRemoval = true)
   @OrderBy("fortuneCategory.id ASC")
-  private Set<FortuneResultCategory> categories = new HashSet<>();
+  private Set<FortuneResultCategory> categories = new LinkedHashSet<>();
 
   @OneToMany(
       mappedBy = "fortuneResult",
       cascade = CascadeType.ALL,
       orphanRemoval = true)
-  @OrderBy("periodValue ASC")
-  private Set<FortuneResultItem> items = new HashSet<>();
+  @OrderBy("periodSequence ASC")
+  private Set<FortuneResultItem> items = new LinkedHashSet<>();
 
   public static FortuneResult create(Member member, SaveFortuneRequest request) {
     validateInputs(member, request);
