@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <th:block th:replace="~{fragments/head :: common-meta}" />
+
+  <title>LUCKY LOG</title>
+
+  <th:block th:replace="~{fragments/head :: common-resources}" />
+  <link rel="stylesheet" href="../../static/css/common/toast.css" th:href="@{/css/common/toast.css}">
+  <link rel="stylesheet" href="../../static/css/fortune/fortune-result.css"
+    th:href="@{/css/fortune/fortune-result.css}">
+  <script src="../../static/js/common/toast.js" th:src="@{/js/common/toast.js}" defer></script>
+  <script src="../../static/js/fortune/fortune-my-detail.js" th:src="@{/js/fortune/fortune-my-detail.js}" defer></script>
+</head>
+
+<body>
+
+  <!-- Thymeleaf 메시지 (숨겨진 상태) -->
+  <div id="messages">
+    <span id="msg-copy-success" th:text="#{fortune.copy.success}">운세 결과가 복사되었습니다! 📋</span>
+    <span id="msg-copy-failed" th:text="#{fortune.copy.failed}">복사에 실패했습니다. 😅</span>
+    <span id="msg-share-success" th:text="#{fortune.share.success}">운세 결과 공유 페이지가 생성되었습니다! 💌</span>
+    <span id="msg-share-failed" th:text="#{fortune.share.failed}">공유에 실패했습니다. 😅</span>
+  </div>
+
+  <div class="float-emoji">📜</div>
+  <div class="float-emoji">🔮</div>
+  <div class="float-emoji">⭐</div>
+  <div class="float-emoji">🌙</div>
+  <div class="float-emoji">✨</div>
+
+  <div class="fortune-page-container">
+    <a class="back-btn" href="/" th:href="@{/}"><span>홈으로</span></a>
+
+    <div th:replace="~{fragments/header :: authButtons}"></div>
+
+    <section class="logo user-selection-container">
+      <div class="ai-selection-container" th:object="${myFortune.fortuneOption}">
+        <span th:text="*{ai.icon}">🪂</span>
+        <span id="ai-name" th:text="*{ai.displayName}">Gemini</span>
+      </div>
+      <p class="logo-compact" th:object="${myFortune.birthInfo}">
+        <span th:if="*{city != null && city.displayName != '모름'}" th:text="*{city.displayName}">
+          서울특별시
+        </span>
+        <span th:text="*{gender.displayName}">여성</span>
+        <span th:text="*{calendar.displayName}">양력</span>
+        <br>
+        <span th:text="*{year}">1995년</span>년
+        <span th:text="*{month}">02월</span>월
+        <span th:text="*{day}">16일</span>일
+        <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">
+          자시(23:30 - 01:29)
+        </span>
+      </p>
+    </section>
+
+    <!-- 결과 화면 -->
+    <section class="result-screen" id="result-screen" th:if="${myFortune != null}" th:object="${myFortune}">
+      <div class="fortune-title"><span th:text="*{resultYear}">2025</span>년
+        <span th:text="*{fortuneOption.period.displayName}">월별</span> 운세</div>
+      <div class="fortune-sub-title" th:text="*{getTypeDisplayName}">🔮종합운</div>
+
+      <div class="fortune-content-container">
+        <div th:each="item : *{items}">
+          <p th:text="${item.periodValue.displayName}" class="fortune-month">1월</p>
+          <p th:text="${item.content}" class="fortune-month-content">1월 운세 내용</p>
+        </div>
+      </div>
+
+      <div class="action-button-container">
+        <button type="button" class="action-btn retry-btn" data-retry-btn>
+          <span>🔄</span>
+          <span>다시</span>
+        </button>
+        <button type="button" class="action-btn copy-btn" data-copy-btn>
+          <span>📋</span>
+          <span>복사</span>
+        </button>
+        <button type="button" class="action-btn share-btn" data-share-btn disabled>
+          <span>📤</span>
+          <span>공유</span>
+        </button>
+        <button type="button" class="action-btn save-btn" data-list-btn>
+          <span>📜</span>
+          <span>목록</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 운세 결과가 없는 경우 -->
+    <div th:if="${myFortune == null}" data-error-container>
+      <div class="error-message" data-error-message>저장된 운세를 불러올 수 없습니다, 다시 시도해주세요.</div>
+    </div>
+
+  </div>
+</body>
+
+</html>

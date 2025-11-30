@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.controller.web.fortune;
 
+import com.fortunehub.luckylog.dto.response.fortune.MyFortuneDetailResponse;
 import com.fortunehub.luckylog.dto.response.fortune.MyFortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.security.CustomUserDetails;
@@ -56,7 +57,9 @@ public class FortuneMyController {
       Model model) {
 
     try {
-      fortuneService.getMyFortune(resultId, userDetails.getMember().getId());
+      MyFortuneDetailResponse response =
+          fortuneService.getMyFortune(resultId, userDetails.getMember().getId());
+      model.addAttribute("myFortune", response);
 
       return FORTUNE_MY_DETAIL_VIEW;
 

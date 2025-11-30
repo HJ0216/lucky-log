@@ -88,13 +88,15 @@ public class FortuneResult extends BaseTimeEntity {
   @ColumnDefault("true")
   private boolean isActive = true;
 
-  @OneToMany(mappedBy = "fortuneResult",
+  @OneToMany(
+      mappedBy = "fortuneResult",
       cascade = CascadeType.ALL,
       orphanRemoval = true)
   @OrderBy("fortuneCategory.id ASC")
   private Set<FortuneResultCategory> categories = new HashSet<>();
 
-  @OneToMany(mappedBy = "fortuneResult",
+  @OneToMany(
+      mappedBy = "fortuneResult",
       cascade = CascadeType.ALL,
       orphanRemoval = true)
   @OrderBy("periodValue ASC")

@@ -1,7 +1,9 @@
 package com.fortunehub.luckylog.dto.response.fortune;
 
 import com.fortunehub.luckylog.domain.fortune.FortuneResult;
+import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -37,5 +39,11 @@ public class MyFortuneDetailResponse {
               .map(FortuneItemResponse::from)
               .toList()
     );
+  }
+
+  public String getTypeDisplayName() {
+    return fortuneOption.getTypes().stream()
+                        .map(FortuneType::getDisplayString)
+                        .collect(Collectors.joining(", "));
   }
 }
