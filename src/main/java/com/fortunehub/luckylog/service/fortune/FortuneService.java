@@ -107,21 +107,25 @@ public class FortuneService {
   }
 
   public List<MyFortuneResponse> getMyFortunes(Long memberId) {
-    if (memberId == null) {
+    if (!isValidId(memberId)) {
       throw new CustomException(ErrorCode.INVALID_MEMBER);
     }
 
-    return fortuneResultRepository.findAllByMemberIdAndIsActiveTrue(memberId).stream()
+    return fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(memberId).stream()
                                   .map(MyFortuneResponse::from)
                                   .toList();
   }
 
+  private boolean isValidId(Long id) {
+    return id != null && id > 0;
+  }
+
   public MyFortuneDetailResponse getMyFortune(Long fortuneId, Long memberId) {
-    if (fortuneId == null) {
+    if (!isValidId(fortuneId)) {
       throw new CustomException(ErrorCode.INVALID_FORTUNE);
     }
 
-    if (memberId == null) {
+    if (!isValidId(memberId)) {
       throw new CustomException(ErrorCode.INVALID_MEMBER);
     }
 

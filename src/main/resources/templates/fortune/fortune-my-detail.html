@@ -35,7 +35,7 @@
 
     <div th:replace="~{fragments/header :: authButtons}"></div>
 
-    <section class="logo user-selection-container">
+    <section class="logo user-selection-container" th:if="${myFortune != null}">
       <div class="ai-selection-container" th:object="${myFortune.fortuneOption}">
         <span th:text="*{ai.icon}">🪂</span>
         <span id="ai-name" th:text="*{ai.displayName}">Gemini</span>
@@ -47,9 +47,9 @@
         <span th:text="*{gender.displayName}">여성</span>
         <span th:text="*{calendar.displayName}">양력</span>
         <br>
-        <span th:text="*{year}">1995년</span>년
-        <span th:text="*{month}">02월</span>월
-        <span th:text="*{day}">16일</span>일
+        <span th:text="*{year}">1995</span>년
+        <span th:text="*{month}">02</span>월
+        <span th:text="*{day}">16</span>일
         <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">
           자시(23:30 - 01:29)
         </span>

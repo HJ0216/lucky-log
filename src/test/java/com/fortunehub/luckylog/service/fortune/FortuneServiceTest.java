@@ -75,7 +75,7 @@ class FortuneServiceTest {
 
   @BeforeEach
   void setUp() {
-    member = MemberFixture.createMemberWithId();
+    member = MemberFixture.createMemberWithId(1L);
     fortuneTypes = List.of(FortuneType.LOVE, FortuneType.HEALTH);
     request = createValidFortuneRequest(fortuneTypes);
   }
@@ -217,17 +217,16 @@ class FortuneServiceTest {
   @DisplayName("정상적인 운세 목록 요청 시 조회된다")
   void getMyFortunes_WhenValidRequest_ThenReturnsMyFortunes() {
     // given
-    Member member = MemberFixture.createMemberWithId();
     List<FortuneResult> results = FortuneResultFixture.createFortuneResults(member, 3);
 
-    given(fortuneResultRepository.findAllByMemberIdAndIsActiveTrue(member.getId()))
+    given(fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(member.getId()))
         .willReturn(results);
 
     // when
     List<MyFortuneResponse> result = fortuneService.getMyFortunes(member.getId());
 
     // then
-    verify(fortuneResultRepository).findAllByMemberIdAndIsActiveTrue(member.getId());
+    verify(fortuneResultRepository).findAllByMember_IdAndIsActiveTrue(member.getId());
 
     MyFortuneResponse firstFortune = result.get(0);
     assertThat(firstFortune.getTitle()).isEqualTo("2025년 월별 운세 1");
@@ -247,8 +246,7 @@ class FortuneServiceTest {
   @DisplayName("저장된 운세가 없으면 빈 리스트를 반환한다")
   void getMyFortunes_WhenNoFortunes_ThenReturnsEmptyList() {
     // given
-    Member member = MemberFixture.createMemberWithId();
-    given(fortuneResultRepository.findAllByMemberIdAndIsActiveTrue(member.getId()))
+    given(fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(member.getId()))
         .willReturn(List.of());
 
     // when
@@ -306,13 +304,14 @@ class FortuneServiceTest {
   }
 
   @Test
-  @DisplayName("회원 Id가 없으면 오류가 발생한다")
-  void getMyFortune_WhenMemberIdIsNull_ThenThrowsException() {
+  @DisplayName("회원 Id가 음수면 오류가 발생한다")
+  void getMyFortune_WhenMemberIdIsNegative_ThenThrowsException() {
     // given
     Long resultId = 1L;
+    Long memberId = -1L;
 
     // when & then
-    assertThatThrownBy(() -> fortuneService.getMyFortune(resultId, null))
+    assertThatThrownBy(() -> fortuneService.getMyFortune(resultId, memberId))
         .isInstanceOf(CustomException.class)
         .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_MEMBER);
 
@@ -329,7 +328,7 @@ class FortuneServiceTest {
     given(
         fortuneResultRepository
             .findByIdAndMember_IdAndIsActiveTrue(resultId, member.getId()))
-            .willReturn(Optional.empty());
+        .willReturn(Optional.empty());
 
     // when & then
     assertThatThrownBy(() -> fortuneService.getMyFortune(resultId, member.getId()))

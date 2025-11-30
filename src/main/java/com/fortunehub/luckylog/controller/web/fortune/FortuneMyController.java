@@ -59,20 +59,20 @@ public class FortuneMyController {
     try {
       MyFortuneDetailResponse response =
           fortuneService.getMyFortune(resultId, userDetails.getMember().getId());
-      model.addAttribute("myFortune", response);
+      model.addAttribute("myFortune", null);
 
       return FORTUNE_MY_DETAIL_VIEW;
 
     } catch (CustomException e) {
-      log.error("[운세 목록 세부 내용 조회 실패] | message={}", e.getMessage(), e);
+      log.warn("[운세 목록 세부 내용 조회 실패] | message={}", e.getMessage());
       model.addAttribute("errorMessage", "😲 저장된 사주를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요.");
-      model.addAttribute("myFortune", Collections.emptyList());
+      model.addAttribute("myFortune", null);
 
       return FORTUNE_MY_DETAIL_VIEW;
     } catch (Exception e) {
       log.error("[운세 목록 세부 내용 조회 실패] | message={}", e.getMessage(), e);
       model.addAttribute("errorMessage", "😲 저장된 사주를 불러오는데 실패하였습니다.\n잠시 후 다시 시도해주세요.");
-      model.addAttribute("myFortune", Collections.emptyList());
+      model.addAttribute("myFortune", null);
 
       return FORTUNE_MY_DETAIL_VIEW;
     }

@@ -86,19 +86,19 @@ const FortuneResultPage = {
     this.elements.copyBtn.addEventListener('click', () => {
       const text = this.formatText();
 
-      if (text) {
-        navigator.clipboard
-          .writeText(text)
-          .then(() => {
-            toast.success('복사 완료', this.messages.copySuccess);
-          })
-          .catch((err) => {
-            console.error('복사 실패:', err);
-            toast.error('복사 실패', this.messages.copyFailed);
-          });
-      } else {
+      if(!text) {
         toast.error('복사 실패', this.messages.copyFailed);
       }
+
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          toast.success('복사 완료', this.messages.copySuccess);
+        })
+        .catch((err) => {
+          console.error('복사 실패:', err);
+          toast.error('복사 실패', this.messages.copyFailed);
+        });
     });
 
     this.elements.shareBtn.addEventListener('click', () => {

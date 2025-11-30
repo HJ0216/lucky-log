@@ -27,7 +27,7 @@ public interface FortuneResultRepository extends JpaRepository<FortuneResult, Lo
       + "WHERE fr.member.id = :memberId  "
       + "AND fr.isActive = true "
       + "ORDER BY fr.createdAt DESC")
-  List<FortuneResult> findAllByMemberIdAndIsActiveTrue(@Param("memberId") Long memberId);
+  List<FortuneResult> findAllByMember_IdAndIsActiveTrue(@Param("memberId") Long memberId);
 
   /**
    * SELECT fr FROM FortuneResult fr WHERE fr.id = :fortuneId AND fr.member.id = :memberId AND fr.isActive = true

@@ -81,19 +81,19 @@ const FortuneMyItemPage = {
     this.elements.copyBtn.addEventListener('click', () => {
       const text = this.formatText();
 
-      if (text) {
-        navigator.clipboard
-          .writeText(text)
-          .then(() => {
-            toast.success('복사 완료', this.messages.copySuccess);
-          })
-          .catch((err) => {
-            console.error('복사 실패:', err);
-            toast.error('복사 실패', this.messages.copyFailed);
-          });
-      } else {
+      if(!text){
         toast.error('복사 실패', this.messages.copyFailed);
       }
+
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          toast.success('복사 완료', this.messages.copySuccess);
+        })
+        .catch((err) => {
+          console.error('복사 실패:', err);
+          toast.error('복사 실패', this.messages.copyFailed);
+        });
     });
 
     this.elements.shareBtn.addEventListener('click', () => {
@@ -101,7 +101,7 @@ const FortuneMyItemPage = {
       // 공유할 수 있게 page url을 만드는 방법
     });
 
-    this.elements.listBtn.addEventListener('click', async () => {
+    this.elements.listBtn.addEventListener('click', () => {
       window.location.href = this.config.FORTUNE_MY_URL;
     });
   },

@@ -142,14 +142,16 @@ class FortuneResultRepositoryTest {
     entityManager.clear();
 
     // when
-    FortuneResult found = fortuneResultRepository
-        .findByIdAndMember_IdAndIsActiveTrue(saved.getId(), member.getId())
-        .get();
+    Optional<FortuneResult> foundOptional = fortuneResultRepository
+        .findByIdAndMember_IdAndIsActiveTrue(saved.getId(), member.getId());
+
+    FortuneResult found = foundOptional.get();
 
     List<PeriodValue> periodValues = found.getItems().stream()
                                           .map(FortuneResultItem::getPeriodValue)
                                           .toList();
 
+    assertThat(foundOptional).isPresent();
     assertThat(periodValues).containsExactly(
         PeriodValue.JANUARY,
         PeriodValue.FEBRUARY,

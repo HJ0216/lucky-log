@@ -24,12 +24,8 @@ public class MemberFixture {
     return new Member(email, DEFAULT_PASSWORD, nickname);
   }
 
-  public static Member createMemberWithId() {
-    return createMemberWithId(1L);
-  }
-
   public static Member createMemberWithId(Long id) {
-    Member member = new Member(DEFAULT_EMAIL, DEFAULT_PASSWORD, DEFAULT_NICKNAME);
+    Member member = createMember();
     ReflectionTestUtils.setField(member, "id", id);
     return member;
   }
