@@ -113,7 +113,7 @@ src
 
 ## 🗄️데이터베이스 설계
 
-![ERD_v1](./uploads/erd_v1_2.png)
+![ERD_v1](./uploads/erd_v1_3.png)
 
 ## 🎫 Local 환경에서의 실행
 
