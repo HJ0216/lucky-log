@@ -299,8 +299,7 @@ class FortuneServiceTest {
         .isInstanceOf(CustomException.class)
         .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_FORTUNE);
 
-    verify(fortuneResultRepository, never()).findByIdAndMember_IdAndIsActiveTrue(null,
-        member.getId());
+    verify(fortuneResultRepository, never()).findByIdAndMember_IdAndIsActiveTrue(any(), any());
   }
 
   @Test
@@ -316,7 +315,7 @@ class FortuneServiceTest {
         .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_MEMBER);
 
     verify(fortuneResultRepository, never())
-        .findByIdAndMember_IdAndIsActiveTrue(resultId, null);
+        .findByIdAndMember_IdAndIsActiveTrue(any(), any());
   }
 
   @Test

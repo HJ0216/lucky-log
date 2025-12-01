@@ -72,9 +72,11 @@ public class FortuneResultFixture {
     SaveFortuneRequest request = createSaveFortuneRequest(title);
     FortuneResult result = FortuneResult.create(member, request);
 
+    LocalDateTime now = LocalDateTime.now();
+
     ReflectionTestUtils.setField(result, "id", 1L);
-    ReflectionTestUtils.setField(result, "createdAt", LocalDateTime.now());
-    ReflectionTestUtils.setField(result, "updatedAt", LocalDateTime.now());
+    ReflectionTestUtils.setField(result, "createdAt", now);
+    ReflectionTestUtils.setField(result, "updatedAt", now);
 
     addItems(result, request.getResponses());
     addCategories(result, request.getOption().getFortunes());
