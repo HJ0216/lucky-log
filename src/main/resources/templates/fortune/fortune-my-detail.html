@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="../../static/css/fortune/fortune-result.css"
     th:href="@{/css/fortune/fortune-result.css}">
   <script src="../../static/js/common/toast.js" th:src="@{/js/common/toast.js}" defer></script>
-  <script src="../../static/js/fortune/fortune-result.js" th:src="@{/js/fortune/fortune-result.js}" defer></script>
+  <script src="../../static/js/fortune/fortune-my-detail.js" th:src="@{/js/fortune/fortune-my-detail.js}" defer></script>
 </head>
 
 <body>
@@ -22,36 +22,34 @@
     <span id="msg-copy-failed" th:text="#{fortune.copy.failed}">복사에 실패했습니다. 😅</span>
     <span id="msg-share-success" th:text="#{fortune.share.success}">운세 결과 공유 페이지가 생성되었습니다! 💌</span>
     <span id="msg-share-failed" th:text="#{fortune.share.failed}">공유에 실패했습니다. 😅</span>
-    <span id="msg-save-success" th:text="#{fortune.save.success}">운세 결과가 저장되었습니다! 🗂️</span>
-    <span id="msg-save-failed" th:text="#{fortune.save.failed}">저장에 실패했습니다. 😅</span>
   </div>
 
+  <div class="float-emoji">📜</div>
   <div class="float-emoji">🔮</div>
+  <div class="float-emoji">⭐</div>
+  <div class="float-emoji">🌙</div>
   <div class="float-emoji">✨</div>
-  <div class="float-emoji">🌟</div>
-  <div class="float-emoji">🎪</div>
-  <div class="float-emoji">🪂</div>
 
   <div class="fortune-page-container">
     <a class="back-btn" href="/" th:href="@{/}"><span>홈으로</span></a>
 
     <div th:replace="~{fragments/header :: authButtons}"></div>
 
-    <section class="logo user-selection-container">
-      <div class="ai-selection-container">
-        <span th:text="${option.ai.icon}">🪂</span>
-        <span id="ai-name" th:text="${option.ai.displayName}">Gemini</span>
+    <section class="logo user-selection-container" th:if="${myFortune != null}">
+      <div class="ai-selection-container" th:object="${myFortune.fortuneOption}">
+        <span th:text="*{ai.icon}">🪂</span>
+        <span id="ai-name" th:text="*{ai.displayName}">Gemini</span>
       </div>
-      <p class="logo-compact" th:if="${session.birthInfo != null}" th:object="${session.birthInfo}">
+      <p class="logo-compact" th:object="${myFortune.birthInfo}">
         <span th:if="*{city != null && city.displayName != '모름'}" th:text="*{city.displayName}">
           서울특별시
         </span>
         <span th:text="*{gender.displayName}">여성</span>
         <span th:text="*{calendar.displayName}">양력</span>
         <br>
-        <span th:text="*{year}">1995년</span>년
-        <span th:text="*{month}">02월</span>월
-        <span th:text="*{day}">16일</span>일
+        <span th:text="*{year}">1995</span>년
+        <span th:text="*{month}">02</span>월
+        <span th:text="*{day}">16</span>일
         <span th:if="*{time != null && time.displayName != '모름'}" th:text="*{time.displayName}">
           자시(23:30 - 01:29)
         </span>
@@ -59,21 +57,16 @@
     </section>
 
     <!-- 결과 화면 -->
-    <section class="result-screen" id="result-screen">
-      <div class="fortune-title"><span th:text="${fortuneResultYear}">2025</span>년 <span
-          th:text="${periodDisplayValue}">월별</span> 운세</div>
-      <div class="fortune-sub-title" th:text="${selectedOptions}">🔮종합운</div>
+    <section class="result-screen" id="result-screen" th:if="${myFortune != null}" th:object="${myFortune}">
+      <div class="fortune-title"><span th:text="*{resultYear}">2025</span>년
+        <span th:text="*{fortuneOption.period.displayName}">월별</span> 운세</div>
+      <div class="fortune-sub-title" th:text="*{getTypeDisplayName}">🔮종합운</div>
 
-      <div th:if="${responses != null and !#lists.isEmpty(responses)}" class="fortune-content-container">
-        <div th:each="res : ${responses}" class="fortune-item">
-          <p th:text="${res.periodValue.displayName}" class="fortune-month">1월</p>
-          <p th:text="${res.result}" class="fortune-month-content">1월 운세 내용</p>
+      <div class="fortune-content-container">
+        <div th:each="item : *{items}" class="fortune-item">
+          <p th:text="${item.periodValue.displayName}" class="fortune-month">1월</p>
+          <p th:text="${item.content}" class="fortune-month-content">1월 운세 내용</p>
         </div>
-      </div>
-
-      <!-- 운세 결과가 없는 경우 -->
-      <div th:if="${responses == null or #lists.isEmpty(responses)}" data-error-container>
-        <div class="error-message" data-error-message>운세 결과를 불러올 수 없습니다, 다시 시도해주세요.</div>
       </div>
 
       <div class="action-button-container">
@@ -89,22 +82,19 @@
           <span>📤</span>
           <span>공유</span>
         </button>
-        <button type="button" class="action-btn save-btn" data-save-btn>
-          <span>💾</span>
-          <span>저장</span>
+        <button type="button" class="action-btn save-btn" data-list-btn>
+          <span>📜</span>
+          <span>목록</span>
         </button>
       </div>
     </section>
-  </div>
 
-  <script th:inline="javascript">
-    window.fortuneData = {
-      birthInfo: /*[[${session.birthInfo}]]*/ {},
-      fortuneOption: /*[[${option}]]*/ {},
-      fortuneResultYear: /*[[${fortuneResultYear}]]*/ 2025,
-      responses: /*[[${responses}]]*/[],
-    };
-  </script>
+    <!-- 운세 결과가 없는 경우 -->
+    <div th:if="${myFortune == null}" data-error-container>
+      <div class="error-message" th:text="${errorMessage}" data-error-message>저장된 운세를 불러올 수 없습니다, 다시 시도해주세요.</div>
+    </div>
+
+  </div>
 </body>
 
 </html>

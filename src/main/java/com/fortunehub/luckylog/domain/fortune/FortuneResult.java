@@ -20,12 +20,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Optional;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,6 +61,10 @@ public class FortuneResult extends BaseTimeEntity {
   @Column(nullable = false, length = 10)
   private GenderType gender;
 
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, length = 10)
+  private CalendarType calendar;
+
   @Column(nullable = false)
   private LocalDate birthDate;
 
@@ -83,15 +88,19 @@ public class FortuneResult extends BaseTimeEntity {
   @ColumnDefault("true")
   private boolean isActive = true;
 
-  @OneToMany(mappedBy = "fortuneResult",
+  @OneToMany(
+      mappedBy = "fortuneResult",
       cascade = CascadeType.ALL,
       orphanRemoval = true)
-  private List<FortuneResultCategory> categories = new ArrayList<>();
+  @OrderBy("fortuneCategory.id ASC")
+  private Set<FortuneResultCategory> categories = new LinkedHashSet<>();
 
-  @OneToMany(mappedBy = "fortuneResult",
+  @OneToMany(
+      mappedBy = "fortuneResult",
       cascade = CascadeType.ALL,
       orphanRemoval = true)
-  private List<FortuneResultItem> items = new ArrayList<>();
+  @OrderBy("periodSequence ASC")
+  private Set<FortuneResultItem> items = new LinkedHashSet<>();
 
   public static FortuneResult create(Member member, SaveFortuneRequest request) {
     validateInputs(member, request);
@@ -103,6 +112,7 @@ public class FortuneResult extends BaseTimeEntity {
 
     BirthInfoForm birthInfo = request.getBirthInfo();
     result.gender = birthInfo.getGender();
+    result.calendar = birthInfo.getCalendar();
     result.birthDate = createBirthDate(birthInfo);
     result.birthTimeZone = Optional.ofNullable(birthInfo.getTime()).orElse(TimeType.UNKNOWN);
     result.birthRegion = Optional.ofNullable(birthInfo.getCity()).orElse(CityType.UNKNOWN);
@@ -112,6 +122,10 @@ public class FortuneResult extends BaseTimeEntity {
     result.periodType = option.getPeriod();
 
     return result;
+  }
+
+  public void softDelete() {
+    this.isActive = false;
   }
 
   private static void validateInputs(Member member, SaveFortuneRequest request) {

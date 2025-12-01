@@ -47,8 +47,10 @@ public class FortuneResultFixture {
   public static FortuneResult createFortuneResultWithTitle(Member member, String title) {
     SaveFortuneRequest request = createSaveFortuneRequest(title);
     FortuneResult result = FortuneResult.create(member, request);
-    ReflectionTestUtils.setField(result, "createdAt", LocalDateTime.now());
-    ReflectionTestUtils.setField(result, "updatedAt", LocalDateTime.now());
+
+    LocalDateTime now = LocalDateTime.now();
+    ReflectionTestUtils.setField(result, "createdAt", now);
+    ReflectionTestUtils.setField(result, "updatedAt", now);
 
     addItems(result, request.getResponses());
     addCategories(result, request.getOption().getFortunes());
@@ -66,6 +68,25 @@ public class FortuneResultFixture {
                     .toList();
   }
 
+  public static FortuneResult createFortuneResultWithTitleAndId(Member member, String title) {
+    SaveFortuneRequest request = createSaveFortuneRequest(title);
+    FortuneResult result = FortuneResult.create(member, request);
+
+    LocalDateTime now = LocalDateTime.now();
+
+    ReflectionTestUtils.setField(result, "id", 1L);
+    ReflectionTestUtils.setField(result, "createdAt", now);
+    ReflectionTestUtils.setField(result, "updatedAt", now);
+
+    addItems(result, request.getResponses());
+    addCategories(result, request.getOption().getFortunes());
+
+    return result;
+  }
+
+  public static FortuneResult createFortuneResultWithId(Member member) {
+    return createFortuneResultWithTitleAndId(member, "2025년 월별 운세");
+  }
 
   // Private Helper Methods
   private static SaveFortuneRequest createSaveFortuneRequest(String title) {
@@ -91,7 +112,7 @@ public class FortuneResultFixture {
     return option;
   }
 
-  private static List<FortuneResponse> createValidFortuneResponses() {
+  public static List<FortuneResponse> createValidFortuneResponses() {
     FortuneResponse response1 = new FortuneResponse();
     response1.setFortune(FortuneType.LOVE);
     response1.setPeriodValue(PeriodValue.JANUARY);
@@ -101,7 +122,18 @@ public class FortuneResultFixture {
     response2.setFortune(FortuneType.HEALTH);
     response2.setPeriodValue(PeriodValue.FEBRUARY);
     response2.setResult("건강운이 상승합니다.");
-    return List.of(response1, response2);
+
+    FortuneResponse response3 = new FortuneResponse();
+    response3.setFortune(FortuneType.HEALTH);
+    response3.setPeriodValue(PeriodValue.MARCH);
+    response3.setResult("건강 유지를 위해 운동이 필요합니다.");
+
+    FortuneResponse response4 = new FortuneResponse();
+    response4.setFortune(FortuneType.LOVE);
+    response4.setPeriodValue(PeriodValue.APRIL);
+    response4.setResult("좋은 인연을 만나게 될 것입니다.");
+
+    return List.of(response1, response2, response3, response4);
   }
 
   private static BirthInfoForm createValidBirthInfo() {

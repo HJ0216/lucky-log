@@ -18,11 +18,11 @@ import com.fortunehub.luckylog.domain.fortune.FortuneResultItem;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
-import com.fortunehub.luckylog.domain.fortune.PeriodValue;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
+import com.fortunehub.luckylog.dto.response.fortune.MyFortuneDetailResponse;
 import com.fortunehub.luckylog.dto.response.fortune.MyFortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
@@ -32,6 +32,7 @@ import com.fortunehub.luckylog.repository.fortune.FortuneCategoryRepository;
 import com.fortunehub.luckylog.repository.fortune.FortuneResultRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -73,8 +74,8 @@ class FortuneServiceTest {
 
   @BeforeEach
   void setUp() {
-    member = MemberFixture.createMember();
-    fortuneTypes = List.of(FortuneType.OVERALL, FortuneType.MONEY);
+    member = MemberFixture.createMemberWithId(1L);
+    fortuneTypes = List.of(FortuneType.LOVE, FortuneType.HEALTH);
     request = createValidFortuneRequest(fortuneTypes);
   }
 
@@ -89,7 +90,7 @@ class FortuneServiceTest {
 
     given(fortuneCategoryRepository
         .findByFortuneTypeIn(any())).willReturn(
-        getCategoriesByTypes(FortuneType.OVERALL, FortuneType.MONEY));
+        getCategoriesByTypes(FortuneType.LOVE, FortuneType.HEALTH));
 
     // when
     fortuneService.save(member, request);
@@ -166,8 +167,8 @@ class FortuneServiceTest {
 
     // 카테고리 1개만 반환 (2개 요청)
     List<FortuneCategory> categories = List.of(
-        FortuneCategory.create(1, FortuneType.OVERALL)
-        // MONEY 없음 → 예외 발생 예상
+        FortuneCategory.create(1, FortuneType.LOVE)
+        // HEALTH 없음 → 예외 발생 예상
     );
 
     given(fortuneCategoryRepository.findByFortuneTypeIn(fortuneTypes))
@@ -191,7 +192,7 @@ class FortuneServiceTest {
         .willReturn(4L);
 
     given(fortuneCategoryRepository.findByFortuneTypeIn(fortuneTypes))
-        .willReturn(getCategoriesByTypes(FortuneType.OVERALL, FortuneType.MONEY));
+        .willReturn(getCategoriesByTypes(FortuneType.LOVE, FortuneType.HEALTH));
 
     // when
     fortuneService.save(member, request);
@@ -203,18 +204,18 @@ class FortuneServiceTest {
     FortuneResult savedResult = captor.getValue();
     assertThat(savedResult.getTitle()).isEqualTo(TEST_TITLE);
     assertThat(savedResult.getMember()).isEqualTo(member);
-    assertThat(savedResult.getItems()).hasSize(2);
+    assertThat(savedResult.getItems()).hasSize(4);
     assertThat(savedResult.getCategories()).hasSize(2);
     assertThat(savedResult.getItems())
         .extracting(FortuneResultItem::getContent)
-        .containsExactly("좋은 한 해가 될 것입니다.", "재물운이 상승합니다.");
+        .containsExactlyInAnyOrder("좋은 한 해가 될 것입니다.", "건강운이 상승합니다.",
+            "건강 유지를 위해 운동이 필요합니다.", "좋은 인연을 만나게 될 것입니다.");
   }
 
   @Test
   @DisplayName("정상적인 운세 목록 요청 시 조회된다")
   void getMyFortunes_WhenValidRequest_ThenReturnsMyFortunes() {
     // given
-    Member member = MemberFixture.createMemberWithId();
     List<FortuneResult> results = FortuneResultFixture.createFortuneResults(member, 3);
 
     given(fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(member.getId()))
@@ -244,7 +245,6 @@ class FortuneServiceTest {
   @DisplayName("저장된 운세가 없으면 빈 리스트를 반환한다")
   void getMyFortunes_WhenNoFortunes_ThenReturnsEmptyList() {
     // given
-    Member member = MemberFixture.createMemberWithId();
     given(fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(member.getId()))
         .willReturn(List.of());
 
@@ -255,9 +255,108 @@ class FortuneServiceTest {
     assertThat(result).isEmpty();
   }
 
+  @Test
+  @DisplayName("정상적인 운세 상세 정보 요청 시 조회된다")
+  void getMyFortune_WhenValidRequest_ThenReturnsMyFortuneDetail() {
+    // given
+    FortuneResult result = FortuneResultFixture.createFortuneResultWithId(member);
+
+    given(
+        fortuneResultRepository.findByIdAndMember_IdAndIsActiveTrue(result.getId(), member.getId()))
+        .willReturn(Optional.of(result));
+
+    // when
+    MyFortuneDetailResponse response = fortuneService.getMyFortune(result.getId(), member.getId());
+
+    // then
+    verify(fortuneResultRepository)
+        .findByIdAndMember_IdAndIsActiveTrue(result.getId(), member.getId());
+
+    assertThat(response)
+        .isNotNull()
+        .satisfies(r -> {
+          assertThat(r.getTitle()).isEqualTo("2025년 월별 운세");
+          assertThat(r.getItems()).hasSize(4);
+
+          assertThat(r.getBirthInfo())
+              .extracting("year", "month", "day")
+              .containsExactly(1995, 2, 16);
+
+          assertThat(r.getFortuneOption())
+              .satisfies(opt -> {
+                assertThat(opt.getAi()).isEqualTo(AIType.GEMINI);
+                assertThat(opt.getTypes()).hasSize(2);
+              });
+        });
+  }
+
+  @Test
+  @DisplayName("운세 Id가 없으면 오류가 발생한다")
+  void getMyFortune_WhenFortuneIdIsNull_ThenThrowsException() {
+    // when & then
+    assertThatThrownBy(() -> fortuneService.getMyFortune(null, member.getId()))
+        .isInstanceOf(CustomException.class)
+        .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_FORTUNE);
+
+    verify(fortuneResultRepository, never()).findByIdAndMember_IdAndIsActiveTrue(any(), any());
+  }
+
+  @Test
+  @DisplayName("회원 Id가 음수면 오류가 발생한다")
+  void getMyFortune_WhenMemberIdIsNegative_ThenThrowsException() {
+    // given
+    Long resultId = 1L;
+    Long memberId = -1L;
+
+    // when & then
+    assertThatThrownBy(() -> fortuneService.getMyFortune(resultId, memberId))
+        .isInstanceOf(CustomException.class)
+        .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_MEMBER);
+
+    verify(fortuneResultRepository, never())
+        .findByIdAndMember_IdAndIsActiveTrue(any(), any());
+  }
+
+  @Test
+  @DisplayName("저장된 운세가 없으면 오류가 발생한다")
+  void getMyFortune_WhenFortuneIsEmpty_ThenThrowsException() {
+    // given
+    Long resultId = 1L;
+
+    given(
+        fortuneResultRepository
+            .findByIdAndMember_IdAndIsActiveTrue(resultId, member.getId()))
+        .willReturn(Optional.empty());
+
+    // when & then
+    assertThatThrownBy(() -> fortuneService.getMyFortune(resultId, member.getId()))
+        .isInstanceOf(CustomException.class)
+        .hasMessageContaining(ErrorCode.INVALID_FORTUNE.getMessage());
+
+    verify(fortuneResultRepository)
+        .findByIdAndMember_IdAndIsActiveTrue(resultId, member.getId());
+  }
+
+  @Test
+  @DisplayName("다른 회원의 운세를 조회하면 오류가 발생한다")
+  void getMyFortune_WhenOtherMemberFortune_ThenThrowException() {
+    // given
+    Member otherMember = MemberFixture.createMemberWithId(999L);
+    FortuneResult otherFortune = FortuneResultFixture.createFortuneResultWithId(otherMember);
+
+    given(fortuneResultRepository
+        .findByIdAndMember_IdAndIsActiveTrue(otherFortune.getId(), member.getId()))
+        .willReturn(Optional.empty());
+
+    // when & then
+    assertThatThrownBy(() -> fortuneService.getMyFortune(otherFortune.getId(), member.getId()))
+        .isInstanceOf(CustomException.class)
+        .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_FORTUNE);
+  }
+
   private SaveFortuneRequest createValidFortuneRequest(List<FortuneType> fortunes) {
     FortuneOptionForm option = createValidFortuneOption(fortunes);
-    List<FortuneResponse> responses = createValidFortuneResponses();
+    List<FortuneResponse> responses = FortuneResultFixture.createValidFortuneResponses();
 
     SaveFortuneRequest request = new SaveFortuneRequest();
     request.setTitle(TEST_TITLE);
@@ -275,19 +374,6 @@ class FortuneServiceTest {
     option.setFortunes(fortunes);
     option.setPeriod(PeriodType.MONTHLY);
     return option;
-  }
-
-  private List<FortuneResponse> createValidFortuneResponses() {
-    FortuneResponse response1 = new FortuneResponse();
-    response1.setFortune(FortuneType.OVERALL);
-    response1.setPeriodValue(PeriodValue.JANUARY);
-    response1.setResult("좋은 한 해가 될 것입니다.");
-
-    FortuneResponse response2 = new FortuneResponse();
-    response2.setFortune(FortuneType.MONEY);
-    response2.setPeriodValue(PeriodValue.FEBRUARY);
-    response2.setResult("재물운이 상승합니다.");
-    return List.of(response1, response2);
   }
 
   private BirthInfoForm createValidBirthInfo() {

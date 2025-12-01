@@ -1,6 +1,6 @@
 'use strict';
 
-const FortuneResultPage = {
+const FortuneMyItemPage = {
   config: {
     INDEX_URL: '/',
     FORTUNE_MY_URL: '/fortune/my',
@@ -11,9 +11,6 @@ const FortuneResultPage = {
     copyFailed: '복사에 실패했습니다. 😅',
     shareSuccess: '운세 결과 공유 페이지가 생성되었습니다! 💌',
     shareFailed: '공유에 실패했습니다. 😅',
-    saveSuccess: '운세 결과가 저장되었습니다! 🗂️',
-    saveFailed: '저장에 실패했습니다. 😅',
-    loginRequired: '로그인 페이지로 이동합니다! 🔐',
   },
 
   // DOM 요소 캐싱
@@ -22,7 +19,7 @@ const FortuneResultPage = {
     retryBtn: null,
     copyBtn: null,
     shareBtn: null,
-    saveBtn: null,
+    listBtn: null,
   },
 
   init() {
@@ -37,7 +34,7 @@ const FortuneResultPage = {
     this.elements.retryBtn = document.querySelector('[data-retry-btn]');
     this.elements.copyBtn = document.querySelector('[data-copy-btn]');
     this.elements.shareBtn = document.querySelector('[data-share-btn]');
-    this.elements.saveBtn = document.querySelector('[data-save-btn]');
+    this.elements.listBtn = document.querySelector('[data-list-btn]');
   },
 
   validateRequiredElements() {
@@ -46,7 +43,7 @@ const FortuneResultPage = {
       'retryBtn',
       'copyBtn',
       'shareBtn',
-      'saveBtn',
+      'listBtn',
     ];
 
     const missing = required.filter((key) => !this.elements[key]);
@@ -63,11 +60,9 @@ const FortuneResultPage = {
   loadMessages() {
     const messageElements = {
       copySuccess: document.getElementById('msg-copy-success'),
-      shareSuccess: document.getElementById('msg-share-success'),
-      saveSuccess: document.getElementById('msg-save-success'),
       copyFailed: document.getElementById('msg-copy-failed'),
+      shareSuccess: document.getElementById('msg-share-success'),
       shareFailed: document.getElementById('msg-share-failed'),
-      saveFailed: document.getElementById('msg-save-failed'),
     };
 
     Object.keys(messageElements).forEach((key) => {
@@ -86,7 +81,7 @@ const FortuneResultPage = {
     this.elements.copyBtn.addEventListener('click', () => {
       const text = this.formatText();
 
-      if(!text) {
+      if(!text){
         toast.error('복사 실패', this.messages.copyFailed);
         return;
       }
@@ -107,68 +102,8 @@ const FortuneResultPage = {
       // 공유할 수 있게 page url을 만드는 방법
     });
 
-    this.elements.saveBtn.addEventListener('click', async () => {
-      if (!window.fortuneData) {
-        toast.error('저장 실패', this.messages.saveFailed);
-        return;
-      }
-
-      const {
-        birthInfo,
-        fortuneOption: option,
-        fortuneResultYear,
-        responses,
-      } = window.fortuneData;
-
-      // TODO: Custom title로 변경 예정
-      const titleText =
-        document.querySelector('.fortune-title')?.textContent?.trim() || '';
-      const subtitleText =
-        document.querySelector('.fortune-sub-title')?.textContent?.trim() || '';
-      const fullTitle = `${titleText} ${subtitleText}`.trim();
-
-      try {
-        const response = await fetch('/api/fortune', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            title: fullTitle,
-            birthInfo,
-            option,
-            fortuneResultYear,
-            responses,
-          }),
-        });
-
-        const data = await response.json();
-
-        if (response.status === 401) {
-          toast.error('로그인 필요', this.messages.loginRequired);
-          // TODO: 모달 방식으로 변경 예정
-          //          setTimeout(() => {
-          //            window.location.href = '/login';
-          //          }, 1000);
-          return;
-        }
-
-        if (!response.ok) {
-          toast.error('저장 실패', data.message || this.messages.saveFailed);
-          return;
-        }
-
-        if (data.success) {
-          toast.success('저장 완료', this.messages.saveSuccess);
-          setTimeout(() => {
-            window.location.href = this.config.FORTUNE_MY_URL;
-          }, 500);
-        } else {
-          toast.error('저장 실패', this.messages.saveFailed);
-        }
-      } catch (error) {
-        toast.error('저장 실패', this.messages.saveFailed);
-      }
+    this.elements.listBtn.addEventListener('click', () => {
+      window.location.href = this.config.FORTUNE_MY_URL;
     });
   },
 
@@ -214,5 +149,5 @@ const FortuneResultPage = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  FortuneResultPage.init();
+  FortuneMyItemPage.init();
 });

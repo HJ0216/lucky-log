@@ -30,6 +30,7 @@ public enum ErrorCode {
 
   // 운세 저장
   INVALID_MEMBER(HttpStatus.BAD_REQUEST, "👤 유효하지 않은 회원입니다."),
+  INVALID_FORTUNE(HttpStatus.BAD_REQUEST, "😲 운세 정보를 찾을 수 없습니다."),
   DUPLICATE_FORTUNE_TITLE(HttpStatus.BAD_REQUEST, "📝 이미 동일한 이름의 운세가 저장되어 있습니다."),
   EXCEED_MAX_SAVE_COUNT(HttpStatus.BAD_REQUEST, "💾 저장 가능한 운세 개수를 초과했습니다."),
   FORTUNE_CATEGORY_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "🔍 일부 운세 카테고리를 찾을 수 없습니다."),

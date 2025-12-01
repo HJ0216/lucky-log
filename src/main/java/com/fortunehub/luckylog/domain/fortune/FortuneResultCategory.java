@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,5 +50,18 @@ public class FortuneResultCategory {
   // 연관관계 편의 메서드
   protected void setFortuneResult(FortuneResult result) {
     this.fortuneResult = result;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof FortuneResultCategory)) return false;
+    FortuneResultCategory that = (FortuneResultCategory) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
   }
 }

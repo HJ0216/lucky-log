@@ -12,6 +12,7 @@ import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
+import com.fortunehub.luckylog.dto.response.fortune.MyFortuneDetailResponse;
 import com.fortunehub.luckylog.dto.response.fortune.MyFortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
@@ -106,12 +107,32 @@ public class FortuneService {
   }
 
   public List<MyFortuneResponse> getMyFortunes(Long memberId) {
-    if (memberId == null) {
+    if (!isValidId(memberId)) {
       throw new CustomException(ErrorCode.INVALID_MEMBER);
     }
 
     return fortuneResultRepository.findAllByMember_IdAndIsActiveTrue(memberId).stream()
                                   .map(MyFortuneResponse::from)
                                   .toList();
+  }
+
+  private boolean isValidId(Long id) {
+    return id != null && id > 0;
+  }
+
+  public MyFortuneDetailResponse getMyFortune(Long fortuneId, Long memberId) {
+    if (!isValidId(fortuneId)) {
+      throw new CustomException(ErrorCode.INVALID_FORTUNE);
+    }
+
+    if (!isValidId(memberId)) {
+      throw new CustomException(ErrorCode.INVALID_MEMBER);
+    }
+
+    FortuneResult fortune = fortuneResultRepository
+        .findByIdAndMember_IdAndIsActiveTrue(fortuneId, memberId)
+        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_FORTUNE));
+
+    return MyFortuneDetailResponse.from(fortune);
   }
 }
