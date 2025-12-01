@@ -18,7 +18,6 @@ import com.fortunehub.luckylog.domain.fortune.FortuneResultItem;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
-import com.fortunehub.luckylog.domain.fortune.PeriodValue;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
@@ -357,7 +356,7 @@ class FortuneServiceTest {
 
   private SaveFortuneRequest createValidFortuneRequest(List<FortuneType> fortunes) {
     FortuneOptionForm option = createValidFortuneOption(fortunes);
-    List<FortuneResponse> responses = createValidFortuneResponses();
+    List<FortuneResponse> responses = FortuneResultFixture.createValidFortuneResponses();
 
     SaveFortuneRequest request = new SaveFortuneRequest();
     request.setTitle(TEST_TITLE);
@@ -375,30 +374,6 @@ class FortuneServiceTest {
     option.setFortunes(fortunes);
     option.setPeriod(PeriodType.MONTHLY);
     return option;
-  }
-
-  private List<FortuneResponse> createValidFortuneResponses() {
-    FortuneResponse response1 = new FortuneResponse();
-    response1.setFortune(FortuneType.LOVE);
-    response1.setPeriodValue(PeriodValue.JANUARY);
-    response1.setResult("좋은 한 해가 될 것입니다.");
-
-    FortuneResponse response2 = new FortuneResponse();
-    response2.setFortune(FortuneType.HEALTH);
-    response2.setPeriodValue(PeriodValue.FEBRUARY);
-    response2.setResult("건강운이 상승합니다.");
-
-    FortuneResponse response3 = new FortuneResponse();
-    response3.setFortune(FortuneType.HEALTH);
-    response3.setPeriodValue(PeriodValue.MARCH);
-    response3.setResult("건강 유지를 위해 운동이 필요합니다.");
-
-    FortuneResponse response4 = new FortuneResponse();
-    response4.setFortune(FortuneType.LOVE);
-    response4.setPeriodValue(PeriodValue.APRIL);
-    response4.setResult("좋은 인연을 만나게 될 것입니다.");
-
-    return List.of(response1, response2, response3, response4);
   }
 
   private BirthInfoForm createValidBirthInfo() {

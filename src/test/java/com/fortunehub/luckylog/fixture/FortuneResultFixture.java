@@ -112,7 +112,7 @@ public class FortuneResultFixture {
     return option;
   }
 
-  private static List<FortuneResponse> createValidFortuneResponses() {
+  public static List<FortuneResponse> createValidFortuneResponses() {
     FortuneResponse response1 = new FortuneResponse();
     response1.setFortune(FortuneType.LOVE);
     response1.setPeriodValue(PeriodValue.JANUARY);
