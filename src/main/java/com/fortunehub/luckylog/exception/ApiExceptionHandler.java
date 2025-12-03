@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity handleValidation(
+  public ResponseEntity<ErrorResponse> handleValidation(
       MethodArgumentNotValidException ex
   ) {
     log.warn("[Validation 실패] {}", ex.getMessage());
@@ -38,7 +38,7 @@ public class ApiExceptionHandler {
   }
 
   @ExceptionHandler(CustomException.class)
-  public ResponseEntity handleCustomException(CustomException ex) {
+  public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
     log.warn("[CustomException] code={}, message={}",
         ex.getErrorCode(), ex.getMessage());
 
@@ -56,7 +56,7 @@ public class ApiExceptionHandler {
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity handleException(Exception ex) {
+  public ResponseEntity<ErrorResponse> handleException(Exception ex) {
     log.error("[예상치 못한 예외]", ex);
 
     ErrorResponse response = ErrorResponse.builder()
