@@ -128,7 +128,7 @@ const FortuneResultPage = {
       const fullTitle = `${titleText} ${subtitleText}`.trim();
 
       try {
-        const response = await fetch('/api/fortune', {
+        const response = await fetch('/api/v2/fortunes', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -153,19 +153,16 @@ const FortuneResultPage = {
           return;
         }
 
-        if (!response.ok) {
-          toast.error('저장 실패', data.message || this.messages.saveFailed);
-          return;
-        }
-
-        if (data.success) {
+        if (response.status === 201) {
           toast.success('저장 완료', this.messages.saveSuccess);
           setTimeout(() => {
             window.location.href = this.config.FORTUNE_MY_URL;
           }, 500);
-        } else {
-          toast.error('저장 실패', this.messages.saveFailed);
+          return;
         }
+
+        toast.error('저장 실패', data.message || this.messages.saveFailed);
+
       } catch (error) {
         toast.error('저장 실패', this.messages.saveFailed);
       }
