@@ -142,8 +142,6 @@ const FortuneResultPage = {
           }),
         });
 
-        const data = await response.json();
-
         if (response.status === 401) {
           toast.error('로그인 필요', this.messages.loginRequired);
           // TODO: 모달 방식으로 변경 예정
