@@ -2,7 +2,6 @@ package com.fortunehub.luckylog.controller.api.fortune;
 
 import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -146,8 +145,8 @@ class FortuneControllerV2Test {
     List<FortuneType> fortuneTypes = List.of(FortuneType.OVERALL, FortuneType.MONEY);
     SaveFortuneRequest request = createValidFortuneRequest(fortuneTypes);
 
-    willThrow(new RuntimeException("예상치 못한 오류 발생"))
-        .given(fortuneService).save(any(Member.class), any(SaveFortuneRequest.class));
+    when(fortuneService.save(any(Member.class), any(SaveFortuneRequest.class)))
+        .thenThrow(new RuntimeException("예상치 못한 오류 발생"));
 
     // when & then
     mockMvc.perform(post("/api/v2/fortunes")

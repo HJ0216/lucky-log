@@ -145,8 +145,8 @@ class FortuneControllerTest {
     List<FortuneType> fortuneTypes = List.of(FortuneType.OVERALL, FortuneType.MONEY);
     SaveFortuneRequest request = createValidFortuneRequest(fortuneTypes);
 
-    willThrow(new RuntimeException("예상치 못한 오류 발생"))
-        .given(fortuneService).save(any(Member.class), any(SaveFortuneRequest.class));
+    when(fortuneService.save(any(Member.class), any(SaveFortuneRequest.class)))
+        .thenThrow(new RuntimeException("예상치 못한 오류 발생"));
 
     // when & then
     mockMvc.perform(post("/api/fortune")

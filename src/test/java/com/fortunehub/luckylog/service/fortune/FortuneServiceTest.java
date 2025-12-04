@@ -90,14 +90,15 @@ class FortuneServiceTest {
         .findByFortuneTypeIn(any()))
         .willReturn(getCategoriesByTypes(FortuneType.LOVE, FortuneType.HEALTH));
 
+    FortuneResult saved = FortuneResultFixture.createFortuneResultWithId(member);
     given(fortuneResultRepository.save(any(FortuneResult.class)))
-        .willReturn(FortuneResultFixture.createFortuneResultWithId(member));
+        .willReturn(saved);
 
     // when
     Long savedId = fortuneService.save(member, request);
 
     // then
-    assertThat(savedId).isEqualTo(1L);
+    assertThat(savedId).isEqualTo(saved.getId());
     verify(fortuneResultRepository).save(any(FortuneResult.class));
   }
 
