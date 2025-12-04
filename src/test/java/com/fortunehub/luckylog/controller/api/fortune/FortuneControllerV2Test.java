@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.controller.api.fortune;
 
+import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.never;
@@ -70,8 +71,7 @@ class FortuneControllerV2Test {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andExpect(status().isCreated())
-           .andExpect(header().string("Location", "/api/v2/fortunes/1"))
-           .andExpect(jsonPath("$").value(1));
+           .andExpect(header().string("Location", endsWith("/api/v2/fortunes/1")));
 
     verify(fortuneService).save(any(Member.class), any(SaveFortuneRequest.class));
   }

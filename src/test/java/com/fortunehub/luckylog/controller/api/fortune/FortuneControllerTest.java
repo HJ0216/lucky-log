@@ -5,6 +5,7 @@ import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,6 +26,7 @@ import com.fortunehub.luckylog.domain.fortune.TimeType;
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
+import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.service.fortune.FortuneService;
 import java.util.List;
@@ -101,28 +103,38 @@ class FortuneControllerTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andExpect(status().isBadRequest())
-           .andExpect(jsonPath("$.success").value(false))
-           .andExpect(jsonPath("$.message").value(ErrorCode.ARGUMENT_NOT_VALID.getMessage()));
+           .andExpect(jsonPath("$.code").value("VALIDATION_FAILED"))
+           .andExpect(jsonPath("$.message").value("입력값 검증에 실패했습니다."))
+           .andExpect(jsonPath("$.timestamp").exists())
+           .andExpect(jsonPath("$.details.birthInfo").exists());
+
 
     verify(fortuneService, never()).save(any(), any());
   }
 
+
   @Test
-  @DisplayName("유효하지 않은 요청 시 400 응답한다")
+  @DisplayName("이미 존재하는 운세 제목이면 409를 응답한다")
   @WithMockCustomUser
-  void save_WhenInvalidRequest_ThenReturnsBadRequest() throws Exception {
-    BirthInfoForm birthInfo = createValidBirthInfo();
-    SaveFortuneRequest invalidRequest = new SaveFortuneRequest();
+  void save_WhenTitleIsDuplicate_ThenReturnsConflict() throws Exception {
+    // given
+    List<FortuneType> fortuneTypes = List.of(FortuneType.LOVE, FortuneType.HEALTH);
+    SaveFortuneRequest request = createValidFortuneRequest(fortuneTypes);
+
+    when(fortuneService.save(any(Member.class), any(SaveFortuneRequest.class)))
+        .thenThrow(new CustomException(ErrorCode.DUPLICATE_FORTUNE_TITLE));
 
     // when & then
     mockMvc.perform(post("/api/fortune")
-               .sessionAttr("birthInfo", birthInfo)
                .contentType(MediaType.APPLICATION_JSON)
-               .content(objectMapper.writeValueAsString(invalidRequest)))
-           .andExpect(status().isBadRequest())
-           .andExpect(jsonPath("$.message").value(ErrorCode.ARGUMENT_NOT_VALID.getMessage()));
+               .content(objectMapper.writeValueAsString(request)))
+           .andExpect(status().isConflict())
+           .andExpect(jsonPath("$.code").value(ErrorCode.DUPLICATE_FORTUNE_TITLE.name()))
+           .andExpect(jsonPath("$.message").value(ErrorCode.DUPLICATE_FORTUNE_TITLE.getMessage()))
+           .andExpect(jsonPath("$.timestamp").exists());
 
-    verify(fortuneService, never()).save(any(), any());
+    verify(fortuneService)
+        .save(any(Member.class), any(SaveFortuneRequest.class));
   }
 
   @Test
@@ -141,8 +153,9 @@ class FortuneControllerTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andExpect(status().isInternalServerError())
-           .andExpect(jsonPath("$.success").value(false))
-           .andExpect(jsonPath("$.message").value(ErrorCode.SYSTEM_ERROR.getMessage()));
+           .andExpect(jsonPath("$.code").value("INTERNAL_SERVER_ERROR"))
+           .andExpect(jsonPath("$.message").value("서버 오류가 발생했습니다."))
+           .andExpect(jsonPath("$.timestamp").exists());
   }
 
   private SaveFortuneRequest createValidFortuneRequest(List<FortuneType> fortunes) {

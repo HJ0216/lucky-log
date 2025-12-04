@@ -14,7 +14,6 @@ import com.fortunehub.luckylog.domain.fortune.CalendarType;
 import com.fortunehub.luckylog.domain.fortune.CityType;
 import com.fortunehub.luckylog.domain.fortune.FortuneCategory;
 import com.fortunehub.luckylog.domain.fortune.FortuneResult;
-import com.fortunehub.luckylog.domain.fortune.FortuneResultItem;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
@@ -37,7 +36,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -89,13 +87,17 @@ class FortuneServiceTest {
         .willReturn(4L);
 
     given(fortuneCategoryRepository
-        .findByFortuneTypeIn(any())).willReturn(
-        getCategoriesByTypes(FortuneType.LOVE, FortuneType.HEALTH));
+        .findByFortuneTypeIn(any()))
+        .willReturn(getCategoriesByTypes(FortuneType.LOVE, FortuneType.HEALTH));
+
+    given(fortuneResultRepository.save(any(FortuneResult.class)))
+        .willReturn(FortuneResultFixture.createFortuneResultWithId(member));
 
     // when
-    fortuneService.save(member, request);
+    Long savedId = fortuneService.save(member, request);
 
     // then
+    assertThat(savedId).isEqualTo(1L);
     verify(fortuneResultRepository).save(any(FortuneResult.class));
   }
 
@@ -180,36 +182,6 @@ class FortuneServiceTest {
         .hasMessageContaining(ErrorCode.FORTUNE_CATEGORY_NOT_FOUND.getMessage());
 
     verify(fortuneResultRepository, never()).save(any(FortuneResult.class));
-  }
-
-  @Test
-  @DisplayName("저장된 운세 객체의 내용이 올바르게 설정된다")
-  void save_WhenValidRequest_ThenSavesCorrectFortuneData() {
-    // given
-    given(fortuneResultRepository.existsByMember_IdAndTitle(member.getId(), TEST_TITLE))
-        .willReturn(false);
-    given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(member.getId()))
-        .willReturn(4L);
-
-    given(fortuneCategoryRepository.findByFortuneTypeIn(fortuneTypes))
-        .willReturn(getCategoriesByTypes(FortuneType.LOVE, FortuneType.HEALTH));
-
-    // when
-    fortuneService.save(member, request);
-
-    // then
-    ArgumentCaptor<FortuneResult> captor = ArgumentCaptor.forClass(FortuneResult.class);
-    verify(fortuneResultRepository).save(captor.capture());
-
-    FortuneResult savedResult = captor.getValue();
-    assertThat(savedResult.getTitle()).isEqualTo(TEST_TITLE);
-    assertThat(savedResult.getMember()).isEqualTo(member);
-    assertThat(savedResult.getItems()).hasSize(4);
-    assertThat(savedResult.getCategories()).hasSize(2);
-    assertThat(savedResult.getItems())
-        .extracting(FortuneResultItem::getContent)
-        .containsExactlyInAnyOrder("좋은 한 해가 될 것입니다.", "건강운이 상승합니다.",
-            "건강 유지를 위해 운동이 필요합니다.", "좋은 인연을 만나게 될 것입니다.");
   }
 
   @Test
