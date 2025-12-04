@@ -46,7 +46,7 @@ public class FortuneService {
   }
 
   @Transactional
-  public void save(Member member, SaveFortuneRequest request) {
+  public Long save(Member member, SaveFortuneRequest request) {
     validateBusinessRules(member, request);
 
     FortuneResult result = FortuneResult.create(member, request);
@@ -54,7 +54,8 @@ public class FortuneService {
     addItems(result, request.getResponses());
     addCategories(result, request.getOption().getFortunes());
 
-    fortuneResultRepository.save(result);
+    FortuneResult saved = fortuneResultRepository.save(result);
+    return saved.getId();
   }
 
   private void addItems(FortuneResult result, List<FortuneResponse> responses) {

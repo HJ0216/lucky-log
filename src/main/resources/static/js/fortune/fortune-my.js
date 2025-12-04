@@ -25,9 +25,11 @@ const FortuneMyPage = {
   attachEvents() {},
 
   autoHideErrors() {
-    setTimeout(() => {
-      this.elements.errorMessage.classList.add('hidden');
-    }, this.config.ERROR_DURATION);
+    if (this.elements.errorMessage) {
+      setTimeout(() => {
+        this.elements.errorMessage.classList.add('hidden');
+      }, this.config.ERROR_DURATION);
+    }
   },
 };
 
