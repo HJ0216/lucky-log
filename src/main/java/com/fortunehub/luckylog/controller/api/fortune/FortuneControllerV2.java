@@ -3,6 +3,11 @@ package com.fortunehub.luckylog.controller.api.fortune;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.security.CustomUserDetails;
 import com.fortunehub.luckylog.service.fortune.FortuneService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +24,23 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v2/fortunes")
+@Tag(name = "운세 API", description = "운세 생성 및 조회 관련 API")
 public class FortuneControllerV2 {
 
   private final FortuneService fortuneService;
 
   @PostMapping
+  @Operation(summary = "운세 저장", description = "사용자의 생년월일 정보로 새로운 운세를 생성합니다")
+  @ApiResponses({
+      @ApiResponse(responseCode = "201", description = "운세 생성 성공"),
+      @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+      @ApiResponse(responseCode = "401", description = "인증 실패"),
+      @ApiResponse(responseCode = "403", description = "운세 저장 횟수 초과 (최대 5개)"),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 회원/운세/운세 카테고리"),
+      @ApiResponse(responseCode = "409", description = "중복된 운세 제목")
+  })
   public ResponseEntity<Void> save(
-      @AuthenticationPrincipal CustomUserDetails userDetails,
+      @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails userDetails,
       @Valid @RequestBody SaveFortuneRequest request
   ) {
     Long savedId = fortuneService.save(userDetails.getMember(), request);

@@ -18,6 +18,7 @@ Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입
 - **ORM**: Spring Data JPA
 - **Security**: Spring Security
 - **Database**: H2 (개발) / MySQL (운영)
+- **API Documentation**: Swagger UI (SpringDoc OpenAPI 2.8.6)
 
 ### Frontend
 
@@ -40,6 +41,11 @@ Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입
 - **Build Tool**: Gradle
 - **Testing**: JUnit 5
 - **Version Control**: Git
+
+## 📚 API 문서
+
+**Swagger UI**: [API 문서](https://lucky-log.duckdns.org/swagger-ui/index.html)
+> 🔒 인증이 필요한 API는 먼저 [로그인](https://lucky-log.duckdns.org/login)을 해야합니다.
 
 ## 🏗️배포 아키텍쳐
 

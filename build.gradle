@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.fortunehub'
-version = '2.0.0'
+version = '1.7.1'
 
 java {
 	toolchain {
