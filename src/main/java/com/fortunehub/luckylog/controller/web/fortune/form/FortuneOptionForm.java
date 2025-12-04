@@ -25,7 +25,7 @@ public class FortuneOptionForm {
 
   @Schema(
       description = "조회할 운세 종류 목록",
-      example = "[\"LOVE\", \"HEALTH\", \"MONEY\"]",
+      example = "[\"love\", \"health\", \"money\"]",
       requiredMode = Schema.RequiredMode.REQUIRED
   )
   @NotEmpty(message = "🍀 최소 하나의 운세를 선택해주세요!")

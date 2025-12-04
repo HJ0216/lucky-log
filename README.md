@@ -45,6 +45,7 @@ Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입
 ## 📚 API 문서
 
 **Swagger UI**: https://lucky-log.duckdns.org/swagger-ui/index.html
+> 🔒 인증이 필요한 API는 먼저 [로그인](https://lucky-log.duckdns.org/login)을 해야합니다.
 
 ## 🏗️배포 아키텍쳐
 
