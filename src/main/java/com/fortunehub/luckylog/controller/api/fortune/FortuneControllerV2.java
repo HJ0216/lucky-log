@@ -36,7 +36,7 @@ public class FortuneControllerV2 {
       @ApiResponse(responseCode = "400", description = "잘못된 요청"),
       @ApiResponse(responseCode = "401", description = "인증 실패"),
       @ApiResponse(responseCode = "403", description = "운세 저장 횟수 초과 (최대 5개)"),
-      @ApiResponse(responseCode = "404", description = "존재하지 않는 운세"),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 회원/운세/운세 카테고리"),
       @ApiResponse(responseCode = "409", description = "중복된 운세 제목")
   })
   public ResponseEntity<Void> save(
