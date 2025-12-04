@@ -56,7 +56,7 @@ class FortuneControllerV2Test {
   @Test
   @DisplayName("정상적인 운세 저장 요청 시 운세가 저장되고 201 응답한다")
   @WithMockCustomUser
-  void save_WhenValidRequest_ThenReturnsOk() throws Exception {
+  void save_WhenValidRequest_ThenReturnsCreated() throws Exception {
     // given
     List<FortuneType> fortuneTypes = List.of(FortuneType.LOVE, FortuneType.HEALTH);
     SaveFortuneRequest request = createValidFortuneRequest(fortuneTypes);
@@ -70,7 +70,7 @@ class FortuneControllerV2Test {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
            .andExpect(status().isCreated())
-           .andExpect(header().string("Location", endsWith("/api/v2/fortunes/1")));
+           .andExpect(header().string("Location", endsWith("/api/v2/fortunes/" + savedId)));
 
     verify(fortuneService).save(any(Member.class), any(SaveFortuneRequest.class));
   }

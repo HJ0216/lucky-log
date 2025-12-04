@@ -87,7 +87,7 @@ class FortuneServiceTest {
         .willReturn(4L);
 
     given(fortuneCategoryRepository
-        .findByFortuneTypeIn(any()))
+        .findByFortuneTypeIn(fortuneTypes))
         .willReturn(getCategoriesByTypes(FortuneType.LOVE, FortuneType.HEALTH));
 
     FortuneResult saved = FortuneResultFixture.createFortuneResultWithId(member);

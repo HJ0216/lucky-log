@@ -159,6 +159,7 @@ const FortuneResultPage = {
           return;
         }
 
+        const data = await response.json();
         toast.error('저장 실패', data.message || this.messages.saveFailed);
 
       } catch (error) {
