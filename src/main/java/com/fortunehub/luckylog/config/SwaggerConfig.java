@@ -12,14 +12,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
+  private static final String SECURITY_SCHEME_NAME = "cookieAuth";
+
   @Bean
   public OpenAPI openAPI() {
-    String securitySchemeName = "cookieAuth";
-
     return new OpenAPI()
         .components(new Components()
-            .addSecuritySchemes(securitySchemeName, securityScheme())) // 보안 방식 정의
-        .addSecurityItem(new SecurityRequirement().addList(securitySchemeName)) // 전역 보안 적용
+            .addSecuritySchemes(SECURITY_SCHEME_NAME, securityScheme())) // 보안 방식 정의
+        .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME)) // 전역 보안 적용
         .info(apiInfo()); // API 기본 정보
   }
 
@@ -39,6 +39,5 @@ public class SwaggerConfig {
         .contact(new Contact()
             .name("HJ0216")
             .email("6120hj@gmail.com"));
-
   }
 }

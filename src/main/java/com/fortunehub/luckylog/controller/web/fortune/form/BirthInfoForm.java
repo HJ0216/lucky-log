@@ -38,7 +38,7 @@ public class BirthInfoForm {
 
   @Schema(description = "출생 일", example = "16", minimum = "1", maximum = "31", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "🎂 생년월일을 모두 입력해주세요!")
-  @Min(1)
+  @Range(min = 1, max = 31)
   private Integer day;
 
   @Schema(description = "출생 시간 (선택사항)", example = "TIME_11_30")

@@ -18,7 +18,7 @@ Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입
 - **ORM**: Spring Data JPA
 - **Security**: Spring Security
 - **Database**: H2 (개발) / MySQL (운영)
-- **API Documentation**: Swagger 2.8.6
+- **API Documentation**: Swagger UI (SpringDoc OpenAPI 2.8.6)
 
 ### Frontend
 
