@@ -91,7 +91,7 @@ class GeminiServiceTest {
 
   @Test
   @DisplayName("정상적인 운세 요청 시 결과를 반환한다")
-  void analyzeFortune_WhenValidRequest_ThenReturnsFortuneResponses() {
+  void generateFortune_WhenValidRequest_ThenReturnsFortuneResponses() {
     // given
     GenerateContentResponse response = mock(GenerateContentResponse.class);
 
@@ -141,7 +141,7 @@ class GeminiServiceTest {
 
   @Test
   @DisplayName("빈 응답일 경우 예외가 발생한다")
-  void analyzeFortune_WhenResponseEmpty_ThenThrowsException() {
+  void generateFortune_WhenResponseEmpty_ThenThrowsException() {
     // given
     GenerateContentResponse response = mock(GenerateContentResponse.class);
     given(client.models.generateContent(
@@ -161,7 +161,7 @@ class GeminiServiceTest {
 
   @Test
   @DisplayName("응답이 없을 경우 예외가 발생한다")
-  void analyzeFortune_WhenResponseNull_ThenThrowsException() {
+  void generateFortune_WhenResponseNull_ThenThrowsException() {
     // given
     given(client.models.generateContent(
         eq(MODEL_NAME),
@@ -178,7 +178,7 @@ class GeminiServiceTest {
 
   @Test
   @DisplayName("잘못된 형식의 JSON 응답일 경우 예외가 발생한다")
-  void analyzeFortune_WhenInvalidResponse_ThenThrowsException() {
+  void generateFortune_WhenInvalidResponse_ThenThrowsException() {
     // given
     GenerateContentResponse response = mock(GenerateContentResponse.class);
     given(client.models.generateContent(
@@ -199,7 +199,7 @@ class GeminiServiceTest {
 
   @Test
   @DisplayName("API 호출이 실패하면 예외가 발생한다")
-  void analyzeFortune_WhenApiFails_ThenThrowsException() {
+  void generateFortune_WhenApiFails_ThenThrowsException() {
     // given
     given(client.models.generateContent(
         eq(MODEL_NAME),

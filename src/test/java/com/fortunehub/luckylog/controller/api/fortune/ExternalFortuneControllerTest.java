@@ -65,7 +65,13 @@ class ExternalFortuneControllerTest {
     mockMvc.perform(post("/api/v2/external/fortunes")
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
-           .andExpect(status().isOk());
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$[0].fortune").value("love"))
+           .andExpect(jsonPath("$[0].periodValue").value("january"))
+           .andExpect(jsonPath("$[0].result").value("좋은 한 해가 될 것입니다."))
+           .andExpect(jsonPath("$[1].fortune").value("health"))
+           .andExpect(jsonPath("$[1].periodValue").value("february"))
+           .andExpect(jsonPath("$[1].result").value("건강운이 상승합니다."));
 
     verify(fortuneService).generateFortune(any(BirthInfoForm.class), any(FortuneOptionForm.class),
         anyInt());
