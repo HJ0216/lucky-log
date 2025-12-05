@@ -107,7 +107,7 @@ class GeminiServiceTest {
 
     // when
     FortuneRequest request = createFortuneRequest();
-    List<FortuneResponse> responses = service.analyzeFortune(request);
+    List<FortuneResponse> responses = service.generateFortune(request);
 
     // then
     assertThat(responses)
@@ -154,7 +154,7 @@ class GeminiServiceTest {
     // when & then
     FortuneRequest request = createFortuneRequest();
 
-    assertThatThrownBy(() -> service.analyzeFortune(request))
+    assertThatThrownBy(() -> service.generateFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_EMPTY_RESPONSE.getMessage());
   }
@@ -171,7 +171,7 @@ class GeminiServiceTest {
     // when & then
     FortuneRequest request = createFortuneRequest();
 
-    assertThatThrownBy(() -> service.analyzeFortune(request))
+    assertThatThrownBy(() -> service.generateFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_UNKNOWN_ERROR.getMessage());
   }
@@ -192,7 +192,7 @@ class GeminiServiceTest {
     // when & then
     FortuneRequest request = createFortuneRequest();
 
-    assertThatThrownBy(() -> service.analyzeFortune(request))
+    assertThatThrownBy(() -> service.generateFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_RESPONSE_PARSE_ERROR.getMessage());
   }
@@ -209,7 +209,7 @@ class GeminiServiceTest {
     // when & then
     FortuneRequest request = createFortuneRequest();
 
-    assertThatThrownBy(() -> service.analyzeFortune(request))
+    assertThatThrownBy(() -> service.generateFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_OVERLOAD.getMessage());
 
