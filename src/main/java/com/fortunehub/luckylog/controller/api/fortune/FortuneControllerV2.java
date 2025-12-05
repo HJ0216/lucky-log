@@ -24,7 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v2/fortunes")
-@Tag(name = "운세 API", description = "운세 생성 및 조회 관련 API")
+@Tag(name = "운세 API", description = "운세 저장 관련 API")
 public class FortuneControllerV2 {
 
   private final FortuneService fortuneService;
