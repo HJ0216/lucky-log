@@ -89,7 +89,7 @@ public class FortuneOptionController {
 
     try {
       int fortuneResultYear = LocalDateTime.now().getYear();
-      List<FortuneResponse> responses = fortuneService.analyzeFortune(savedBirthInfo, option,
+      List<FortuneResponse> responses = fortuneService.generateFortune(savedBirthInfo, option,
           fortuneResultYear);
       redirectAttributes.addFlashAttribute("fortuneResultYear", fortuneResultYear);
       redirectAttributes.addFlashAttribute("option", option); //자동으로 Model에 포함

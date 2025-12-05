@@ -24,20 +24,21 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v2/fortunes")
-@Tag(name = "운세 API", description = "운세 생성 및 조회 관련 API")
+@Tag(name = "운세 API", description = "운세 저장 관련 API")
 public class FortuneControllerV2 {
 
   private final FortuneService fortuneService;
 
   @PostMapping
-  @Operation(summary = "운세 저장", description = "사용자의 생년월일 정보로 새로운 운세를 생성합니다")
+  @Operation(summary = "운세 저장")
   @ApiResponses({
       @ApiResponse(responseCode = "201", description = "운세 생성 성공"),
       @ApiResponse(responseCode = "400", description = "잘못된 요청"),
       @ApiResponse(responseCode = "401", description = "인증 실패"),
       @ApiResponse(responseCode = "403", description = "운세 저장 횟수 초과 (최대 5개)"),
       @ApiResponse(responseCode = "404", description = "존재하지 않는 회원/운세/운세 카테고리"),
-      @ApiResponse(responseCode = "409", description = "중복된 운세 제목")
+      @ApiResponse(responseCode = "409", description = "중복된 운세 제목"),
+      @ApiResponse(responseCode = "500", description = "서버 오류")
   })
   public ResponseEntity<Void> save(
       @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails userDetails,

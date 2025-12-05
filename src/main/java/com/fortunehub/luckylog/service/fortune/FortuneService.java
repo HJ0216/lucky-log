@@ -36,10 +36,10 @@ public class FortuneService {
   private final FortuneResultRepository fortuneResultRepository;
   private final FortuneCategoryRepository fortuneCategoryRepository;
 
-  public List<FortuneResponse> analyzeFortune(
+  public List<FortuneResponse> generateFortune(
       BirthInfoForm savedBirthInfo, FortuneOptionForm option, int fortuneResultYear) {
     return switch (option.getAi()) {
-      case GEMINI -> geminiService.analyzeFortune(
+      case GEMINI -> geminiService.generateFortune(
           FortuneRequest.from(savedBirthInfo, option, fortuneResultYear));
       default -> throw new CustomException(ErrorCode.UNSUPPORTED_AI_TYPE);
     };

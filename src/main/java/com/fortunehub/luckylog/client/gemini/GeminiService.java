@@ -40,7 +40,7 @@ public class GeminiService {
     this.promptTemplate = promptTemplate;
   }
 
-  public List<FortuneResponse> analyzeFortune(FortuneRequest request) {
+  public List<FortuneResponse> generateFortune(FortuneRequest request) {
 
     String prompt = buildPrompt(request);
     List<FortuneResponse> responses = generateContent(prompt, request);
