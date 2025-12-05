@@ -88,7 +88,11 @@ class ExternalFortuneControllerTest {
     mockMvc.perform(post("/api/v2/external/fortunes")
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
-           .andExpect(status().isBadRequest());
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("VALIDATION_FAILED"))
+           .andExpect(jsonPath("$.message").value("입력값 검증에 실패했습니다."))
+           .andExpect(jsonPath("$.timestamp").exists());
+
 
     verify(fortuneService, never()).generateFortune(any(BirthInfoForm.class),
         any(FortuneOptionForm.class), anyInt());
@@ -105,7 +109,11 @@ class ExternalFortuneControllerTest {
     mockMvc.perform(post("/api/v2/external/fortunes")
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(request)))
-           .andExpect(status().isBadRequest());
+           .andExpect(status().isBadRequest())
+           .andExpect(jsonPath("$.code").value("VALIDATION_FAILED"))
+           .andExpect(jsonPath("$.message").value("입력값 검증에 실패했습니다."))
+           .andExpect(jsonPath("$.timestamp").exists());
+
 
     verify(fortuneService, never()).generateFortune(any(BirthInfoForm.class),
         any(FortuneOptionForm.class), anyInt());
