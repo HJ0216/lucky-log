@@ -1,35 +1,53 @@
 package com.fortunehub.luckylog.security;
 
 import com.fortunehub.luckylog.domain.member.Member;
+import com.fortunehub.luckylog.domain.member.Role;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
-@RequiredArgsConstructor
-public class CustomUserDetails implements UserDetails {
+@NoArgsConstructor
+@AllArgsConstructor
+public class CustomUserDetails implements UserDetails, Serializable {
 
   private static final String DEFAULT_DISPLAY_NAME = "내 정보 보기";
 
-  private final Member member;
+  private Long memberId;
+  private String email;
+  private String password;
+  private String nickname;
+  private Role role;
+  private boolean isActive;
+
+  public CustomUserDetails(Member member) {
+    memberId = member.getId();
+    email = member.getEmail();
+    password = member.getPassword();
+    nickname = member.getNickname();
+    role = member.getRole();
+    isActive = member.isActive();
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + member.getRole().name()));
+    return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
   }
 
   @Override
   public String getPassword() {
-    return member.getPassword();
+    return password;
   }
 
   @Override
   public String getUsername() {
-    return member.getEmail();
+    return email;
   }
 
   @Override
@@ -49,15 +67,14 @@ public class CustomUserDetails implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return member.isActive();
+    return isActive;
   }
 
   public String getDisplayName() {
-    if (member.getNickname() != null && !member.getNickname().isBlank()) {
-      return member.getNickname();
+    if (nickname != null && !nickname.isBlank()) {
+      return nickname;
     }
 
-    String email = member.getEmail();
     if (email == null) {
       return DEFAULT_DISPLAY_NAME;
     }

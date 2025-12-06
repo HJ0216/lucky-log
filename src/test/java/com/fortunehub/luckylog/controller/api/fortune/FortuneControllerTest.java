@@ -70,7 +70,7 @@ class FortuneControllerTest {
            .andExpect(jsonPath("$.success").value(true))
            .andExpect(jsonPath("$.message").value("저장되었습니다."));
 
-    verify(fortuneService).save(any(Member.class), any(SaveFortuneRequest.class));
+    verify(fortuneService).save(any(), any(SaveFortuneRequest.class));
   }
 
   @Test
@@ -121,7 +121,7 @@ class FortuneControllerTest {
     List<FortuneType> fortuneTypes = List.of(FortuneType.LOVE, FortuneType.HEALTH);
     SaveFortuneRequest request = createValidFortuneRequest(fortuneTypes);
 
-    when(fortuneService.save(any(Member.class), any(SaveFortuneRequest.class)))
+    when(fortuneService.save(any(), any(SaveFortuneRequest.class)))
         .thenThrow(new CustomException(ErrorCode.DUPLICATE_FORTUNE_TITLE));
 
     // when & then
@@ -134,7 +134,7 @@ class FortuneControllerTest {
            .andExpect(jsonPath("$.timestamp").exists());
 
     verify(fortuneService)
-        .save(any(Member.class), any(SaveFortuneRequest.class));
+        .save(any(), any(SaveFortuneRequest.class));
   }
 
   @Test
@@ -145,7 +145,7 @@ class FortuneControllerTest {
     List<FortuneType> fortuneTypes = List.of(FortuneType.OVERALL, FortuneType.MONEY);
     SaveFortuneRequest request = createValidFortuneRequest(fortuneTypes);
 
-    when(fortuneService.save(any(Member.class), any(SaveFortuneRequest.class)))
+    when(fortuneService.save(any(), any(SaveFortuneRequest.class)))
         .thenThrow(new RuntimeException("예상치 못한 오류 발생"));
 
     // when & then

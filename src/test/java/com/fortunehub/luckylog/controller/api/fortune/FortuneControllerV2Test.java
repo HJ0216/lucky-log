@@ -23,7 +23,6 @@ import com.fortunehub.luckylog.domain.fortune.GenderType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.domain.fortune.PeriodValue;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
-import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
@@ -62,7 +61,7 @@ class FortuneControllerV2Test {
     SaveFortuneRequest request = createValidFortuneRequest(fortuneTypes);
 
     Long savedId = 1L;
-    when(fortuneService.save(any(Member.class), any(SaveFortuneRequest.class)))
+    when(fortuneService.save(any(), any(SaveFortuneRequest.class)))
         .thenReturn(savedId);
 
     // when & then
@@ -72,7 +71,7 @@ class FortuneControllerV2Test {
            .andExpect(status().isCreated())
            .andExpect(header().string("Location", endsWith("/api/v2/fortunes/" + savedId)));
 
-    verify(fortuneService).save(any(Member.class), any(SaveFortuneRequest.class));
+    verify(fortuneService).save(any(), any(SaveFortuneRequest.class));
   }
 
   @Test
@@ -121,7 +120,7 @@ class FortuneControllerV2Test {
     List<FortuneType> fortuneTypes = List.of(FortuneType.LOVE, FortuneType.HEALTH);
     SaveFortuneRequest request = createValidFortuneRequest(fortuneTypes);
 
-    when(fortuneService.save(any(Member.class), any(SaveFortuneRequest.class)))
+    when(fortuneService.save(any(), any(SaveFortuneRequest.class)))
         .thenThrow(new CustomException(ErrorCode.DUPLICATE_FORTUNE_TITLE));
 
     // when & then
@@ -134,7 +133,7 @@ class FortuneControllerV2Test {
            .andExpect(jsonPath("$.timestamp").exists());
 
     verify(fortuneService)
-        .save(any(Member.class), any(SaveFortuneRequest.class));
+        .save(any(), any(SaveFortuneRequest.class));
   }
 
   @Test
@@ -145,7 +144,7 @@ class FortuneControllerV2Test {
     List<FortuneType> fortuneTypes = List.of(FortuneType.OVERALL, FortuneType.MONEY);
     SaveFortuneRequest request = createValidFortuneRequest(fortuneTypes);
 
-    when(fortuneService.save(any(Member.class), any(SaveFortuneRequest.class)))
+    when(fortuneService.save(any(), any(SaveFortuneRequest.class)))
         .thenThrow(new RuntimeException("예상치 못한 오류 발생"));
 
     // when & then
@@ -158,8 +157,7 @@ class FortuneControllerV2Test {
            .andExpect(jsonPath("$.timestamp").exists());
 
     verify(fortuneService)
-        .save(any(Member.class), any(SaveFortuneRequest.class));
-
+        .save(any(), any(SaveFortuneRequest.class));
   }
 
   private SaveFortuneRequest createValidFortuneRequest(List<FortuneType> fortunes) {

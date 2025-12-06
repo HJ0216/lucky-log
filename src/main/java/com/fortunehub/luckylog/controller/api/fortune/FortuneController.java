@@ -27,9 +27,9 @@ public class FortuneController {
       @AuthenticationPrincipal CustomUserDetails userDetails,
       @Valid @RequestBody SaveFortuneRequest request
   ) {
-    fortuneService.save(userDetails.getMember(), request);
+    fortuneService.save(userDetails.getMemberId(), request);
 
-    log.info("[운세 저장 완료] | memberId={}", userDetails.getMember().getId());
+    log.info("[운세 저장 완료] | memberId={}", userDetails.getMemberId());
 
     return ResponseEntity.ok(ApiResponse.success("저장되었습니다."));
   }

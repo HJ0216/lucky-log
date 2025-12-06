@@ -29,6 +29,7 @@ import com.fortunehub.luckylog.fixture.FortuneResultFixture;
 import com.fortunehub.luckylog.fixture.MemberFixture;
 import com.fortunehub.luckylog.repository.fortune.FortuneCategoryRepository;
 import com.fortunehub.luckylog.repository.fortune.FortuneResultRepository;
+import com.fortunehub.luckylog.repository.member.MemberRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +45,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @DisplayName("운세 Service")
 class FortuneServiceTest {
 
+  @Mock
+  private MemberRepository memberRepository;
   @Mock
   private FortuneResultRepository fortuneResultRepository;
 
@@ -81,6 +84,9 @@ class FortuneServiceTest {
   @DisplayName("정상적인 운세 저장 요청 시 운세가 저장된다")
   void save_WhenValidRequest_ThenSavesFortune() {
     // given
+    given(memberRepository.findById(member.getId()))
+        .willReturn(Optional.of(member));
+
     given(fortuneResultRepository.existsByMember_IdAndTitle(member.getId(), TEST_TITLE))
         .willReturn(false);
     given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(member.getId()))
@@ -95,7 +101,7 @@ class FortuneServiceTest {
         .willReturn(saved);
 
     // when
-    Long savedId = fortuneService.save(member, request);
+    Long savedId = fortuneService.save(member.getId(), request);
 
     // then
     assertThat(savedId).isEqualTo(saved.getId());
@@ -117,10 +123,12 @@ class FortuneServiceTest {
   @DisplayName("비활성화된 회원으로 저장 시 예외가 발생한다")
   void save_WhenMemberIsInactive_ThenThrowsException() {
     // given
-    Member member = MemberFixture.createInactiveMember();
+    Member member = MemberFixture.createInactiveMemberWithId(1L);
+    given(memberRepository.findById(member.getId()))
+        .willReturn(Optional.of(member));
 
     // when
-    assertThatThrownBy(() -> fortuneService.save(member, request))
+    assertThatThrownBy(() -> fortuneService.save(member.getId(), request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.INVALID_MEMBER.getMessage());
 
@@ -131,11 +139,13 @@ class FortuneServiceTest {
   @DisplayName("중복된 제목으로 저장 시 예외가 발생한다")
   void save_WhenTitleIsDuplicate_ThenThrowsException() {
     // given
+    given(memberRepository.findById(member.getId()))
+        .willReturn(Optional.of(member));
     given(fortuneResultRepository.existsByMember_IdAndTitle(member.getId(), TEST_TITLE))
         .willReturn(true);
 
     // when & then
-    assertThatThrownBy(() -> fortuneService.save(member, request))
+    assertThatThrownBy(() -> fortuneService.save(member.getId(), request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.DUPLICATE_FORTUNE_TITLE.getMessage());
 
@@ -146,13 +156,15 @@ class FortuneServiceTest {
   @DisplayName("최대 저장 개수 초과 시 예외가 발생한다")
   void save_WhenExceedMaxSaveCount_ThenThrowsException() {
     // given
+    given(memberRepository.findById(member.getId()))
+        .willReturn(Optional.of(member));
     given(fortuneResultRepository.existsByMember_IdAndTitle(member.getId(), TEST_TITLE))
         .willReturn(false);
     given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(member.getId()))
         .willReturn(5L); // MAX_SAVE_COUNT만큼 운세가 저장됨
 
     // when & then
-    assertThatThrownBy(() -> fortuneService.save(member, request))
+    assertThatThrownBy(() -> fortuneService.save(member.getId(), request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.EXCEED_MAX_SAVE_COUNT.getMessage());
 
@@ -163,6 +175,8 @@ class FortuneServiceTest {
   @DisplayName("운세 카테고리를 찾을 수 없을 때 예외가 발생한다")
   void save_WhenCategoryNotFound_ThenThrowsException() {
     // given
+    given(memberRepository.findById(member.getId()))
+        .willReturn(Optional.of(member));
     given(fortuneResultRepository.existsByMember_IdAndTitle(member.getId(), TEST_TITLE))
         .willReturn(false);
     given(fortuneResultRepository.countByMember_IdAndIsActiveTrue(member.getId()))
@@ -178,7 +192,7 @@ class FortuneServiceTest {
         .willReturn(categories);
 
     // when & then
-    assertThatThrownBy(() -> fortuneService.save(member, request))
+    assertThatThrownBy(() -> fortuneService.save(member.getId(), request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.FORTUNE_CATEGORY_NOT_FOUND.getMessage());
 

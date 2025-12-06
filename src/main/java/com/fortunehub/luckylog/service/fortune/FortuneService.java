@@ -18,8 +18,10 @@ import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
 import com.fortunehub.luckylog.repository.fortune.FortuneCategoryRepository;
 import com.fortunehub.luckylog.repository.fortune.FortuneResultRepository;
+import com.fortunehub.luckylog.repository.member.MemberRepository;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class FortuneService {
 
   private static final int MAX_SAVE_COUNT = 5;
 
+  private final MemberRepository memberRepository;
   private final GeminiService geminiService;
   private final FortuneResultRepository fortuneResultRepository;
   private final FortuneCategoryRepository fortuneCategoryRepository;
@@ -46,7 +49,11 @@ public class FortuneService {
   }
 
   @Transactional
-  public Long save(Member member, SaveFortuneRequest request) {
+  public Long save(Long memberId, SaveFortuneRequest request) {
+
+    Member member = memberRepository.findById(memberId)
+                                    .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER));
+
     validateBusinessRules(member, request);
 
     FortuneResult result = FortuneResult.create(member, request);
@@ -85,7 +92,7 @@ public class FortuneService {
   }
 
   private void validateBusinessRules(Member member, SaveFortuneRequest request) {
-    if (member == null || !member.isActive()) {
+    if (!member.isActive()) {
       throw new CustomException(ErrorCode.INVALID_MEMBER);
     }
 
