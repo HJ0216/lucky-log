@@ -38,13 +38,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6' // swagger
-
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6' // thymeleaf, security
 	implementation 'com.google.genai:google-genai:1.12.0' // gemini
 
 	implementation 'org.springframework.boot:spring-boot-starter-actuator' // health check
 
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6' // thymeleaf, security
+	// redis session
+	implementation 'org.springframework.session:spring-session-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6' // swagger
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 

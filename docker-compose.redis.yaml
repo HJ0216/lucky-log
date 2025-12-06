@@ -1,0 +1,23 @@
+services:
+  redis: # 실제 Redis 서버
+    image: redis:7.2 # Redis 공식 Docker 이미지 7.2 버전을 사용
+    container_name: redis-local
+    ports:
+      - "6379:6379" # PC(호스트)에서 6379 포트로 접근하면 Docker 컨테이너 내부의 6379로 연결됨
+    command: ["redis-server", "--appendonly", "yes"]
+    # Docker 컨테이너 안에서 Redis 서버를 실행할 때 추가 옵션을 적용하는 명령
+    # redis-server Redis 실행 명령어
+    # --appendonly yes 옵션, Redis 데이터를 디스크에 영구 저장(AOF, Append Only File)
+    volumes:
+      - redis-data:/data # 컨테이너 내부 폴더 /data를 로컬 볼륨 redis-data에 저장
+
+  redis-insight: # Redis 모니터링/관리 웹 UI
+    image: redis/redisinsight:latest
+    container_name: redis-insight
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+
+volumes:
+  redis-data: # Docker가 내부적으로 redis-data라는 persistent volume을 생성해서 데이터 유지
