@@ -1,8 +1,6 @@
 package com.fortunehub.luckylog.controller.api.fortune;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,7 +21,6 @@ import com.fortunehub.luckylog.domain.fortune.GenderType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.domain.fortune.PeriodValue;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
-import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.dto.request.fortune.SaveFortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
@@ -107,7 +104,6 @@ class FortuneControllerTest {
            .andExpect(jsonPath("$.message").value("입력값 검증에 실패했습니다."))
            .andExpect(jsonPath("$.timestamp").exists())
            .andExpect(jsonPath("$.details.birthInfo").exists());
-
 
     verify(fortuneService, never()).save(any(), any());
   }

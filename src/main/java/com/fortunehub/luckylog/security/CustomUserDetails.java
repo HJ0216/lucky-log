@@ -2,10 +2,10 @@ package com.fortunehub.luckylog.security;
 
 import com.fortunehub.luckylog.domain.member.Member;
 import com.fortunehub.luckylog.domain.member.Role;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,8 +14,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class CustomUserDetails implements UserDetails, Serializable {
+
+  @Serial
+  private static final long serialVersionUID = 1L;
 
   private static final String DEFAULT_DISPLAY_NAME = "내 정보 보기";
 
