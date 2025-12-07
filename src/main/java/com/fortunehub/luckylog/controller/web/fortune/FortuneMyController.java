@@ -31,7 +31,7 @@ public class FortuneMyController {
   public String list(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
     try {
       List<MyFortuneResponse> myFortunes = fortuneService.getMyFortunes(
-          userDetails.getMember().getId());
+          userDetails.getMemberId());
       model.addAttribute("myFortunes", myFortunes);
 
       return FORTUNE_MY_VIEW;
@@ -58,7 +58,7 @@ public class FortuneMyController {
 
     try {
       MyFortuneDetailResponse response =
-          fortuneService.getMyFortune(resultId, userDetails.getMember().getId());
+          fortuneService.getMyFortune(resultId, userDetails.getMemberId());
       model.addAttribute("myFortune", response);
 
       return FORTUNE_MY_DETAIL_VIEW;

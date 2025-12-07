@@ -44,9 +44,9 @@ public class FortuneControllerV2 {
       @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails userDetails,
       @Valid @RequestBody SaveFortuneRequest request
   ) {
-    Long savedId = fortuneService.save(userDetails.getMember(), request);
+    Long savedId = fortuneService.save(userDetails.getMemberId(), request);
 
-    log.info("[운세 저장 완료] | memberId={}", userDetails.getMember().getId());
+    log.info("[운세 저장 완료] | memberId={}", userDetails.getMemberId());
 
     URI location = ServletUriComponentsBuilder
         .fromCurrentRequest()

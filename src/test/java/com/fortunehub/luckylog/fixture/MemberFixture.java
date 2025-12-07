@@ -40,4 +40,10 @@ public class MemberFixture {
 
     return member;
   }
+
+  public static Member createInactiveMemberWithId(Long id) {
+    Member member = createInactiveMember();
+    ReflectionTestUtils.setField(member, "id", id);
+    return member;
+  }
 }
