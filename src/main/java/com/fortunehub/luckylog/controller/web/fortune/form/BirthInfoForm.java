@@ -7,6 +7,8 @@ import com.fortunehub.luckylog.domain.fortune.TimeType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import java.io.Serial;
+import java.io.Serializable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +18,10 @@ import org.hibernate.validator.constraints.Range;
 @NoArgsConstructor
 @Getter
 @Setter
-public class BirthInfoForm {
+public class BirthInfoForm implements Serializable {
+
+  @Serial
+  private static final long serialVersionUID = 1L;
 
   @Schema(description = "성별", example = "FEMALE", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "👶 성별을 선택해주세요!")
