@@ -133,10 +133,14 @@ https://github.com/HJ0216/lucky-log.git
 
 - `SPRING_PROFILES_ACTIVE=local` profile 설정
 - `application.yaml` 관련 환경 변수 설정
-- `application-local.yaml` 관련 환경 변수 설정
-- `application-prompt.yaml` 파일 추가
+- `application-prompts.yaml` 파일 추가
 
-3. 프로젝트 실행
+3. Docker 기반 개발 환경 실행
+```bash
+docker compose -f docker-compose.dev.yaml up -d
+```
+
+4. 프로젝트 실행
 
 ## 📜 Git 전략
 
