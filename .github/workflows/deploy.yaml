@@ -91,7 +91,7 @@ jobs:
             echo "🔐 Loading REDIS_PASSWORD from /etc/luckylog/env..."
 
             # root 권한으로 env 파일에서 REDIS_PASSWORD만 안전하게 추출
-            REDIS_PASSWORD=$(sudo awk -F= '/^REDIS_PASSWORD=/{print $$2}' /etc/luckylog/env)
+            REDIS_PASSWORD=$(sudo grep '^REDIS_PASSWORD=' /etc/luckylog/env | cut -d'=' -f2)
 
             if [ -z "$REDIS_PASSWORD" ]; then
               echo "❌ REDIS_PASSWORD not found in /etc/luckylog/env"
