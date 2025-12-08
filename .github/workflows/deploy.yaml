@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - hotfix
 
 jobs:
   test:
@@ -87,10 +88,15 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "🔐 Loading environment variables..."
-            # root 권한으로 env 파일 읽어서 변수 export
-            sudo bash -c "source /etc/luckylog/env && export REDIS_PASSWORD=\$REDIS_PASSWORD && printenv | grep REDIS_PASSWORD" > /tmp/redis_env
-            source /tmp/redis_env
+            echo "🔐 Loading REDIS_PASSWORD from /etc/luckylog/env..."
+
+            # root 권한으로 env 파일에서 REDIS_PASSWORD만 안전하게 추출
+            REDIS_PASSWORD=$(sudo awk -F= '/^REDIS_PASSWORD=/{print \$2}' /etc/luckylog/env)
+
+            if [ -z "$REDIS_PASSWORD" ]; then
+              echo "❌ REDIS_PASSWORD not found in /etc/luckylog/env"
+              exit 1
+            fi
 
             echo "🧪 Checking Redis container status..."
             if ! docker ps --format '{{.Names}}' | grep -q 'redis-prod'; then
@@ -100,17 +106,24 @@ jobs:
 
             echo "🧪 Testing Redis PING..."
             # stderr 포함 전체 출력 저장
-            PING_OUTPUT=$(docker exec redis-prod sh -c "timeout 3 redis-cli -a \"$REDIS_PASSWORD\" ping" 2>&1)
+            docker exec redis-prod sh -c "timeout 3 redis-cli -a \"$REDIS_PASSWORD\" ping" >/tmp/redis_ping_output 2>&1
+            RET=$?
 
-            echo "$PING_OUTPUT"
+            cat /tmp/redis_ping_output
 
-            # PONG 문자열 포함 여부로 성공/실패 판단
-            if echo "$PING_OUTPUT" | grep -q "PONG"; then
-              echo "✅ Redis is healthy."
-            else
-              echo "❌ Redis PING failed!"
+            # exit code 실패면 바로 실패
+            if [ $RET -ne 0 ]; then
+              echo "❌ Redis PING failed (exit code $RET)"
               exit 1
             fi
+
+            # exit code는 0인데 PONG이 없으면 실패 처리
+            if ! grep -q "PONG" /tmp/redis_ping_output; then
+              echo "❌ Redis PING failed (no PONG in output)"
+              exit 1
+            fi
+
+            echo "✅ Redis is healthy."
 
       - name: Restart Service
         uses: appleboy/ssh-action@v1.0.3
