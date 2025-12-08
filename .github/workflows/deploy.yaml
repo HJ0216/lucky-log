@@ -88,7 +88,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "🔐 Loading environment variables..."
-            source /etc/luckylog/env
+            # root 권한으로 env 파일 읽어서 변수 export
+            sudo bash -c "source /etc/luckylog/env && export REDIS_PASSWORD=\$REDIS_PASSWORD && printenv | grep REDIS_PASSWORD" > /tmp/redis_env
+            source /tmp/redis_env
 
             echo "🧪 Checking Redis container status..."
             if ! docker ps --format '{{.Names}}' | grep -q 'redis-prod'; then
@@ -97,12 +99,18 @@ jobs:
             fi
 
             echo "🧪 Testing Redis PING..."
-            if ! (docker exec redis-prod sh -c "timeout 3 redis-cli -a \"$REDIS_PASSWORD\" ping" | grep -q "PONG"); then
+            # stderr 포함 전체 출력 저장
+            PING_OUTPUT=$(docker exec redis-prod sh -c "timeout 3 redis-cli -a \"$REDIS_PASSWORD\" ping" 2>&1)
+
+            echo "$PING_OUTPUT"
+
+            # PONG 문자열 포함 여부로 성공/실패 판단
+            if echo "$PING_OUTPUT" | grep -q "PONG"; then
+              echo "✅ Redis is healthy."
+            else
               echo "❌ Redis PING failed!"
               exit 1
             fi
-
-            echo "✅ Redis is healthy."
 
       - name: Restart Service
         uses: appleboy/ssh-action@v1.0.3
