@@ -80,6 +80,30 @@ jobs:
           source: '*.jar'
           target: '/tmp/'
 
+      - name: Check Redis Health
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "🔐 Loading environment variables..."
+            source /etc/luckylog/env
+
+            echo "🧪 Checking Redis container status..."
+            if ! docker ps --format '{{.Names}}' | grep -q 'redis-prod'; then
+              echo "❌ Redis container is NOT running!"
+              exit 1
+            fi
+
+            echo "🧪 Testing Redis PING..."
+            if ! (docker exec redis-prod sh -c "timeout 3 redis-cli -a \"$REDIS_PASSWORD\" ping" | grep -q "PONG"); then
+              echo "❌ Redis PING failed!"
+              exit 1
+            fi
+
+            echo "✅ Redis is healthy."
+
       - name: Restart Service
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -88,7 +112,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "📦 Deploying JAR file..."
-            sudo mv /tmp/*.jar /home/deploy/lucky-log/luckylog.jar
+            sudo mv /tmp/*.jar /home/deploy/lucky-log/luckylog.jar.new
+            sudo mv -f /home/deploy/lucky-log/luckylog.jar.new /home/deploy/lucky-log/luckylog.jar
             sudo chown deploy:deploy /home/deploy/lucky-log/luckylog.jar
 
             echo "🔄 Restarting service..."
