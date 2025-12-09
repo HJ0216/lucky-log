@@ -6,6 +6,8 @@ import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,8 +19,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class FortuneOptionForm {
+public class FortuneOptionForm implements Serializable {
 
+  @Serial
+  private static final long serialVersionUID = 1L;
+  
   @Schema(description = "사용할 AI 모델", example = "GEMINI", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "🤖 AI를 선택해주세요!")
   private AIType ai = AIType.GEMINI;
