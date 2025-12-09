@@ -3,6 +3,8 @@ package com.fortunehub.luckylog.dto.response.fortune;
 import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.PeriodValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serial;
+import java.io.Serializable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +13,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class FortuneResponse {
+public class FortuneResponse implements Serializable {
+
+  @Serial
+  private static final long serialVersionUID = 1L;
 
   @Schema(description = "운세 종류", example = "love")
   private FortuneType fortune;
