@@ -89,8 +89,7 @@ jobs:
           script: |
             echo "🔐 Loading REDIS_PASSWORD from /etc/luckylog/env..."
 
-            # root 권한으로 env 파일에서 REDIS_PASSWORD만 안전하게 추출
-            REDIS_PASSWORD=$(sudo grep '^REDIS_PASSWORD=' /etc/luckylog/env | cut -d'=' -f2)
+            REDIS_PASSWORD=$(grep '^REDIS_PASSWORD=' /etc/luckylog/env | cut -d'=' -f2)
 
             if [ -z "$REDIS_PASSWORD" ]; then
               echo "❌ REDIS_PASSWORD not found in /etc/luckylog/env"
@@ -104,20 +103,15 @@ jobs:
             fi
 
             echo "🧪 Testing Redis PING..."
-            # stderr 포함 전체 출력 저장
-            docker exec redis-prod sh -c "timeout 3 redis-cli -a \"$REDIS_PASSWORD\" ping" >/tmp/redis_ping_output 2>&1
+            PING_RESULT=$(docker exec redis-prod sh -c "timeout 3 redis-cli -a \"$REDIS_PASSWORD\" ping" 2>&1)
             RET=$?
 
-            cat /tmp/redis_ping_output
-
-            # exit code 실패면 바로 실패
             if [ $RET -ne 0 ]; then
               echo "❌ Redis PING failed (exit code $RET)"
               exit 1
             fi
 
-            # exit code는 0인데 PONG이 없으면 실패 처리
-            if ! grep -q "PONG" /tmp/redis_ping_output; then
+            if ! echo "$PING_RESULT" | grep -q "PONG"; then
               echo "❌ Redis PING failed (no PONG in output)"
               exit 1
             fi
