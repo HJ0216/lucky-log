@@ -57,9 +57,17 @@ Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입
 - **Testing**: JUnit 5
 - **Version Control**: Git
 
+## 🩺 기술 선택 과정 및 문제 해결
+
+개발 과정에서 기술 선택의 이유와 발생한 주요 문제들을 기록했습니다.  
+아래 Wiki에서 의사결정 흐름과 해결 과정을 확인할 수 있습니다.
+
+👉 [Wiki](https://github.com/HJ0216/lucky-log/wiki/Tech-Decision-&-Troubleshooting)
+
 ## 📚 API 문서
 
 **Swagger UI**: [API 문서](https://lucky-log.duckdns.org/swagger-ui/index.html)
+
 > 🔒 인증이 필요한 API는 먼저 [로그인](https://lucky-log.duckdns.org/login)을 해야합니다.
 
 ## 🏗️배포 아키텍쳐
@@ -151,6 +159,7 @@ https://github.com/HJ0216/lucky-log.git
 - `application-prompts.yaml` 파일 추가
 
 3. Docker 기반 개발 환경 실행
+
 ```bash
 docker compose -f docker-compose.dev.yaml up -d
 ```
