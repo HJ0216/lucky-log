@@ -89,7 +89,7 @@ jobs:
           script: |
             echo "🔐 Loading REDIS_PASSWORD from /etc/luckylog/.env..."
 
-            REDIS_PASSWORD=$(sudo grep '^REDIS_PASSWORD=' /etc/luckylog/.env | cut -d'=' -f2)
+            REDIS_PASSWORD=$(sudo grep '^REDIS_PASSWORD=' /etc/luckylog/.env | cut -d'=' -f2- | xargs)
 
             if [ -z "$REDIS_PASSWORD" ]; then
               echo "❌ REDIS_PASSWORD not found in /etc/luckylog/.env"
