@@ -80,44 +80,6 @@ jobs:
           source: '*.jar'
           target: '/tmp/'
 
-      - name: Check Redis Health
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            echo "🔐 Loading REDIS_PASSWORD from /etc/luckylog/.env..."
-
-            REDIS_PASSWORD=$(sudo grep '^REDIS_PASSWORD=' /etc/luckylog/.env | cut -d'=' -f2- | xargs)
-
-            if [ -z "$REDIS_PASSWORD" ]; then
-              echo "❌ REDIS_PASSWORD not found in /etc/luckylog/.env"
-              exit 1
-            fi
-
-            echo "🧪 Checking Redis container status..."
-            if ! docker ps --format '{{.Names}}' | grep -q 'redis-prod'; then
-              echo "❌ Redis container is NOT running!"
-              exit 1
-            fi
-
-            echo "🧪 Testing Redis PING..."
-            PING_RESULT=$(docker exec redis-prod sh -c "timeout 3 redis-cli -a \"$REDIS_PASSWORD\" ping" 2>&1)
-            RET=$?
-
-            if [ $RET -ne 0 ]; then
-              echo "❌ Redis PING failed (exit code $RET)"
-              exit 1
-            fi
-
-            if ! echo "$PING_RESULT" | grep -q "PONG"; then
-              echo "❌ Redis PING failed (no PONG in output)"
-              exit 1
-            fi
-
-            echo "✅ Redis is healthy."
-
       - name: Restart Service
         uses: appleboy/ssh-action@v1.0.3
         with:
