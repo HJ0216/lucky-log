@@ -57,6 +57,10 @@ Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입
 - **Testing**: JUnit 5
 - **Version Control**: Git
 
+## 🏗️ 아키텍쳐
+
+![Architecture_v2](./uploads/architectrue_v2.svg)
+
 ## 🩺 기술 선택 과정 및 문제 해결
 
 개발 과정에서 기술 선택의 이유와 발생한 주요 문제들을 기록했습니다.  
@@ -69,18 +73,6 @@ Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입
 **Swagger UI**: [API 문서](https://lucky-log.duckdns.org/swagger-ui/index.html)
 
 > 🔒 인증이 필요한 API는 먼저 [로그인](https://lucky-log.duckdns.org/login)을 해야합니다.
-
-## 🏗️배포 아키텍쳐
-
-```txt
-GitHub Repository
-       ↓ (Push)
-GitHub Actions (CI/CD)
-       ↓ (Build & Test)
-AWS EC2 (Application Server)
-       ↓ (Data)
-AWS RDS (MySQL Database)
-```
 
 ## 📂 디렉터리 구조
 
