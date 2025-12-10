@@ -24,6 +24,12 @@ Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입
 - 🔐 **로그인**
 - 💌 **회원 가입**: 간단한 가입 후, 운세 저장 기능 사용
 
+## 📸 주요 화면
+
+<img width="32%" height="400px" align="center" alt="view-index" src="./uploads/view-index.png"/>
+<img width="32%" height="400px" align="center" alt="view-option" src="./uploads/view-option.png" style="margin: 0 5px;"/>
+<img width="32%" height="400px" align="center" alt="view-result" src="./uploads/view-result.png"/>
+
 ## 🛠️ 기술 스택
 
 ### Backend
