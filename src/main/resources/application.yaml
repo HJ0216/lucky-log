@@ -14,6 +14,10 @@ spring:
       hibernate:
         default_batch_fetch_size: 10
 
+logging:
+  level:
+    root: INFO
+
 gemini:
   api:
     key: ${GEMINI_API_KEY}

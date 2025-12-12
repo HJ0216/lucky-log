@@ -29,8 +29,6 @@ logging:
     com.fortunehub.luckylog: DEBUG # com.fortunehub.luckylog 패키지의 로그는 DEBUG까지 상세하게
     org.hibernate.SQL: INFO # SQL 쿼리 보기
     org.hibernate.orm.jdbc.bind: TRACE # 파라미터 값까지 보기
-  pattern:
-    console: '[%X{requestId:-NO-REQUEST-ID}] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{36}).%magenta(%M) - %msg%n'
 
 management:
   endpoints:

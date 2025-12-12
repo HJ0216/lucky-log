@@ -26,16 +26,7 @@ logging:
     org.hibernate.SQL: WARN
     org.springframework.web: WARN
     org.springframework.security: WARN
-  pattern:
-    file: '[%X{requestId:-NO-REQUEST-ID}] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n'
-    console: '[%X{requestId:-NO-REQUEST-ID}] %d{HH:mm:ss.SSS} %-5level %logger{35} - %msg%n'
-  file:
-    name: /home/deploy/logs/luckylog.log
-  logback:
-    rollingpolicy:
-      max-file-size: 50MB
-      max-history: 30
-      file-name-pattern: /home/deploy/logs/luckylog-%d{yyyy-MM-dd}.%i.log
+  path: /home/deploy/logs
 
 management:
   endpoints:
