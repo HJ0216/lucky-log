@@ -48,4 +48,4 @@ management:
 
 springdoc:
   swagger-ui:
-    try-it-out-enabled: false # swagger try-it-out 비활성화
+    supportedSubmitMethods: [get] # get만 테스트 가능
