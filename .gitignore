@@ -59,4 +59,9 @@ Thumbs.db
 .env
 application-prompts.yaml
 application-prompts-*.yaml
-docker-compose.prod.yaml
+
+
+# =========================================
+# 내부 관리 파일
+# =========================================
+/archive
