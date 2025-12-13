@@ -180,14 +180,13 @@ docker compose -f docker-compose.dev.yaml up -d
 | 🎉    | Init     | 프로젝트 시작    |
 | ✨    | Feat     | 새로운 기능 추가 |
 | 🐛    | Fix      | 버그 수정        |
-| 📝    | Docs     | 문서 수정        |
-| 🎨    | Style    | 코드 포매팅      |
 | 💄    | Design   | UI 디자인 변경   |
 | ✅    | Test     | 테스트 코드      |
 | ♻️    | Refactor | 코드 리팩토링    |
-| 🧹    | Chore    | 기타 수정        |
 | 🚚    | Rename   | 파일/폴더명 수정 |
 | 🔥    | Remove   | 파일 삭제        |
+| 📝    | Docs     | 문서 수정        |
+| 🧹    | Chore    | 기타 직업        |
 
 **커밋 메시지 형식**
 
