@@ -19,5 +19,28 @@ services:
     depends_on:
       - redis
 
+  mysql: # 로컬 개발용 MySQL
+    image: mysql:8.0
+    container_name: mysql-local
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: luckylog
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: luckylog
+      MYSQL_PASSWORD: luckylog
+      TZ: Asia/Seoul
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
 volumes:
   redis-data: # Docker가 내부적으로 redis-data라는 persistent volume을 생성해서 데이터 유지
+  mysql-data:

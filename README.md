@@ -36,7 +36,7 @@ Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입
 - **Framework**: Spring Boot 3.5.3
 - **ORM**: Spring Data JPA
 - **Security**: Spring Security
-- **Database**: H2 (개발) / MySQL (운영)
+- **Database**: MySQL, Redis
 - **API Documentation**: Swagger UI (SpringDoc OpenAPI 2.8.6)
 
 ### Frontend
@@ -152,6 +152,7 @@ https://github.com/HJ0216/lucky-log.git
 
 - `SPRING_PROFILES_ACTIVE=local` profile 설정
 - `application.yaml` 관련 환경 변수 설정
+- `application-local.yaml` 관련 환경 변수 설정
 - `application-prompts.yaml` 파일 추가
 
 3. Docker 기반 개발 환경 실행
