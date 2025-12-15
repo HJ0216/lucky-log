@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -246,7 +247,7 @@ class GeminiServiceTest {
     service.generateFortune(request); // cache HIT
 
     // then
-    verify(client.models, org.mockito.Mockito.times(1))
+    verify(client.models, times(1))
         .generateContent(eq(MODEL_NAME), anyString(), eq(generateContentConfig));
   }
 
@@ -298,7 +299,7 @@ class GeminiServiceTest {
         .isInstanceOf(CustomException.class);
 
     // 캐시되지 않았으므로 두 번 호출됨
-    verify(client.models, org.mockito.Mockito.times(2))
+    verify(client.models, times(2))
         .generateContent(eq(MODEL_NAME), anyString(), eq(generateContentConfig));
 
     assertThat(fortuneResultCache.getIfPresent(request.cacheKey()))
@@ -306,11 +307,10 @@ class GeminiServiceTest {
   }
 
   private FortuneRequest createFortuneRequest() {
-    String sessionId = "TEST_SESSION";
     BirthInfoForm birthForm = createBirthInfoForm();
     FortuneOptionForm optionForm = createFortuneOptionForm();
 
-    return FortuneRequest.from(sessionId, birthForm, optionForm, TEST_YEAR);
+    return FortuneRequest.from(birthForm, optionForm, TEST_YEAR);
   }
 
   private BirthInfoForm createBirthInfoForm() {

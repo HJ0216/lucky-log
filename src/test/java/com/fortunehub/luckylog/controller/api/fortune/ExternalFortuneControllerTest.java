@@ -57,7 +57,6 @@ class ExternalFortuneControllerTest {
     List<FortuneResponse> responses = createFortuneResponses();
 
     when(fortuneService.generateFortune(
-        anyString(),
         any(BirthInfoForm.class),
         any(FortuneOptionForm.class),
         anyInt()
@@ -76,7 +75,6 @@ class ExternalFortuneControllerTest {
            .andExpect(jsonPath("$[1].result").value("건강운이 상승합니다."));
 
     verify(fortuneService).generateFortune(
-        anyString(),
         any(BirthInfoForm.class),
         any(FortuneOptionForm.class),
         anyInt());
@@ -100,7 +98,6 @@ class ExternalFortuneControllerTest {
 
 
     verify(fortuneService, never()).generateFortune(
-        anyString(),
         any(BirthInfoForm.class),
         any(FortuneOptionForm.class),
         anyInt());
@@ -124,7 +121,6 @@ class ExternalFortuneControllerTest {
 
 
     verify(fortuneService, never()).generateFortune(
-        anyString(),
         any(BirthInfoForm.class),
         any(FortuneOptionForm.class),
         anyInt());
@@ -137,7 +133,6 @@ class ExternalFortuneControllerTest {
     GenerateFortuneRequest request = createGenerateFortuneRequest();
 
     when(fortuneService.generateFortune(
-        anyString(),
         any(BirthInfoForm.class),
         any(FortuneOptionForm.class),
         anyInt()))
@@ -153,7 +148,6 @@ class ExternalFortuneControllerTest {
            .andExpect(jsonPath("$.timestamp").exists());
 
     verify(fortuneService).generateFortune(
-        anyString(),
         any(BirthInfoForm.class),
         any(FortuneOptionForm.class),
         anyInt());

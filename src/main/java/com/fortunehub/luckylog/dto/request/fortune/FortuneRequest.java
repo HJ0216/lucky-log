@@ -19,8 +19,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FortuneRequest implements CacheKeyProvider {
 
-  private final String sessionId;
-
   // 생년월일 정보
   private final GenderType gender;
   private final CalendarType calendar;
@@ -38,12 +36,10 @@ public class FortuneRequest implements CacheKeyProvider {
   private final Integer fortuneResultYear;
 
   public static FortuneRequest from(
-      String sessionId,
       BirthInfoForm birthInfo,
       FortuneOptionForm fortuneOption,
       int fortuneResultYear) {
     return new FortuneRequest(
-        sessionId,
         birthInfo.getGender(),
         birthInfo.getCalendar(),
         birthInfo.getYear(),
@@ -99,8 +95,6 @@ public class FortuneRequest implements CacheKeyProvider {
                                  .collect(Collectors.joining(","));
 
     return String.join(":",
-        "GUEST",
-        sessionId,
         gender.name(),
         calendar.name(),
         year.toString(),
@@ -110,8 +104,7 @@ public class FortuneRequest implements CacheKeyProvider {
         cityKey,
         fortuneKeys,
         period.name(),
-        LocalDate.now().toString()
+        fortuneResultYear.toString()
     );
-
   }
 }
