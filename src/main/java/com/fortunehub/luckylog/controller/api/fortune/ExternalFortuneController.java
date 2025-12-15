@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,11 +37,12 @@ public class ExternalFortuneController {
       @ApiResponse(responseCode = "500", description = "서버 오류")
   })
   public ResponseEntity<List<FortuneResponse>> generate(
+      HttpSession session,
       @Valid @RequestBody GenerateFortuneRequest request) {
 
     int fortuneResultYear = LocalDateTime.now().getYear();
     List<FortuneResponse> responses = fortuneService.generateFortune(
-        request.getBirthInfo(), request.getOption(), fortuneResultYear);
+        session.getId(), request.getBirthInfo(), request.getOption(), fortuneResultYear);
 
     log.info("[외부 운세 생성 완료] | fortuneTypes={} | resultCount={}",
         request.getOption().getFortunes(), responses.size());

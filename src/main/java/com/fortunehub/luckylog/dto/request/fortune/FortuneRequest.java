@@ -1,5 +1,6 @@
 package com.fortunehub.luckylog.dto.request.fortune;
 
+import com.fortunehub.luckylog.common.cache.CacheKeyProvider;
 import com.fortunehub.luckylog.controller.web.fortune.form.BirthInfoForm;
 import com.fortunehub.luckylog.controller.web.fortune.form.FortuneOptionForm;
 import com.fortunehub.luckylog.domain.fortune.CalendarType;
@@ -8,6 +9,7 @@ import com.fortunehub.luckylog.domain.fortune.FortuneType;
 import com.fortunehub.luckylog.domain.fortune.GenderType;
 import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.domain.fortune.TimeType;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -15,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class FortuneRequest {
+public class FortuneRequest implements CacheKeyProvider {
+
+  private final String sessionId;
 
   // 생년월일 정보
   private final GenderType gender;
@@ -33,9 +37,13 @@ public class FortuneRequest {
   // 운세 결과 연도
   private final Integer fortuneResultYear;
 
-  public static FortuneRequest from(BirthInfoForm birthInfo, FortuneOptionForm fortuneOption,
+  public static FortuneRequest from(
+      String sessionId,
+      BirthInfoForm birthInfo,
+      FortuneOptionForm fortuneOption,
       int fortuneResultYear) {
     return new FortuneRequest(
+        sessionId,
         birthInfo.getGender(),
         birthInfo.getCalendar(),
         birthInfo.getYear(),
@@ -79,5 +87,29 @@ public class FortuneRequest {
         .append("\n- 출생시간: ").append(getBirthTime())
         .append("\n- 출생장소: ").append(getBirthCity())
         .toString();
+  }
+
+  @Override
+  public String cacheKey() {
+    String fortuneKeys = fortunes.stream()
+                                 .map(Enum::name)
+                                 .sorted()
+                                 .collect(Collectors.joining(","));
+
+    return String.join(":",
+        "GUEST",
+        sessionId,
+        gender.name(),
+        calendar.name(),
+        year.toString(),
+        month.toString(),
+        day.toString(),
+        time.name(),
+        city.name(),
+        fortuneKeys,
+        period.name(),
+        LocalDate.now().toString()
+    );
+
   }
 }

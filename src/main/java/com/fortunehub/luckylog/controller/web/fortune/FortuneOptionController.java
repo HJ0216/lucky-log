@@ -9,6 +9,7 @@ import com.fortunehub.luckylog.domain.fortune.PeriodType;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.service.fortune.FortuneService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -68,6 +69,7 @@ public class FortuneOptionController {
       @Valid @ModelAttribute FortuneOptionForm option,
       BindingResult result,
       @SessionAttribute(name = "birthInfo", required = false) BirthInfoForm savedBirthInfo,
+      HttpSession session,
       RedirectAttributes redirectAttributes
   ) {
 
@@ -89,7 +91,7 @@ public class FortuneOptionController {
 
     try {
       int fortuneResultYear = LocalDateTime.now().getYear();
-      List<FortuneResponse> responses = fortuneService.generateFortune(savedBirthInfo, option,
+      List<FortuneResponse> responses = fortuneService.generateFortune(session.getId(), savedBirthInfo, option,
           fortuneResultYear);
       redirectAttributes.addFlashAttribute("fortuneResultYear", fortuneResultYear);
       redirectAttributes.addFlashAttribute("option", option); //자동으로 Model에 포함
