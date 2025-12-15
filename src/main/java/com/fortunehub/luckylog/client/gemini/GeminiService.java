@@ -49,15 +49,24 @@ public class GeminiService {
 
   public List<FortuneResponse> generateFortune(FortuneRequest request) {
 
-    return fortuneResultCache.get(
-        request.cacheKey(),
-        key -> {
-          log.info("[Gemini] 실제 AI 호출 발생 - key={}", key);
+    long start = System.currentTimeMillis();
 
-          String prompt = buildPrompt(request);
-          return generateContent(prompt, request);
-        }
-    );
+    try {
+      return fortuneResultCache.get(
+          request.cacheKey(),
+          key -> {
+            log.info("[Cache MISS] Gemini 호출 - key={}", key);
+
+            String prompt = buildPrompt(request);
+            return generateContent(prompt, request);
+          }
+      );
+    } finally {
+      long end = System.currentTimeMillis();
+      log.info("[Fortune] 처리 완료 - key={}, elapsed={}ms",
+          request.cacheKey(),
+          end - start);
+    }
   }
 
   private String buildPrompt(FortuneRequest request) {
