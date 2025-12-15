@@ -6,18 +6,22 @@ import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
+import com.github.benmanes.caffeine.cache.Cache;
 import com.google.genai.Client;
 import com.google.genai.errors.ServerException;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public class GeminiService {
+
+  private final Cache<String, List<FortuneResponse>> fortuneResultCache;
 
   private final String modelName;
   private final String promptTemplate;
@@ -27,12 +31,15 @@ public class GeminiService {
   private final ObjectMapper objectMapper;
 
   public GeminiService(
+      @Qualifier("fortuneResultCache")
+      Cache<String, List<FortuneResponse>> fortuneResultCache,
       Client client,
       GenerateContentConfig generateContentConfig,
       ObjectMapper objectMapper,
       @Value("${gemini.model}") String modelName,
       @Value("${fortune.prompt}") String promptTemplate
   ) {
+    this.fortuneResultCache = fortuneResultCache;
     this.client = client;
     this.generateContentConfig = generateContentConfig;
     this.objectMapper = objectMapper;
@@ -42,10 +49,15 @@ public class GeminiService {
 
   public List<FortuneResponse> generateFortune(FortuneRequest request) {
 
-    String prompt = buildPrompt(request);
-    List<FortuneResponse> responses = generateContent(prompt, request);
+    return fortuneResultCache.get(
+        request.cacheKey(),
+        key -> {
+          log.info("[Gemini] 실제 AI 호출 발생 - key={}", key);
 
-    return responses;
+          String prompt = buildPrompt(request);
+          return generateContent(prompt, request);
+        }
+    );
   }
 
   private String buildPrompt(FortuneRequest request) {
