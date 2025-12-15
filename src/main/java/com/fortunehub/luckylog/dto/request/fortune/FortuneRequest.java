@@ -91,6 +91,8 @@ public class FortuneRequest implements CacheKeyProvider {
 
   @Override
   public String cacheKey() {
+    String timeKey = (time == null) ? TimeType.UNKNOWN.name() : time.name();
+    String cityKey = (city == null) ? CityType.UNKNOWN.name() : city.name();
     String fortuneKeys = fortunes.stream()
                                  .map(Enum::name)
                                  .sorted()
@@ -104,8 +106,8 @@ public class FortuneRequest implements CacheKeyProvider {
         year.toString(),
         month.toString(),
         day.toString(),
-        time.name(),
-        city.name(),
+        timeKey,
+        cityKey,
         fortuneKeys,
         period.name(),
         LocalDate.now().toString()
