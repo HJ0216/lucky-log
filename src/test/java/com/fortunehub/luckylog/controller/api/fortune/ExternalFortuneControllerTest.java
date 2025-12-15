@@ -73,7 +73,9 @@ class ExternalFortuneControllerTest {
            .andExpect(jsonPath("$[1].periodValue").value("february"))
            .andExpect(jsonPath("$[1].result").value("건강운이 상승합니다."));
 
-    verify(fortuneService).generateFortune(any(BirthInfoForm.class), any(FortuneOptionForm.class),
+    verify(fortuneService).generateFortune(
+        any(BirthInfoForm.class),
+        any(FortuneOptionForm.class),
         anyInt());
   }
 
@@ -94,8 +96,10 @@ class ExternalFortuneControllerTest {
            .andExpect(jsonPath("$.timestamp").exists());
 
 
-    verify(fortuneService, never()).generateFortune(any(BirthInfoForm.class),
-        any(FortuneOptionForm.class), anyInt());
+    verify(fortuneService, never()).generateFortune(
+        any(BirthInfoForm.class),
+        any(FortuneOptionForm.class),
+        anyInt());
   }
 
   @Test
@@ -115,8 +119,10 @@ class ExternalFortuneControllerTest {
            .andExpect(jsonPath("$.timestamp").exists());
 
 
-    verify(fortuneService, never()).generateFortune(any(BirthInfoForm.class),
-        any(FortuneOptionForm.class), anyInt());
+    verify(fortuneService, never()).generateFortune(
+        any(BirthInfoForm.class),
+        any(FortuneOptionForm.class),
+        anyInt());
   }
 
   @Test
@@ -125,7 +131,9 @@ class ExternalFortuneControllerTest {
     // given
     GenerateFortuneRequest request = createGenerateFortuneRequest();
 
-    when(fortuneService.generateFortune(any(BirthInfoForm.class), any(FortuneOptionForm.class),
+    when(fortuneService.generateFortune(
+        any(BirthInfoForm.class),
+        any(FortuneOptionForm.class),
         anyInt()))
         .thenThrow(new RuntimeException("예상치 못한 오류 발생"));
 
@@ -138,7 +146,9 @@ class ExternalFortuneControllerTest {
            .andExpect(jsonPath("$.message").value("서버 오류가 발생했습니다."))
            .andExpect(jsonPath("$.timestamp").exists());
 
-    verify(fortuneService).generateFortune(any(BirthInfoForm.class), any(FortuneOptionForm.class),
+    verify(fortuneService).generateFortune(
+        any(BirthInfoForm.class),
+        any(FortuneOptionForm.class),
         anyInt());
   }
 

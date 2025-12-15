@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,8 @@ import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.genai.Client;
 import com.google.genai.Models;
 import com.google.genai.errors.ServerException;
@@ -31,6 +34,7 @@ import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,6 +55,7 @@ class GeminiServiceTest {
   private GenerateContentConfig generateContentConfig;
 
   GeminiService service;
+  private Cache<String, List<FortuneResponse>> fortuneResultCache;
 
   private static final String MODEL_NAME = "gemini-test";
   private static final String PROMPT_TEMPLATE = "[ANALYSIS_YEAR]년 [FORTUNE_TYPES] 운세 분석";
@@ -80,7 +85,13 @@ class GeminiServiceTest {
   void setUp() {
     ReflectionTestUtils.setField(client, "models", models); // final field
 
+    fortuneResultCache =
+        Caffeine.newBuilder()
+                .expireAfterWrite(1, TimeUnit.DAYS)
+                .build();
+
     service = new GeminiService(
+        fortuneResultCache,
         client,
         generateContentConfig,
         new ObjectMapper(),
@@ -212,7 +223,87 @@ class GeminiServiceTest {
     assertThatThrownBy(() -> service.generateFortune(request))
         .isInstanceOf(CustomException.class)
         .hasMessageContaining(ErrorCode.GEMINI_OVERLOAD.getMessage());
+  }
 
+  @Test
+  @DisplayName("같은 요청이 반복되면 Gemini API는 한 번만 호출된다 (로컬 캐시 HIT)")
+  void generateFortune_sameRequest_usesCache() {
+    // given
+    GenerateContentResponse response = mock(GenerateContentResponse.class);
+
+    given(client.models.generateContent(
+        eq(MODEL_NAME),
+        anyString(),
+        eq(generateContentConfig)
+    )).willReturn(response);
+
+    String rawResponse = "```json\n" + VALID_JSON_RESPONSE + "\n```";
+    given(response.text()).willReturn(rawResponse);
+
+    FortuneRequest request = createFortuneRequest();
+
+    // when
+    service.generateFortune(request); // cache MISS
+    service.generateFortune(request); // cache HIT
+
+    // then
+    verify(client.models, times(1))
+        .generateContent(eq(MODEL_NAME), anyString(), eq(generateContentConfig));
+  }
+
+  @Test
+  @DisplayName("첫 호출 후 결과가 로컬 캐시에 저장된다")
+  void generateFortune_shouldStoreResultInCache() {
+    // given
+    GenerateContentResponse response = mock(GenerateContentResponse.class);
+
+    given(client.models.generateContent(
+        eq(MODEL_NAME),
+        anyString(),
+        eq(generateContentConfig)
+    )).willReturn(response);
+
+    String rawResponse = "```json\n" + VALID_JSON_RESPONSE + "\n```";
+    given(response.text()).willReturn(rawResponse);
+
+    FortuneRequest request = createFortuneRequest();
+
+    // when
+    service.generateFortune(request);
+
+    // then
+    List<FortuneResponse> cached =
+        fortuneResultCache.getIfPresent(request.cacheKey());
+
+    assertThat(cached).isNotNull();
+    assertThat(cached).hasSize(3);
+  }
+
+  @Test
+  @DisplayName("API 호출 중 예외가 발생하면 결과는 캐시되지 않는다")
+  void generateFortune_exception_shouldNotBeCached() {
+    // given
+    given(client.models.generateContent(
+        eq(MODEL_NAME),
+        anyString(),
+        eq(generateContentConfig)
+    )).willThrow(new ServerException(500, "ERROR", "API 서버 오류"));
+
+    FortuneRequest request = createFortuneRequest();
+
+    // when & then
+    assertThatThrownBy(() -> service.generateFortune(request))
+        .isInstanceOf(CustomException.class);
+
+    assertThatThrownBy(() -> service.generateFortune(request))
+        .isInstanceOf(CustomException.class);
+
+    // 캐시되지 않았으므로 두 번 호출됨
+    verify(client.models, times(2))
+        .generateContent(eq(MODEL_NAME), anyString(), eq(generateContentConfig));
+
+    assertThat(fortuneResultCache.getIfPresent(request.cacheKey()))
+        .isNull();
   }
 
   private FortuneRequest createFortuneRequest() {

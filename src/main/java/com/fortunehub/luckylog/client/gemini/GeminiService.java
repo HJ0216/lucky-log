@@ -6,18 +6,22 @@ import com.fortunehub.luckylog.dto.request.fortune.FortuneRequest;
 import com.fortunehub.luckylog.dto.response.fortune.FortuneResponse;
 import com.fortunehub.luckylog.exception.CustomException;
 import com.fortunehub.luckylog.exception.ErrorCode;
+import com.github.benmanes.caffeine.cache.Cache;
 import com.google.genai.Client;
 import com.google.genai.errors.ServerException;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public class GeminiService {
+
+  private final Cache<String, List<FortuneResponse>> fortuneResultCache;
 
   private final String modelName;
   private final String promptTemplate;
@@ -27,12 +31,15 @@ public class GeminiService {
   private final ObjectMapper objectMapper;
 
   public GeminiService(
+      @Qualifier("fortuneResultCache")
+      Cache<String, List<FortuneResponse>> fortuneResultCache,
       Client client,
       GenerateContentConfig generateContentConfig,
       ObjectMapper objectMapper,
       @Value("${gemini.model}") String modelName,
       @Value("${fortune.prompt}") String promptTemplate
   ) {
+    this.fortuneResultCache = fortuneResultCache;
     this.client = client;
     this.generateContentConfig = generateContentConfig;
     this.objectMapper = objectMapper;
@@ -42,10 +49,25 @@ public class GeminiService {
 
   public List<FortuneResponse> generateFortune(FortuneRequest request) {
 
-    String prompt = buildPrompt(request);
-    List<FortuneResponse> responses = generateContent(prompt, request);
+    long start = System.currentTimeMillis();
+    String key = request.cacheKey();
 
-    return responses;
+    try {
+      return fortuneResultCache.get(
+          key,
+          k -> {
+            log.info("[Cache MISS] Gemini 호출 - key={}", key);
+
+            String prompt = buildPrompt(request);
+            return generateContent(prompt, request);
+          }
+      );
+    } finally {
+      long end = System.currentTimeMillis();
+      log.info("[Fortune] 처리 완료 - key={}, elapsed={}ms",
+          key,
+          end - start);
+    }
   }
 
   private String buildPrompt(FortuneRequest request) {
