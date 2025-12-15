@@ -50,11 +50,12 @@ public class GeminiService {
   public List<FortuneResponse> generateFortune(FortuneRequest request) {
 
     long start = System.currentTimeMillis();
+    String key = request.cacheKey();
 
     try {
       return fortuneResultCache.get(
-          request.cacheKey(),
-          key -> {
+          key,
+          k -> {
             log.info("[Cache MISS] Gemini 호출 - key={}", key);
 
             String prompt = buildPrompt(request);
@@ -64,7 +65,7 @@ public class GeminiService {
     } finally {
       long end = System.currentTimeMillis();
       log.info("[Fortune] 처리 완료 - key={}, elapsed={}ms",
-          request.cacheKey(),
+          key,
           end - start);
     }
   }
