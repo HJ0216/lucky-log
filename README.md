@@ -76,8 +76,6 @@ Lucky Log는 AI를 활용하여 운세를 예측하고 저장하는 서비스입
 
 **Swagger UI**: [API 문서](https://lucky-log.duckdns.org/swagger-ui/index.html)
 
-> 🔒 인증이 필요한 API는 먼저 [로그인](https://lucky-log.duckdns.org/login)을 해야합니다.
-
 ## 📂 디렉터리 구조
 
 ```txt
@@ -89,6 +87,7 @@ src
 │              ├─client # 외부 API
 │              │  └─gemini
 │              ├─common
+│              │  └─cache
 │              ├─config # 설정 파일
 │              ├─controller # 웹 컨트롤러
 │              │  ├─api
